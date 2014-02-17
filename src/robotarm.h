@@ -5,8 +5,6 @@
 #ifndef ARMCONFIG_H_
 #define ARMCONFIG_H_
 
-#include "utils.h"
-
 struct Link;
 struct Base;
 struct Brush;
