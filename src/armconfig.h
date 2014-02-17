@@ -7,7 +7,7 @@
 
 #include "utils.h"
 
-const Links[] = {
+const Link links[] = {
    //Base base(300, link1),
    //Link link1(PRISMATIC, 150, base, link2),
    //Link link2(REVOLUTE, 100, link1, link3),
