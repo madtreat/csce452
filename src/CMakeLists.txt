@@ -3,11 +3,18 @@ project(paintbot)
 
 set(SOURCES
    main.cpp
+   robotarm.cpp
+   link.cpp
+   base.cpp
+   brush.cpp
 )
 
 set(HEADERS
-   armconfig.h
+   robotarm.h
    utils.h
+   link.h
+   base.h
+   brush.h
 )
 
 #set(HEADERS_NO_MOC)
