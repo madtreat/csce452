@@ -9,6 +9,13 @@ struct Link;
 struct Base;
 struct Brush;
 
+enum Motion {
+   CW    = 1,
+   CCW   = 2,
+   LEFT  = CCW,
+   RIGHT = CW
+};
+
 class RobotArm {
 public:
    static const int NUM_LINKS = 3;
@@ -19,6 +26,8 @@ public:
    Link* getLink(int link);
    Link* getBase()  {return links[0];}
    Link* getBrush() {return links[NUM_LINKS+1];}
+
+   void moveJoint(Link* link, Motion motion);
 
 private:
    // the size of links is NUM_LINKS + base + brush (hence the +2)

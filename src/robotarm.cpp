@@ -51,4 +51,12 @@ Link* RobotArm::getLink(int link)
    return links[link];
 }
 
+void RobotArm::moveJoint(Link* link, Motion motion)
+{
+   // get the link's current position
+   // translate (if prismatic joint) or 
+   //    rotate (if revolute joint)
+   // in the correct direction (motion)
+}
+
 
