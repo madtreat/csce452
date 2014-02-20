@@ -11,10 +11,11 @@ public:
    Canvas(int argc, char* argv[]);
    ~Canvas();
 
+   void init();
+
    static void circle(int x, int y);
    static void display();
    static void keyboard(unsigned char key, int x, int y);
-   void init();
    static void mouseMove(int x, int y);
 
 private:

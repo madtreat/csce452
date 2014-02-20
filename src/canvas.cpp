@@ -14,13 +14,14 @@
 #include <string.h>
 
 
-Canvas::Canvas(int argc, char* argv[])
+Canvas::Canvas(int argc, char** argv)
 {
    glutInit(&argc, argv);
    glutInitDisplayMode (GLUT_SINGLE | GLUT_RGB);
    glutInitWindowSize (WIDTH, HEIGHT); 
    glutInitWindowPosition (100, 100);
    glutCreateWindow ("PaintBot");
+
    init ();
    glutDisplayFunc (display);
    glutMotionFunc (mouseMove);
@@ -30,6 +31,16 @@ Canvas::Canvas(int argc, char* argv[])
 
 Canvas::~Canvas()
 {
+}
+
+void Canvas::init ( void )
+{
+   glClearColor (0.752941,  0.752941, 0.752941, 0.0);
+
+   glMatrixMode(GL_PROJECTION);
+   glLoadIdentity();
+   glOrtho(0.0, WIDTH-1, HEIGHT-1, 0, -1.0, 1.0);
+   glMatrixMode(GL_MODELVIEW);
 }
 
 void Canvas::circle(int x,int y)// circle for the paint
@@ -211,16 +222,6 @@ void Canvas::keyboard ( unsigned char key, int x, int y )
    {
    }
    glutPostRedisplay ( );
-}
-
-void Canvas::init ( void )
-{
-   glClearColor (0.752941,  0.752941, 0.752941, 0.0);
-
-   glMatrixMode(GL_PROJECTION);
-   glLoadIdentity();
-   glOrtho(0.0, WIDTH-1, HEIGHT-1, 0, -1.0, 1.0);
-   glMatrixMode(GL_MODELVIEW);
 }
 
 void Canvas::mouseMove ( int x, int y )
