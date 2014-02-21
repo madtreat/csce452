@@ -8,11 +8,11 @@
 
 #include <iostream>
 
-int main(int argc, char** argv)
+int main(int argc, char* argv[])
 {
    std::cout << "Starting PaintBot..." << std::endl;
    RobotArm* arm = new RobotArm();
-   Canvas* canvas(argc, argv);
+   Canvas* canvas = new Canvas(argc, argv);
 
    return 0;
 }
