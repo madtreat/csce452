@@ -6,6 +6,7 @@
 #include "link.h"
 #include "base.h"
 #include "brush.h"
+
 class Canvas
 {
 public:
@@ -20,6 +21,7 @@ public:
    static void circle(int x, int y, int radius);
    static void display();
    static void Robot(Joint joint[],Link L, Brush b);
+
 private:
    
 };

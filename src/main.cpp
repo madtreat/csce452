@@ -3,9 +3,6 @@
  */
 
 #include "robotarm.h"
-#include "link.h"
-#include "canvas.h"
-#include "canvaswidget.h"
 #include "window.h"
 
 #include <QApplication>

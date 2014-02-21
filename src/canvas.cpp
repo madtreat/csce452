@@ -28,7 +28,6 @@ Canvas::Canvas()
    char* argv[argc];
    argv[0] = "paintbot";
    glutInit(&argc, argv);
-   std::cout << "END Canvas constructor" << std::endl;
 }
 
 Canvas::~Canvas()
@@ -43,40 +42,40 @@ void Canvas::init ( void )
    glMatrixMode(GL_MODELVIEW);
 }
 
-void Canvas::circle(int x,int y,int radius)// circle for the paint
+// the paint brush draws circles on the canvas
+// radius is the paint's radius
+void Canvas::circle(int x, int y, int radius)
 {
-    //radius is the size  
-   // glColor3f(0,0,0);
+   //glColor3f(0,0,0);
    glBegin(GL_TRIANGLE_FAN);
    glVertex2f(x,y);
-   for(double i=0; i<=360; ++i ) // a for loop that creates points around the mouse point 
+   // create points around the mouse point
+   for(double i=0; i<=360; ++i )
    {
-      glVertex2f(x+sin(i)*radius, y+cos(i)*radius); // using the unit circle 
+      // useing the unit circle
+      glVertex2f(x+sin(i)*radius, y+cos(i)*radius);
    }
-   glEnd(); 
-
+   glEnd();
 }
-void Canvas::Robot(Joint joint[3],Link L, Brush b)
+
+void Canvas::Robot(Joint joint[3], Link L, Brush b)
 {
 	for(int i = 0; i<3; i++ )
 	{
 		if(joint[i].type== BASE_JOINT)// there is no movement 
-		{
-		glColor3f(1,0,0);
-		circle(10+((WIDTH-210)/2)-5,HEIGHT-50,6);
-		glColor3f(0,0,1);
-		circle(10+((WIDTH-210)/2)-5,HEIGHT-50,7);
-		// glBegin(GL_POLYGON);
-		// glVertex2f (10+((WIDTH-210)/2)-5,HEIGHT-50);
+      {
+         glColor3f(1,0,0);
+         circle(10+((WIDTH-210)/2)-5,HEIGHT-50,6);
+         glColor3f(0,0,1);
+         circle(10+((WIDTH-210)/2)-5,HEIGHT-50,7);
+         // glBegin(GL_POLYGON);
+         // glVertex2f (10+((WIDTH-210)/2)-5,HEIGHT-50);
 
-		// glEnd(); 
-
-		}
-
-	
+         // glEnd();
+      }
 	}
-	
 }
+
 void Canvas::display ( void )
 {
    glClear ( GL_COLOR_BUFFER_BIT );
