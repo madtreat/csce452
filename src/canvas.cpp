@@ -4,6 +4,9 @@
 #ifdef __APPLE__
 #include <GLUT/glut.h>
 #include <OpenGL/gl.h>
+#elif __linux__
+#include <GL/glut.h>
+#include <GL/gl.h>
 #else
 #include <gl/glut.h>
 #include <gl/gl.h>
@@ -15,30 +18,13 @@
 #include <iostream>
 
 
-//Canvas::Canvas(int argc, char** argv)
 Canvas::Canvas()
 {
-   std::cout << "Canvas constructor" << std::endl;
-   /*
    int argc = 1;
    char* argv[argc];
    argv[0] = "paintbot";
    glutInit(&argc, argv);
    std::cout << "END Canvas constructor" << std::endl;
-   // */
-
-   glutInitDisplayMode (GLUT_SINGLE | GLUT_RGB);
-   glutInitWindowSize (WIDTH, HEIGHT); 
-   glutInitWindowPosition (100, 100);
-   glutCreateWindow ("PaintBot");
-   // */
-
-   init ();
-   glutDisplayFunc (display);
-   glutMotionFunc (mouseMove);
-   glutKeyboardFunc (keyboard);
-   glutMainLoop ( );
-   // */
 }
 
 Canvas::~Canvas()
@@ -47,8 +33,6 @@ Canvas::~Canvas()
 
 void Canvas::init ( void )
 {
-   glClearColor (0.752941,  0.752941, 0.752941, 0.0);
-
    glMatrixMode(GL_PROJECTION);
    glLoadIdentity();
    glOrtho(0.0, WIDTH-1, HEIGHT-1, 0, -1.0, 1.0);
@@ -226,18 +210,5 @@ void Canvas::display ( void )
    glEnd();
 
    glFlush ( );
-}
-
-void Canvas::keyboard ( unsigned char key, int x, int y )
-{
-   switch ( key )
-   {
-   }
-   glutPostRedisplay ( );
-}
-
-void Canvas::mouseMove ( int x, int y )
-{
-   glutPostRedisplay ( );
 }
 

@@ -2,6 +2,9 @@
 #include "canvaswidget.h"
 #include "canvas.h"
 
+#include <iostream>
+
+
 CanvasWidget::CanvasWidget(Canvas* _canvas, QWidget* _parent)
 : QGLWidget(QGLFormat(QGL::SampleBuffers), _parent),
   canvas(_canvas)
@@ -33,7 +36,7 @@ void CanvasWidget::paintEvent(QPaintEvent *event)
    painter.end();
 }
 
-/*
+//*
 void CanvasWidget::initializeGL()
 {
    glEnable(GL_DEPTH_TEST);
@@ -41,24 +44,26 @@ void CanvasWidget::initializeGL()
 
    qglClearColor(QColor(Qt::black));
 
-   //shaderProgram.addShaderFromSourceFile(QGLShader::Vertex, ":/vertexShader.vsh");
-   //shaderProgram.addShaderFromSourceFile(QGLShader::Fragment, ":/fragmentShader.fsh");
-   //shaderProgram.link();
+   canvas->init();
 
-   //vertices << QVector3D(1, 0, -2) << QVector3D(0, 1, -2) << QVector3D(-1, 0, -2);
+   /*
+   glutInitDisplayMode (GLUT_SINGLE | GLUT_RGB);
+   glutInitWindowSize (WIDTH, HEIGHT); 
+   glutInitWindowPosition (100, 100);
+   glutCreateWindow ("PaintBot");
+   // */
 }
 
+//*
 void CanvasWidget::resizeGL(int width, int height)
 {
    if (height == 0)
       height = 1;
 
-   //pMatrix.setToIdentity();
-   //pMatrix.perspective(60.0, (float) width / (float) height, 0.001, 1000);
-
    glViewport(0, 0, width, height);
 }
 
+/*
 void CanvasWidget::paintGL()
 {
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

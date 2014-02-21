@@ -30,7 +30,7 @@ Window::Window()
    connect(timer, SIGNAL(timeout()), openGL, SLOT(animate()));
    timer->start();
 
-   setWindowTitle("PaintBot");
+   setWindowTitle("Paint Bot");
 }
 
 Window::~Window()

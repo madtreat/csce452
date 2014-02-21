@@ -26,17 +26,14 @@ public slots:
 
 protected:
    void paintEvent(QPaintEvent *event);
-   //void initializeGL();
-   //void resizeGL(int width, int height);
-   //void paintGL();
+   void initializeGL();
+   void resizeGL(int width, int height);
+   /*
+   void paintGL();
+   // */
 
 private:
-   //QMatrix4x4 pMatrix;
-   //QGLShaderProgram shaderProgram;
-   //QVector<QVector3D> vertices;
-
    Canvas* canvas;
-
 };
 
 #endif

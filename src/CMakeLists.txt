@@ -6,9 +6,16 @@ find_package(OpenGL REQUIRED)
 find_package(GLUT REQUIRED)
 include_directories(${OPENGL_INCLUDE_DIRS} ${GLUT_INCLUDE_DIRS})
 
-# Qt dependencies
-find_package(Qt4 COMPONENTS QtCore QtGui QtOpenGL REQUIRED)
-include(${QT_USE_FILE})
+# Qt 4 dependencies
+#find_package(Qt4 COMPONENTS QtCore QtGui QtOpenGL REQUIRED)
+
+# Qt 5 dependencies
+find_package(Qt5Widgets)
+find_package(Qt5Core)
+find_package(Qt5Gui)
+find_package(Qt5OpenGL)
+set(CMAKE_AUTOMOC ON)
+#include(${QT_USE_FILE})
 
 # List of source files
 set(SOURCES
@@ -40,7 +47,7 @@ set(HEADERS_MOC
    canvaswidget.h
    window.h
 )
-QT4_WRAP_CPP(MOC_SRC ${HEADERS_MOC})
+#QT4_WRAP_CPP(MOC_SRC ${HEADERS_MOC})
 
 # Create the executable
 add_executable(paintbot ${SOURCES} ${HEADERS} ${MOC_SRC})
@@ -51,3 +58,12 @@ target_link_libraries(paintbot
    ${OPENGL_LIBRARIES}
    ${GLUT_LIBRARY}
 )
+
+# Link proper Qt Modules to the executable
+qt5_use_modules(paintbot
+   Widgets
+   Core
+   Gui
+   OpenGL
+)
+
