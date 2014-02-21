@@ -14,9 +14,6 @@ class CanvasWidget : public QGLWidget
    Q_OBJECT
 
 public:
-   static const int WIDTH  = 640;
-   static const int HEIGHT = 480;
-
    CanvasWidget(Canvas* _canvas, QWidget* _parent = 0);
    ~CanvasWidget();
    QSize sizeHint() const;

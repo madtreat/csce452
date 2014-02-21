@@ -3,8 +3,11 @@
 #define WINDOW_H_
 
 #include <QWidget>
+#include <QString>
+#include <QColor>
 
 class Canvas;
+class CanvasWidget;
 
 class Window : public QWidget
 {
@@ -16,7 +19,9 @@ public:
 
 private:
    Canvas* canvas;
-
+   CanvasWidget* canvasWidget;
+   
+   QString getControlStyle(QColor widget);
 };
 
 #endif

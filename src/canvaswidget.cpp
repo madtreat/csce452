@@ -9,7 +9,7 @@ CanvasWidget::CanvasWidget(Canvas* _canvas, QWidget* _parent)
 : QGLWidget(QGLFormat(QGL::SampleBuffers), _parent),
   canvas(_canvas)
 {
-   setFixedSize(WIDTH, HEIGHT);
+   setFixedSize(Canvas::WIDTH, Canvas::HEIGHT);
    setAutoFillBackground(false);
 }
 
@@ -36,7 +36,6 @@ void CanvasWidget::paintEvent(QPaintEvent *event)
    painter.end();
 }
 
-//*
 void CanvasWidget::initializeGL()
 {
    glEnable(GL_DEPTH_TEST);
@@ -45,16 +44,8 @@ void CanvasWidget::initializeGL()
    qglClearColor(QColor(Qt::black));
 
    canvas->init();
-
-   /*
-   glutInitDisplayMode (GLUT_SINGLE | GLUT_RGB);
-   glutInitWindowSize (WIDTH, HEIGHT); 
-   glutInitWindowPosition (100, 100);
-   glutCreateWindow ("PaintBot");
-   // */
 }
 
-//*
 void CanvasWidget::resizeGL(int width, int height)
 {
    if (height == 0)
