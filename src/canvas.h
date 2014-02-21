@@ -5,10 +5,11 @@
 class Canvas
 {
 public:
-   static const int WIDTH  = 1200;
-   static const int HEIGHT = 600;
+   static const int WIDTH  = 640;
+   static const int HEIGHT = 480;
    
-   Canvas(int argc, char* argv[]);
+   //Canvas(int argc, char* argv[]);
+   Canvas();
    ~Canvas();
 
    void init();

@@ -12,21 +12,33 @@
 #include <math.h>
 #include <stdio.h>
 #include <string.h>
+#include <iostream>
 
 
-Canvas::Canvas(int argc, char** argv)
+//Canvas::Canvas(int argc, char** argv)
+Canvas::Canvas()
 {
+   std::cout << "Canvas constructor" << std::endl;
+   /*
+   int argc = 1;
+   char* argv[argc];
+   argv[0] = "paintbot";
    glutInit(&argc, argv);
+   std::cout << "END Canvas constructor" << std::endl;
+   // */
+
    glutInitDisplayMode (GLUT_SINGLE | GLUT_RGB);
    glutInitWindowSize (WIDTH, HEIGHT); 
    glutInitWindowPosition (100, 100);
    glutCreateWindow ("PaintBot");
+   // */
 
    init ();
    glutDisplayFunc (display);
    glutMotionFunc (mouseMove);
    glutKeyboardFunc (keyboard);
    glutMainLoop ( );
+   // */
 }
 
 Canvas::~Canvas()
