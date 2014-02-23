@@ -54,9 +54,47 @@ Link* RobotArm::getLink(int link)
 void RobotArm::moveJoint(Link* link, Motion motion)
 {
    // get the link's current position
+   Joint joint = link.joint;
+   int currPos = jointoint.rotation;
    // translate (if prismatic joint) or 
    //    rotate (if revolute joint)
    // in the correct direction (motion)
+   swtich(motion)
+   {
+   // Clockwise
+	case 1:
+	{
+		if (joint.type == 1)
+		{
+			joint.rotation++;
+			if (joint.rotation == joint.range_max)
+			{
+				joint.rotation = joint.range_max;
+			}
+		}
+		else
+		{
+			
+		}
+		break;
+	}
+	case 2:
+	{
+		if (joint.type == 1)
+		{
+			joint.rotation++;
+			if (joint.rotation == joint.range_max)
+			{
+				joint.rotation = joint.range_max;
+			}
+		}
+		else
+		{
+			
+		}
+		break;
+	}
+   }
 }
 
 

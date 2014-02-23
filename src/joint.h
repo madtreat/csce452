@@ -13,6 +13,7 @@ struct Joint {
    JointType type;
    int       range_min;
    int       range_max;
+   int		 rotation;
 
    Joint(JointType _type, int _min, int _max);
 };
