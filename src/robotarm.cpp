@@ -22,7 +22,7 @@ RobotArm::RobotArm()
    link1->next_link = link2;
    link2->next_link = link3;
    link3->next_link = brush;
-   
+
    // Add to the list
    links[0] = base;
    links[1] = link1;
@@ -54,45 +54,45 @@ Link* RobotArm::getLink(int link)
 void RobotArm::moveJoint(Link* link, Motion motion)
 {
    // get the link's current position
-   Joint joint = link.joint;
+   Joint joint = link->joint;
    // translate (if prismatic joint) or 
    //    rotate (if revolute joint)
    // in the correct direction (motion)
-   swtich(motion)
+   switch(motion)
    {
-   // Clockwise
-	case 1:
-	{
-		if (joint.type == 1)
-		{
-			joint.rotation++;
-			if (joint.rotation >= joint.range_max)
-			{
-				joint.rotation = joint.range_max;
-			}
-		}
-		else
-		{
-			joint.X++;
-		}
-		break;
-	}
-	case 2:
-	{
-		if (joint.type == 1)
-		{
-			joint.rotation--;
-			if (joint.rotation <= joint.range_min)
-			{
-				joint.rotation = joint.range_min;
-			}
-		}
-		else
-		{
-			joint.X--;
-		}
-		break;
-	}
+      // Clockwise
+      case 1:
+         {
+            if (joint.type == 1)
+            {
+               joint.rotation++;
+               if (joint.rotation >= joint.range_max)
+               {
+                  joint.rotation = joint.range_max;
+               }
+            }
+            else
+            {
+               joint.X++;
+            }
+            break;
+         }
+      case 2:
+         {
+            if (joint.type == 1)
+            {
+               joint.rotation--;
+               if (joint.rotation <= joint.range_min)
+               {
+                  joint.rotation = joint.range_min;
+               }
+            }
+            else
+            {
+               joint.X--;
+            }
+            break;
+         }
    }
 }
 
