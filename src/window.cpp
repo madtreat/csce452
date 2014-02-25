@@ -54,6 +54,8 @@ Window::Window()
    j1Spin->setRange(0, 300);
    j1Spin->setSuffix(" px");
    j1Spin->setWrapping(false); // do not allow the P joint to wrap
+   // TODO: connect
+   j1Spin->setValue(150);
    j1Layout->addWidget(j1Spin, 0, 1);
 
    controlLayout->addWidget(joint1);
@@ -72,8 +74,10 @@ Window::Window()
 
    QSpinBox*    j2Spin   = new QSpinBox(joint2);
    j2Spin->setRange(0, 359);
-   j2Spin->setSuffix(" px");
+   j2Spin->setSuffix(" deg");
    j2Spin->setWrapping(true); // allow the R joint to wrap
+   // TODO: connect
+   j2Spin->setValue(90);
    j2Layout->addWidget(j2Spin, 0, 1);
 
    controlLayout->addWidget(joint2);
@@ -92,8 +96,10 @@ Window::Window()
 
    QSpinBox*    j3Spin   = new QSpinBox(joint3);
    j3Spin->setRange(0, 359);
-   j3Spin->setSuffix(" px");
+   j3Spin->setSuffix(" deg");
    j3Spin->setWrapping(true); // allow the R joint to wrap
+   // TODO: connect
+   j3Spin->setValue(90);
    j3Layout->addWidget(j3Spin, 0, 1);
    
    controlLayout->addWidget(joint3);

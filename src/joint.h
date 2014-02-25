@@ -17,7 +17,7 @@ struct Joint {
    int		 X;
    int 		 Y;
 
-   Joint(JointType _type, int _min, int _max, int _rot=0, int _X=0, int _Y=0);
+   Joint(JointType _type, int _min, int _max, int _rot=0, int _X=10, int _Y=10);
 };
 
 #endif

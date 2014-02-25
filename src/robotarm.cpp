@@ -8,6 +8,13 @@ Implements a specific configuration of the robot arm.
 #include "base.h"
 #include "brush.h"
 
+#include <math.h>
+#include <iostream>
+
+using namespace std;
+
+const int PI = 3.1415926;
+
 RobotArm::RobotArm()
 {
 	// Create the links of this paintbot, including predecessors
@@ -51,7 +58,7 @@ Link* RobotArm::getLink(int link)
 	return links[link];
 }
 
-void RobotArm::moveJoint(Link* link, Motion motion)
+void RobotArm::moveJoint(Link* link, Motion motion, int amt)
 {
 	int x_set = 1;
 
@@ -64,45 +71,90 @@ void RobotArm::moveJoint(Link* link, Motion motion)
 	{
 	case CW:
 		{
-			joint.rotation++;
+         //std::cout << "moving link CW" << std::endl;
+         int deg = -amt;
+			joint.rotation += deg;
 			if (joint.rotation >= joint.range_max)
 			{
-				joint.rotation = joint.range_max;
+            // loop back to the beginning
+				joint.rotation = joint.range_min;//joint.range_max;
 			}
+         
+         // update next link's position based on the current frame's X and Y
+         int frameX = joint.X;
+         int frameY = joint.Y;
+         int linkLen = link->length;
+         while ((link = link->next_link) != 0)
+         {
+            //cout << "   Link len = " << link->length << endl;
+            int curX = link->joint.X;
+            int curY = link->joint.Y;
+            double rad = (double) deg * ((double)PI/(double)180);
+            int nextX = curX + (curX*cos(rad) - curX*sin(rad));
+            int nextY = curY + (curY*sin(rad) + curY*cos(rad));
+            cout << "   rad = " << rad << endl;
+            cout << "   cos = " << cos(rad) << endl;
+            cout << "   sin = " << sin(rad) << endl;
+            link->joint.X = nextX;
+            link->joint.Y = nextY;
+         }
+
 			break;
 		}
 	case CCW:
 		{
-			joint.rotation--;
+         int deg = amt;
+			joint.rotation += deg;
 			if (joint.rotation <= joint.range_min)
 			{
-				joint.rotation = joint.range_min;
+            // loop back to the end
+				joint.rotation = joint.range_max;//joint.range_min;
 			}
+
+         // update next link's position based on the current frame's X and Y
+         int frameX = joint.X;
+         int frameY = joint.Y;
+         int linkLen = link->length;
+         while ((link = link->next_link) != 0)
+         {
+            //cout << "   Link len = " << link->length << endl;
+            int curX = link->joint.X;
+            int curY = link->joint.Y;
+            double rad = (double) deg * ((double)PI/(double)180);
+            int nextX = curX + (curX*cos(rad) - curX*sin(rad));
+            int nextY = curY + (curY*sin(rad) + curY*cos(rad));
+            cout << "   rad = " << rad << endl;
+            cout << "   cos = " << cos(rad) << endl;
+            cout << "   sin = " << sin(rad) << endl;
+            link->joint.X = nextX;
+            link->joint.Y = nextY;
+         }
+
 			break;
+      }
 	case LEFT:
 		{
 			joint.X-= x_set;
-			while( link->next_link != brush)
+			while( link->next_link != getBrush())
 			{
 				link = link->next_link;
 				link->joint.X-= x_set;
 			}
-			brush.X-= x_set;
+			getBrush()->joint.X-= x_set;
 			break;
 		}
 	case RIGHT:
 		{
 			joint.X+= x_set;
-			while( link->next_link != brush)
+			while( link->next_link != getBrush())
 			{
 				link = link->next_link;
 				link->joint.X+= x_set;
 			}
-			brush.X+= x_set;
+			getBrush()->joint.X+= x_set;
 			break;
 		}
 	}
-}
 }
 
 

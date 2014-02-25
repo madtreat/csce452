@@ -27,7 +27,7 @@ public:
    Link* getBase()  {return links[0];}
    Link* getBrush() {return links[NUM_LINKS+1];}
 
-   void moveJoint(Link* link, Motion motion);
+   void moveJoint(Link* link, Motion motion, int amt);
 
 private:
    // the size of links is NUM_LINKS + base + brush (hence the +2)
