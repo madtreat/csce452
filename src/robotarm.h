@@ -12,8 +12,8 @@ struct Brush;
 enum Motion {
    CW    = 1,
    CCW   = 2,
-   LEFT  = CCW,
-   RIGHT = CW
+   LEFT  = 4 | CCW,
+   RIGHT = 4 | CW
 };
 
 class RobotArm {
