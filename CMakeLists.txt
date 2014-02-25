@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.9)
+cmake_minimum_required(VERSION 2.8.07)
 project(paintbot)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
