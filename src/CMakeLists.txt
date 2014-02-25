@@ -9,6 +9,20 @@ include_directories(${OPENGL_INCLUDE_DIR} ${GLUT_INCLUDE_DIR})
 #find_package(Qt4 COMPONENTS QtCore QtGui QtOpenGL REQUIRED)
 
 # Qt 5 dependencies
+site_name(host)
+if (APPLE)
+   message(STATUS "Setting CMAKE_PREFIX_PATH for Madison")
+   message(STATUS "   SITE_NAME = " ${host})
+   # Mac only (for Madison)
+   # machine name: maka
+   set(CMAKE_PREFIX_PATH /opt/local/share/qt5/5.2.1/clang_64/lib/cmake)
+elseif(${host} == "violeta-VirtualBox")
+   message(STATUS "Setting CMAKE_PREFIX_PATH for Violeta")
+   # for Violeta
+   # machine name: violeta-VirtualBox
+   set(CMAKE_PREFIX_PATH /home/violeta/Qt5.2.1/5.2.1/gcc_64/lib/cmake)
+endif()
+
 find_package(Qt5Widgets)
 find_package(Qt5Core)
 find_package(Qt5Gui)
