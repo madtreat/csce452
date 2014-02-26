@@ -19,9 +19,9 @@ RobotArm::RobotArm()
 {
 	// Create the links of this paintbot, including predecessors
 	Base*  base  = new Base(300);
-	Link*  link1 = new Link(Joint(PRISMATIC, 0, 300), 150, base);
-	Link*  link2 = new Link(Joint(REVOLUTE, 0, 360), 100, link1);
-	Link*  link3 = new Link(Joint(REVOLUTE, 0, 360), 75, link2);
+	Link*  link1 = new Link(Joint(PRISMATIC, 0, 300, 0, 100, 100), 150, base);
+	Link*  link2 = new Link(Joint(REVOLUTE,  0, 360, 0, 200, 200), 100, link1);
+	Link*  link3 = new Link(Joint(REVOLUTE,  0, 360, 0, 300, 300), 75, link2);
 	Brush* brush = new Brush(link3);
 
 	// Set the successor links
