@@ -58,9 +58,9 @@ void Canvas::circle(int x, int y, int radius)
    glVertex2f(x,y);
    // create points around the mouse point
    //for(double i=0; i<=360; ++i )
-   for(double i = 0; i <= 2*PI; i += (double) PI/ (double) 36 )
+   for(double i = 0; i <= 360; i ++ )
    {
-      // useing the unit circle
+      // using the unit circle
       glVertex2f(x+sin(i)*radius, y+cos(i)*radius);
    }
    glEnd();
@@ -92,6 +92,10 @@ void Canvas::drawLinks()
 	for (int i=0; i<RobotArm::NUM_LINKS+2; i++)
 	{
       Link* link = robot->getLink(i);
+	  //glBegin (GL_POLYGON);
+		//glVertex2f (link->joint.X, link->joint.Y);
+		//glVertex2f (link->next_link->joint.X, link->next_link->joint.Y);
+	  //glEnd();
 		circle(link->joint.X, link->joint.Y,20);
 		glFlush ( );
 	}
