@@ -21,16 +21,10 @@ Window::Window()
    //--------------------------------------------------------//
    // Create the canvas and its container widget
    //--------------------------------------------------------//
-   canvas       = new Canvas();
-   canvasWidget = new CanvasWidget(canvas, this);
-   
-   //------------Added below, could be removed--------
-   // Create RobotArm here so we can call canvas::DrawLinks
+   // Create RobotArm here so we can call canvas::drawLinks
    RobotArm* arm = new RobotArm();
-   
-   // Draw links actually draws joints right now. Or it should. Its not working
-   canvas->DrawLinks(arm->links);
-   //------------------------------------------------------
+   canvas        = new Canvas(arm);
+   canvasWidget  = new CanvasWidget(canvas, this);
    
    // Add to main grid layout
    layout->addWidget(canvasWidget, 0, 0);

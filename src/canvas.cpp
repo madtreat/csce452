@@ -4,6 +4,7 @@
 #include "link.h"
 #include "base.h"
 #include "brush.h"
+#include "robotarm.h"
 
 #ifdef __APPLE__
 #include <GLUT/glut.h>
@@ -21,9 +22,14 @@
 #include <string.h>
 #include <iostream>
 
+using namespace std;
 
-Canvas::Canvas()
+const int PI = 3.1415926;
+
+Canvas::Canvas(RobotArm* _arm)
+//: robot(_arm)
 {
+   robot = _arm;
    int argc = 1;
    char* argv[argc];
    argv[0] = "paintbot";
@@ -46,11 +52,13 @@ void Canvas::init ( void )
 // radius is the paint's radius
 void Canvas::circle(int x, int y, int radius)
 {
-   //glColor3f(0,0,0);
+   //glColor3f(0, 0, 0);
+   //glBegin(GL_POLYGON);//TRIANGLE_FAN);
    glBegin(GL_TRIANGLE_FAN);
    glVertex2f(x,y);
    // create points around the mouse point
-   for(double i=0; i<=360; ++i )
+   //for(double i=0; i<=360; ++i )
+   for(double i = 0; i <= 2*PI; i += (double) PI/ (double) 36 )
    {
       // useing the unit circle
       glVertex2f(x+sin(i)*radius, y+cos(i)*radius);
@@ -58,11 +66,12 @@ void Canvas::circle(int x, int y, int radius)
    glEnd();
 }
 
-void Canvas::Robot(Joint joint[3], Link L, Brush b)
+void Canvas::drawRobot()
 {
-	for(int i = 0; i<3; i++ )
+	for(int i = 0; i < RobotArm::NUM_LINKS+2; i++ )
 	{
-		if(joint[i].type== BASE_JOINT)// there is no movement 
+      Joint joint = robot->getLink(i)->joint;
+		if(joint.type== BASE_JOINT)// there is no movement 
       {
          glColor3f(1,0,0);
          circle(10+((WIDTH-210)/2)-5,HEIGHT-50,6);
@@ -76,14 +85,14 @@ void Canvas::Robot(Joint joint[3], Link L, Brush b)
 	}
 }
 
-void Canvas::DrawLinks(Link* link[5])
+void Canvas::drawLinks()
 {
+   // set color to black
 	glColor3f(0,0,0);
-	for (int i=0; i<5; i++)
+	for (int i=0; i<RobotArm::NUM_LINKS+2; i++)
 	{
-		// I dont know why this isnt working
-		std::cout << "x: " << link[i]->joint.X << " y: " << link[i]->joint.Y << std::endl;
-		circle(link[i]->joint.X,link[i]->joint.Y,100);
+      Link* link = robot->getLink(i);
+		circle(link->joint.X, link->joint.Y,20);
 		glFlush ( );
 	}
 }
@@ -93,6 +102,7 @@ void Canvas::display ( void )
    glClear ( GL_COLOR_BUFFER_BIT );
    // the canvas sheet
 
+   // set white canvas
    glColor3f (1,1,1);
    glBegin (GL_POLYGON);
    glVertex2f (WIDTH-(WIDTH-10),HEIGHT-(HEIGHT-10)); 
@@ -110,13 +120,16 @@ void Canvas::display ( void )
    glVertex2f(WIDTH-200,HEIGHT-(HEIGHT-10));
    glEnd();
 
-   // this is the line in the bottom for the parasetic joint 
+   // this is the line in the bottom for the prismatic joint 
    glLineWidth(6.0);
-   glColor3f(0,0,0);
+   glColor3f(0,0,0); // black prismatic axis/joint 1 - the sliding rail
    circle(10+((WIDTH-210)/2)-150,HEIGHT-50,5);
    glBegin (GL_LINES); 
    glVertex2f (10+((WIDTH-210)/2)-150,HEIGHT-50);
    glVertex2f (10+((WIDTH-210)/2)+150,HEIGHT-50);
    glEnd(); 
+
+   drawLinks();
+   drawRobot();
 }
 

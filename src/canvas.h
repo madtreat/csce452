@@ -7,24 +7,26 @@
 #include "base.h"
 #include "brush.h"
 
+class RobotArm;
+
 class Canvas
 {
 public:
    static const int WIDTH  = 640;
    static const int HEIGHT = 480;
    
-   Canvas();
+   Canvas(RobotArm* _arm);
    ~Canvas();
 
    void init();
 
-   static void circle(int x, int y, int radius);
-   static void display();
-   static void Robot(Joint joint[],Link L, Brush b);
-   static void DrawLinks(Link* link[5]);
+   void circle(int x, int y, int radius);
+   void drawRobot();
+   void drawLinks();
+   void display();
 
 private:
-   
+   RobotArm* robot;
 };
 
 #endif
