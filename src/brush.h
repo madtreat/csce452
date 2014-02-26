@@ -7,7 +7,7 @@
 struct Brush : public Link
 {
    int diameter; // diameter of brush in pixels
-   Brush(Link* _prev = 0);
+   Brush(Link* _prev = 0, int _x = 0, int _y = 0);
 };
 
 #endif

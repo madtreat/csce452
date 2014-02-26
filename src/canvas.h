@@ -22,9 +22,10 @@ public:
 
    void setPainting(bool enabled) {painting = enabled;}
 
-   void circle(int x, int y, int radius);
-   void drawRobot();
-   void drawLinks();
+   void drawCircle(int x, int y, int radius);
+   void drawLink  (int linkNum, double r, double g, double b);
+   void drawJoint (int linkNum, double r, double g, double b);
+   void drawRobot ();
    void paintCurrentLoc();
    void display();
 

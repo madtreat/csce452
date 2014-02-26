@@ -19,10 +19,10 @@ RobotArm::RobotArm()
 {
 	// Create the links of this paintbot, including predecessors
 	Base*  base  = new Base(300);
-	Link*  link1 = new Link(Joint(PRISMATIC, 0, 300, 0, 100, 100), 150, base);
-	Link*  link2 = new Link(Joint(REVOLUTE,  0, 360, 0, 200, 200), 100, link1);
-	Link*  link3 = new Link(Joint(REVOLUTE,  0, 360, 0, 300, 300), 75, link2);
-	Brush* brush = new Brush(link3);
+	Link*  link1 = new Link(Joint(PRISMATIC, 0, 300, 0, 320, 430), 150, base);
+	Link*  link2 = new Link(Joint(REVOLUTE,  0, 360, 0, 320, 280), 100, link1);
+	Link*  link3 = new Link(Joint(REVOLUTE,  0, 360, 0, 320, 180), 75, link2);
+	Brush* brush = new Brush(link3, 320, 105);
 
 	// Set the successor links
 	base->next_link = link1;
@@ -36,6 +36,10 @@ RobotArm::RobotArm()
 	links[2] = link2;
 	links[3] = link3;
 	links[4] = brush;
+   cout << link1->joint.X << " " << link1->joint.Y << endl;// << " " << x1 << " " << y1 << endl;
+   cout << link2->joint.X << " " << link2->joint.Y << endl;// << " " << x1 << " " << y1 << endl;
+   cout << link3->joint.X << " " << link3->joint.Y << endl;// << " " << x1 << " " << y1 << endl;
+   cout << brush->joint.X << " " << brush->joint.Y << endl;// << " " << x1 << " " << y1 << endl;
 }
 
 RobotArm::~RobotArm()
@@ -92,9 +96,9 @@ void RobotArm::moveJoint(Link* link, Motion motion, int amt)
             double rad = (double) deg * ((double)PI/(double)180);
             int nextX = curX + (curX*cos(rad) - curX*sin(rad));
             int nextY = curY + (curY*sin(rad) + curY*cos(rad));
-            cout << "   rad = " << rad << endl;
-            cout << "   cos = " << cos(rad) << endl;
-            cout << "   sin = " << sin(rad) << endl;
+            //cout << "   rad = " << rad << endl;
+            //cout << "   cos = " << cos(rad) << endl;
+            //cout << "   sin = " << sin(rad) << endl;
             link->joint.X = nextX;
             link->joint.Y = nextY;
          }
@@ -123,9 +127,9 @@ void RobotArm::moveJoint(Link* link, Motion motion, int amt)
             double rad = (double) deg * ((double)PI/(double)180);
             int nextX = curX + (curX*cos(rad) - curX*sin(rad));
             int nextY = curY + (curY*sin(rad) + curY*cos(rad));
-            cout << "   rad = " << rad << endl;
-            cout << "   cos = " << cos(rad) << endl;
-            cout << "   sin = " << sin(rad) << endl;
+            //cout << "   rad = " << rad << endl;
+            //cout << "   cos = " << cos(rad) << endl;
+            //cout << "   sin = " << sin(rad) << endl;
             link->joint.X = nextX;
             link->joint.Y = nextY;
          }
