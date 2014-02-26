@@ -76,6 +76,18 @@ void Canvas::Robot(Joint joint[3], Link L, Brush b)
 	}
 }
 
+void Canvas::DrawLinks(Link* link[5])
+{
+	glColor3f(0,0,0);
+	for (int i=0; i<5; i++)
+	{
+		// I dont know why this isnt working
+		std::cout << "x: " << link[i]->joint.X << " y: " << link[i]->joint.Y << std::endl;
+		circle(link[i]->joint.X,link[i]->joint.Y,100);
+		glFlush ( );
+	}
+}
+
 void Canvas::display ( void )
 {
    glClear ( GL_COLOR_BUFFER_BIT );

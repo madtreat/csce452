@@ -16,11 +16,16 @@ if (APPLE)
    # Mac only (for Madison)
    # machine name: maka
    set(CMAKE_PREFIX_PATH /opt/local/share/qt5/5.2.1/clang_64/lib/cmake)
-elseif(${host} == "violeta-VirtualBox")
+elseif(${host} STREQUAL "violeta-VirtualBox")
    message(STATUS "Setting CMAKE_PREFIX_PATH for Violeta")
    # for Violeta
    # machine name: violeta-VirtualBox
    set(CMAKE_PREFIX_PATH /home/violeta/Qt5.2.1/5.2.1/gcc_64/lib/cmake)
+elseif(${host} STREQUAL "ubuntu")
+   message(STATUS "Setting CMAKE_PREFIX_PATH for Matthew")
+   # for Matthew
+   # machine name: ubuntu
+   set(CMAKE_PREFIX_PATH /home/user/Qt5.2.1/5.2.1/gcc/lib/cmake)
 endif()
 
 find_package(Qt5Widgets)

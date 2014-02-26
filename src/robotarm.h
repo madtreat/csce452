@@ -26,12 +26,14 @@ public:
    Link* getLink(int link);
    Link* getBase()  {return links[0];}
    Link* getBrush() {return links[NUM_LINKS+1];}
+   
+   // the size of links is NUM_LINKS + base + brush (hence the +2)
+   Link* links[NUM_LINKS+2];		// <- I moved this out of private so I could use it in window. You can move it back
 
    void moveJoint(Link* link, Motion motion, int amt);
 
-private:
-   // the size of links is NUM_LINKS + base + brush (hence the +2)
-   Link* links[NUM_LINKS+2];
+//private:
+   
 };
 
 #endif

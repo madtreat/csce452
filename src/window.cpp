@@ -2,6 +2,7 @@
 #include "window.h"
 #include "canvas.h"
 #include "canvaswidget.h"
+#include "robotarm.h"
 
 #include <QLabel>
 #include <QGridLayout>
@@ -22,6 +23,14 @@ Window::Window()
    //--------------------------------------------------------//
    canvas       = new Canvas();
    canvasWidget = new CanvasWidget(canvas, this);
+   
+   //------------Added below, could be removed--------
+   // Create RobotArm here so we can call canvas::DrawLinks
+   RobotArm* arm = new RobotArm();
+   
+   // Draw links actually draws joints right now. Or it should. Its not working
+   canvas->DrawLinks(arm->links);
+   //------------------------------------------------------
    
    // Add to main grid layout
    layout->addWidget(canvasWidget, 0, 0);
