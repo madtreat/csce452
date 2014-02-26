@@ -24,7 +24,7 @@ Window::Window()
    // Create RobotArm here so we can call canvas::drawLinks
    RobotArm* arm = new RobotArm();
    canvas        = new Canvas(arm);
-   canvasWidget  = new CanvasWidget(canvas, this);
+   canvasWidget  = new CanvasWidget(canvas, arm, this);
    
    // Add to main grid layout
    layout->addWidget(canvasWidget, 0, 0);
@@ -57,7 +57,7 @@ Window::Window()
    j1Spin->setRange(0, 300);
    j1Spin->setSuffix(" px");
    j1Spin->setWrapping(false); // do not allow the P joint to wrap
-   // TODO: connect
+   connect(j1Spin, SIGNAL(valueChanged(int)), canvasWidget, SLOT(changeJoint1(int)));
    j1Spin->setValue(150);
    j1Layout->addWidget(j1Spin, 0, 1);
 
@@ -79,7 +79,7 @@ Window::Window()
    j2Spin->setRange(0, 359);
    j2Spin->setSuffix(" deg");
    j2Spin->setWrapping(true); // allow the R joint to wrap
-   // TODO: connect
+   connect(j2Spin, SIGNAL(valueChanged(int)), canvasWidget, SLOT(changeJoint2(int)));
    j2Spin->setValue(90);
    j2Layout->addWidget(j2Spin, 0, 1);
 
@@ -101,7 +101,7 @@ Window::Window()
    j3Spin->setRange(0, 359);
    j3Spin->setSuffix(" deg");
    j3Spin->setWrapping(true); // allow the R joint to wrap
-   // TODO: connect
+   connect(j3Spin, SIGNAL(valueChanged(int)), canvasWidget, SLOT(changeJoint3(int)));
    j3Spin->setValue(90);
    j3Layout->addWidget(j3Spin, 0, 1);
    
@@ -117,6 +117,7 @@ Window::Window()
 
    QPushButton* paintButton = new QPushButton("Paint", paintWidget);
    paintButton->setCheckable(true);
+   connect(paintButton, SIGNAL(toggled(bool)), canvasWidget, SLOT(togglePaint(bool)));
    paintLayout->addWidget(paintButton, 0, 0);
 
    controlLayout->addWidget(paintWidget);
