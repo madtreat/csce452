@@ -13,7 +13,7 @@ Implements a specific configuration of the robot arm.
 
 using namespace std;
 
-const int PI = 3.1415926;
+const double PI = 3.1415926;
 
 RobotArm::RobotArm()
 {
@@ -36,10 +36,10 @@ RobotArm::RobotArm()
 	links[2] = link2;
 	links[3] = link3;
 	links[4] = brush;
-   cout << link1->joint.X << " " << link1->joint.Y << endl;// << " " << x1 << " " << y1 << endl;
-   cout << link2->joint.X << " " << link2->joint.Y << endl;// << " " << x1 << " " << y1 << endl;
-   cout << link3->joint.X << " " << link3->joint.Y << endl;// << " " << x1 << " " << y1 << endl;
-   cout << brush->joint.X << " " << brush->joint.Y << endl;// << " " << x1 << " " << y1 << endl;
+   cout << link1->joint.X << " " << link1->joint.Y << endl;
+   cout << link2->joint.X << " " << link2->joint.Y << endl;
+   cout << link3->joint.X << " " << link3->joint.Y << endl;
+   cout << brush->joint.X << " " << brush->joint.Y << endl;
 }
 
 RobotArm::~RobotArm()
@@ -64,10 +64,12 @@ Link* RobotArm::getLink(int link)
 
 void RobotArm::moveJoint(Link* link, Motion motion, int amt)
 {
-	int x_set = 1;
+   // offset for X values to center them on the canvas
+   int OFFSET = 640/2 - 150;
 
 	// get the link's current position
 	Joint joint = link->joint;
+
 	// translate (if prismatic joint) or 
 	//    rotate (if revolute joint)
 	// in the correct direction (motion)
@@ -94,8 +96,10 @@ void RobotArm::moveJoint(Link* link, Motion motion, int amt)
             int curX = link->joint.X;
             int curY = link->joint.Y;
             double rad = (double) deg * ((double)PI/(double)180);
-            int nextX = curX + (curX*cos(rad) - curX*sin(rad));
-            int nextY = curY + (curY*sin(rad) + curY*cos(rad));
+            //int nextX = curX + (curX*cos(rad) - curX*sin(rad));
+            //int nextY = curY + (curY*sin(rad) + curY*cos(rad));
+            int nextX = (curX*cos(rad) - curX*sin(rad));
+            int nextY = (curY*sin(rad) + curY*cos(rad));
             //cout << "   rad = " << rad << endl;
             //cout << "   cos = " << cos(rad) << endl;
             //cout << "   sin = " << sin(rad) << endl;
@@ -125,8 +129,10 @@ void RobotArm::moveJoint(Link* link, Motion motion, int amt)
             int curX = link->joint.X;
             int curY = link->joint.Y;
             double rad = (double) deg * ((double)PI/(double)180);
-            int nextX = curX + (curX*cos(rad) - curX*sin(rad));
-            int nextY = curY + (curY*sin(rad) + curY*cos(rad));
+            //int nextX = curX + (curX*cos(rad) - curX*sin(rad));
+            //int nextY = curY + (curY*sin(rad) + curY*cos(rad));
+            int nextX = (curX*cos(rad) - curX*sin(rad));
+            int nextY = (curY*sin(rad) + curY*cos(rad));
             //cout << "   rad = " << rad << endl;
             //cout << "   cos = " << cos(rad) << endl;
             //cout << "   sin = " << sin(rad) << endl;
@@ -138,24 +144,24 @@ void RobotArm::moveJoint(Link* link, Motion motion, int amt)
       }
 	case LEFT:
 		{
-			joint.X-= x_set;
+			link->joint.X = OFFSET + amt;
 			while( link->next_link != getBrush())
 			{
 				link = link->next_link;
-				link->joint.X-= x_set;
+				link->joint.X = amt;
 			}
-			getBrush()->joint.X-= x_set;
+			getBrush()->joint.X = amt;
 			break;
 		}
 	case RIGHT:
 		{
-			joint.X+= x_set;
+			link->joint.X = OFFSET + amt;
 			while( link->next_link != getBrush())
 			{
 				link = link->next_link;
-				link->joint.X+= x_set;
+				link->joint.X = amt;
 			}
-			getBrush()->joint.X+= x_set;
+			getBrush()->joint.X = amt;
 			break;
 		}
 	}
