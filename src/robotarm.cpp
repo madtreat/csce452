@@ -78,8 +78,8 @@ void RobotArm::moveJoint(Link* link, Motion motion, int amt)
 	case CW:
 		{
          //std::cout << "moving link CW" << std::endl;
-         int deg = -amt;
-			joint.rotation += deg;
+         int deg = amt;
+			joint.rotation = deg;
 			if (joint.rotation >= joint.range_max)
 			{
             // loop back to the beginning
@@ -112,7 +112,7 @@ void RobotArm::moveJoint(Link* link, Motion motion, int amt)
 	case CCW:
 		{
          int deg = amt;
-			joint.rotation += deg;
+			joint.rotation = deg;
 			if (joint.rotation <= joint.range_min)
 			{
             // loop back to the end
@@ -148,7 +148,7 @@ void RobotArm::moveJoint(Link* link, Motion motion, int amt)
 			while( link->next_link != getBrush())
 			{
 				link = link->next_link;
-				link->joint.X = amt;
+				link->joint.X -= abs(amt - link->joint.X);
 			}
 			getBrush()->joint.X = amt;
 			break;
@@ -159,7 +159,7 @@ void RobotArm::moveJoint(Link* link, Motion motion, int amt)
 			while( link->next_link != getBrush())
 			{
 				link = link->next_link;
-				link->joint.X = amt;
+				link->joint.X += abs(amt - link->joint.X);
 			}
 			getBrush()->joint.X = amt;
 			break;
