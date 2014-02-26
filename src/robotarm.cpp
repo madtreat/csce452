@@ -40,13 +40,13 @@ RobotArm::RobotArm()
 
 RobotArm::~RobotArm()
 {
-	for (int i = 0; i < NUM_LINKS + 2; i++)
+	for (int i = 0; i < LENGTH; i++)
 		delete links[i];
 }
 
 Link* RobotArm::getLink(int link)
 {
-	if (link < 0 || link > NUM_LINKS + 1)
+	if (link < 0 || link >= LENGTH)
 		return 0;
 
 	if (link == 0)

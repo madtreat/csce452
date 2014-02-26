@@ -20,13 +20,17 @@ public:
 
    void init();
 
+   void setPainting(bool enabled) {painting = enabled;}
+
    void circle(int x, int y, int radius);
    void drawRobot();
    void drawLinks();
+   void paintCurrentLoc();
    void display();
 
 private:
    RobotArm* robot;
+   bool painting;
 };
 
 #endif

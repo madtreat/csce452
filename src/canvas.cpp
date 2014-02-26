@@ -68,7 +68,7 @@ void Canvas::circle(int x, int y, int radius)
 
 void Canvas::drawRobot()
 {
-	for(int i = 0; i < RobotArm::NUM_LINKS+2; i++ )
+	for(int i = 0; i < RobotArm::LENGTH; i++ )
 	{
       Joint joint = robot->getLink(i)->joint;
 		if(joint.type== BASE_JOINT)// there is no movement 
@@ -95,6 +95,12 @@ void Canvas::drawLinks()
 		circle(link->joint.X, link->joint.Y,20);
 		glFlush ( );
 	}
+}
+
+void Canvas::paintCurrentLoc()
+{
+   Brush* b = static_cast<Brush*>(robot->getLink(RobotArm::LENGTH-1));
+   circle(b->joint.X, b->joint.Y, 5);
 }
 
 void Canvas::display ( void )
@@ -131,5 +137,9 @@ void Canvas::display ( void )
 
    drawLinks();
    drawRobot();
+
+   // if painting is turned on, paint a circle wherever the brush is
+   if (painting)
+      paintCurrentLoc();
 }
 
