@@ -3,15 +3,22 @@
  */
 
 #include "robotarm.h"
+#include "window.h"
 #include "link.h"
 
+#include <QApplication>
 #include <iostream>
+
+using namespace std;
 
 int main(int argc, char* argv[])
 {
-   std::cout << "Starting PaintBot..." << std::endl;
-   RobotArm* arm = new RobotArm();
+   QApplication app(argc, argv);
+   Window w;
+   w.show();
 
-   return 0;
+   cout << "Starting PaintBot..." << endl;
+
+   return app.exec();
 }
 

@@ -1,26 +1,87 @@
-cmake_minimum_required(VERSION 2.8.9)
 project(paintbot)
 
+# Open GL dependencies
+find_package(OpenGL REQUIRED)
+find_package(GLUT REQUIRED)
+include_directories(${OPENGL_INCLUDE_DIR} ${GLUT_INCLUDE_DIR})
+
+# Qt 4 dependencies
+#find_package(Qt4 COMPONENTS QtCore QtGui QtOpenGL REQUIRED)
+
+# Qt 5 dependencies
+site_name(host)
+if (APPLE)
+   message(STATUS "Setting CMAKE_PREFIX_PATH for Madison")
+   message(STATUS "   SITE_NAME = " ${host})
+   # Mac only (for Madison)
+   # machine name: maka
+   set(CMAKE_PREFIX_PATH /opt/local/share/qt5/5.2.1/clang_64/lib/cmake)
+elseif(${host} STREQUAL "violeta-VirtualBox")
+   message(STATUS "Setting CMAKE_PREFIX_PATH for Violeta")
+   # for Violeta
+   # machine name: violeta-VirtualBox
+   set(CMAKE_PREFIX_PATH /home/violeta/Qt5.2.1/5.2.1/gcc_64/lib/cmake)
+elseif(${host} STREQUAL "ubuntu")
+   message(STATUS "Setting CMAKE_PREFIX_PATH for Matthew")
+   # for Matthew
+   # machine name: ubuntu
+   set(CMAKE_PREFIX_PATH /home/user/Qt5.2.1/5.2.1/gcc/lib/cmake)
+endif()
+
+find_package(Qt5Widgets)
+find_package(Qt5Core)
+find_package(Qt5Gui)
+find_package(Qt5OpenGL)
+set(CMAKE_AUTOMOC ON)
+#include(${QT_USE_FILE})
+
+# List of source files
 set(SOURCES
    main.cpp
    base.cpp
    brush.cpp
+   canvas.cpp
+   canvaswidget.cpp
    joint.cpp
    link.cpp
    robotarm.cpp
+   window.cpp
 )
 
+# List of header files used
+# NOTE:  this list EXCLUDES the header files that define Qt subclasses
+#        as they require some processing first.  They should be in HEADERS_MOC.
 set(HEADERS
    base.h
    brush.h
+   canvas.h
    joint.h
    link.h
    robotarm.h
 )
 
-#set(HEADERS_NO_MOC)
+# Necessary for Qt to compile
+set(HEADERS_MOC
+   canvaswidget.h
+   window.h
+)
+#QT4_WRAP_CPP(MOC_SRC ${HEADERS_MOC})
 
-add_executable(paintbot ${SOURCES} ${HEADERS})
-#target_link_libraries(paintbot
-# openGL lib
-#)
+# Create the executable
+add_executable(paintbot ${SOURCES} ${HEADERS} ${MOC_SRC})
+
+# Link to the correct/necessary libraries
+target_link_libraries(paintbot
+   ${QT_LIBRARIES}
+   ${OPENGL_LIBRARIES}
+   ${GLUT_LIBRARY}
+)
+
+# Link proper Qt Modules to the executable
+qt5_use_modules(paintbot
+   Widgets
+   Core
+   Gui
+   OpenGL
+)
+
