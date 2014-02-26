@@ -80,7 +80,7 @@ Window::Window()
    j2Spin->setSuffix(" deg");
    j2Spin->setWrapping(true); // allow the R joint to wrap
    connect(j2Spin, SIGNAL(valueChanged(int)), canvasWidget, SLOT(changeJoint2(int)));
-   j2Spin->setValue(90);
+   j2Spin->setValue(0);
    j2Layout->addWidget(j2Spin, 0, 1);
 
    controlLayout->addWidget(joint2);
@@ -102,7 +102,7 @@ Window::Window()
    j3Spin->setSuffix(" deg");
    j3Spin->setWrapping(true); // allow the R joint to wrap
    connect(j3Spin, SIGNAL(valueChanged(int)), canvasWidget, SLOT(changeJoint3(int)));
-   j3Spin->setValue(90);
+   j3Spin->setValue(0);
    j3Layout->addWidget(j3Spin, 0, 1);
    
    controlLayout->addWidget(joint3);

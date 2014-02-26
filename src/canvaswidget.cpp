@@ -43,7 +43,6 @@ void CanvasWidget::animate()
 void CanvasWidget::changeJoint1(int newVal)
 {
    Motion motion = (newVal < joint1rot) ? LEFT : RIGHT;
-   int amount = abs(newVal - joint1rot);
    robot->moveJoint(robot->getLink(1), motion, newVal);
    
    joint1rot = newVal;
@@ -64,7 +63,7 @@ void CanvasWidget::changeJoint3(int newVal)
 {
    Motion motion = (newVal < joint3rot) ? CW : CCW;
    int amount = abs(newVal - joint3rot);
-   robot->moveJoint(robot->getLink(3), motion, newVal);
+   robot->moveJoint(robot->getLink(3), motion, amount);
    
    joint3rot = newVal;
    printJointLocs();
