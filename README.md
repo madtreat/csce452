@@ -8,9 +8,15 @@ This project requires OpenGL installed on this machine to be run.
    # On Ubuntu
    $ sudo apt-get install libgles2-mesa-dev
 
-This project uses CMake as a build tool.  
+This project uses CMake as a build tool.  (Must be version 2.8.9 or higher)
    # On Ubuntu
    $ sudo apt-get install cmake
+	
+	
+This project uses qt5 for the graphical interface.
+	Download the latest library from http://qt-project.org/downloads
+	Be sure to select the library that includes OpenGL
+	
 
 To build out of source (recommended),
 execute the following steps from the root directory of the project:
@@ -19,6 +25,5 @@ execute the following steps from the root directory of the project:
    $ cmake ..
    $ make
 
-and to run the project:
+and to run the project (from the build directory):
    $ ./src/paintbot
-
