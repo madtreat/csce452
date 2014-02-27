@@ -17,7 +17,9 @@ class CanvasWidget : public QGLWidget
 public:
    CanvasWidget(Canvas* _canvas, RobotArm* _arm, QWidget* _parent = 0);
    ~CanvasWidget();
+   
    QSize sizeHint() const;
+   void printJointLocs() const;
 
 public slots:
    void animate();

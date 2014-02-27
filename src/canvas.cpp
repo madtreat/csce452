@@ -24,12 +24,11 @@
 
 using namespace std;
 
-const int PI = 3.1415926;
+const double PI = 3.1415926;
 
 Canvas::Canvas(RobotArm* _arm)
-//: robot(_arm)
+: robot(_arm)
 {
-   robot = _arm;
    int argc = 1;
    char* argv[argc];
    argv[0] = "paintbot";
@@ -50,15 +49,14 @@ void Canvas::init ( void )
 
 // the paint brush draws circles on the canvas
 // radius is the paint's radius
-void Canvas::circle(int x, int y, int radius)
+void Canvas::drawCircle(int x, int y, int radius)
 {
    //glColor3f(0, 0, 0);
    //glBegin(GL_POLYGON);//TRIANGLE_FAN);
    glBegin(GL_TRIANGLE_FAN);
    glVertex2f(x,y);
    // create points around the mouse point
-   //for(double i=0; i<=360; ++i )
-   for(double i = 0; i <= 360; i ++ )
+   for(int i = 0; i <= 360; i ++ )
    {
       // using the unit circle
       glVertex2f(x+sin(i)*radius, y+cos(i)*radius);
@@ -66,83 +64,103 @@ void Canvas::circle(int x, int y, int radius)
    glEnd();
 }
 
-void Canvas::drawRobot()
+void Canvas::drawLink(int linkNum, double r, double g, double b)
 {
-	for(int i = 0; i < RobotArm::LENGTH; i++ )
-	{
-      Joint joint = robot->getLink(i)->joint;
-		if(joint.type== BASE_JOINT)// there is no movement 
-      {
-         glColor3f(1,0,0);
-         circle(10+((WIDTH-210)/2)-5,HEIGHT-50,6);
-         glColor3f(0,0,1);
-         circle(10+((WIDTH-210)/2)-5,HEIGHT-50,7);
-         // glBegin(GL_POLYGON);
-         // glVertex2f (10+((WIDTH-210)/2)-5,HEIGHT-50);
+   // get the coordinates
+   int x  = robot->getLink(linkNum)->joint.X;
+   int y  = robot->getLink(linkNum)->joint.Y;
+   int x1 = robot->getLink(linkNum+1)->joint.X;
+   int y1 = robot->getLink(linkNum+1)->joint.Y;
+   //cout << x << " " << y << " " << x1 << " " << y1 << endl;
+   /*
+   cout << robot->getLink(1)->joint.X << " " << robot->getLink(1)->joint.Y << endl;
+   cout << robot->getLink(2)->joint.X << " " << robot->getLink(2)->joint.Y << endl;
+   cout << robot->getLink(3)->joint.X << " " << robot->getLink(3)->joint.Y << endl;
+   cout << robot->getLink(4)->joint.X << " " << robot->getLink(4)->joint.Y << endl;
+   // */
 
-         // glEnd();
-      }
-	}
+   // draw the link
+   glColor3f(r,g,b);
+   //glLineWidth(5.0);
+   //glBegin(GL_POLYGON);
+   glBegin(GL_LINES);
+   glVertex2f(x, y);
+   glVertex2f(x1, y1);
+   /*
+   glVertex2f(x-5,y);
+   glVertex2f(x+5,y);
+   glVertex2f(x1+5,y1);
+   glVertex2f(x1-5,y1);
+   // */
+   glEnd();
 }
 
-void Canvas::drawLinks()
+void Canvas::drawJoint(int linkNum, double r, double g, double b)
 {
-   // set color to black
-	glColor3f(0,0,0);
-	for (int i=0; i<RobotArm::NUM_LINKS+2; i++)
-	{
-      Link* link = robot->getLink(i);
-	  //glBegin (GL_POLYGON);
-		//glVertex2f (link->joint.X, link->joint.Y);
-		//glVertex2f (link->next_link->joint.X, link->next_link->joint.Y);
-	  //glEnd();
-		circle(link->joint.X, link->joint.Y,20);
-		glFlush ( );
-	}
+   int x = robot->getLink(linkNum)->joint.X;
+   int y = robot->getLink(linkNum)->joint.Y;
+   glColor3f(r, g, b);
+   drawCircle(x, y, 8);
+}
+
+void Canvas::drawRobot()
+{
+   // this is the line in the bottom for the base and prismatic joint 
+   glLineWidth(6.0);
+   glColor3f(0,0,0); // black prismatic axis/joint 1 - the sliding rail
+   drawCircle ( ((WIDTH)/2)-150, HEIGHT-50, 5);
+   glBegin (GL_LINES); 
+   glVertex2f ( ((WIDTH)/2)-150, HEIGHT-50);
+   glVertex2f ( ((WIDTH)/2)+150, HEIGHT-50);
+   glEnd();
+
+   // draw link 1 and joint
+   drawLink(1, 0, 0, 1);
+   drawJoint(1, 0, 0, 1);
+   
+   // draw link 2 and joint
+   drawLink(2, 1, 0, 0);
+   drawJoint(2, 1, 0, 0);
+
+   // draw link 3 and joint
+   drawLink(3, 0, 1, 0);
+   drawJoint(3, 0, 1, 0);
+   
+   // draw the brush (link 4)
+   drawJoint(4, 1, 1, 0);
 }
 
 void Canvas::paintCurrentLoc()
 {
    Brush* b = static_cast<Brush*>(robot->getLink(RobotArm::LENGTH-1));
-   circle(b->joint.X, b->joint.Y, 5);
+   drawCircle(b->joint.X, b->joint.Y, 5);
 }
 
 void Canvas::display ( void )
 {
    glClear ( GL_COLOR_BUFFER_BIT );
-   // the canvas sheet
 
    // set white canvas
    glColor3f (1,1,1);
    glBegin (GL_POLYGON);
-   glVertex2f (WIDTH-(WIDTH-10),HEIGHT-(HEIGHT-10)); 
-   glVertex2f (WIDTH-(WIDTH-10),HEIGHT-10);
-   glVertex2f (WIDTH-200,HEIGHT-10);
-   glVertex2f (WIDTH-200,HEIGHT-(HEIGHT-10));
+   glVertex2f (10, 10);
+   glVertex2f (10, HEIGHT-10);
+   glVertex2f (WIDTH-10, HEIGHT-10);
+   glVertex2f (WIDTH-10, 10);
    glEnd();
    glColor3f(1.0,0.25,0.0);
 
    glLineWidth(3.0);
    glBegin (GL_LINE_LOOP);
-   glVertex2f (WIDTH-(WIDTH-10),HEIGHT-(HEIGHT-10));
-   glVertex2f (WIDTH-(WIDTH-10),HEIGHT-10);
-   glVertex2f(WIDTH-200,HEIGHT-10);
-   glVertex2f(WIDTH-200,HEIGHT-(HEIGHT-10));
+   glVertex2f (10, 10);
+   glVertex2f (10, HEIGHT-10);
+   glVertex2f (WIDTH-10, HEIGHT-10);
+   glVertex2f (WIDTH-10, 10);
    glEnd();
 
-   // this is the line in the bottom for the prismatic joint 
-   glLineWidth(6.0);
-   glColor3f(0,0,0); // black prismatic axis/joint 1 - the sliding rail
-   circle(10+((WIDTH-210)/2)-150,HEIGHT-50,5);
-   glBegin (GL_LINES); 
-   glVertex2f (10+((WIDTH-210)/2)-150,HEIGHT-50);
-   glVertex2f (10+((WIDTH-210)/2)+150,HEIGHT-50);
-   glEnd(); 
-
-   drawLinks();
    drawRobot();
 
-   // if painting is turned on, paint a circle wherever the brush is
+   // if painting is turned on, paint a drawCircle wherever the brush is
    if (painting)
       paintCurrentLoc();
 }

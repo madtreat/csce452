@@ -10,12 +10,13 @@ enum JointType {
 
 // Pretty much synonymous with Axis
 struct Joint {
-   JointType type;
-   int       range_min;
-   int       range_max;
-   int		 rotation;
-   int		 X;
-   int 		 Y;
+   JointType   type;
+   int         range_min;
+   int         range_max;
+   int		   rotation;
+   int         rot_abs; // rotation from base frame (0)
+   int		   X;
+   int 		   Y;
 
    Joint(JointType _type, int _min, int _max, int _rot=0, int _X=10, int _Y=10);
 };
