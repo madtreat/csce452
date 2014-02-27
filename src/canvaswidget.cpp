@@ -42,6 +42,8 @@ void CanvasWidget::animate()
 
 void CanvasWidget::changeJoint1(int newVal)
 {
+   std::cout << "about to move joint 1" << endl;
+   printJointLocs();
    Motion motion = (newVal < joint1rot) ? LEFT : RIGHT;
    robot->moveJoint(robot->getLink(1), motion, newVal);
    
@@ -53,7 +55,6 @@ void CanvasWidget::changeJoint1(int newVal)
 void CanvasWidget::changeJoint2(int newVal)
 {
    Motion motion = (newVal < joint2rot) ? CW : CCW;
-   int amount = abs(newVal - joint2rot);
    robot->moveJoint(robot->getLink(2), motion, newVal);
    
    joint2rot = newVal;
@@ -64,8 +65,7 @@ void CanvasWidget::changeJoint2(int newVal)
 void CanvasWidget::changeJoint3(int newVal)
 {
    Motion motion = (newVal < joint3rot) ? CW : CCW;
-   int amount = abs(newVal - joint3rot);
-   robot->moveJoint(robot->getLink(3), motion, amount);
+   robot->moveJoint(robot->getLink(3), motion, newVal);
    
    joint3rot = newVal;
    std::cout << "joint 3 changing" << std::endl;

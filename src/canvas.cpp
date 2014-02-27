@@ -27,9 +27,8 @@ using namespace std;
 const double PI = 3.1415926;
 
 Canvas::Canvas(RobotArm* _arm)
-//: robot(_arm)
+: robot(_arm)
 {
-   robot = _arm;
    int argc = 1;
    char* argv[argc];
    argv[0] = "paintbot";
