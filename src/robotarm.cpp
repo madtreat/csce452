@@ -8,7 +8,7 @@
 #include "base.h"
 #include "brush.h"
 
-#include <math.h>
+#include <cmath>
 #include <iostream>
 
 using namespace std;
@@ -97,6 +97,9 @@ void RobotArm::moveJoint(Link* link, Motion motion, int amt)
          if (newrot >= 360 || newrot < 0)
             newrot %= 360;
          link->joint.rot_abs = newrot;
+			cout << "Link: " << link->length << " -- ";
+			cout << "rot_abs: " << link->joint.rot_abs << " - ";
+			cout << "rot: " << link->joint.rotation << endl;
       }
       else
       {
@@ -110,6 +113,7 @@ void RobotArm::moveJoint(Link* link, Motion motion, int amt)
       //while ((link = link->next_link) != 0)
       while (link->next_link != 0)
       {
+			// LINK IS NOW NEXT LINK IN CHAIN	--
          link = link->next_link;
          //link->joint.rotation += link->prev_link->joint.rot_abs;
 
@@ -117,22 +121,20 @@ void RobotArm::moveJoint(Link* link, Motion motion, int amt)
          if (newrot >= 360 || newrot < 0)
             newrot %= 360;
          link->joint.rot_abs = newrot;
+			cout << "NextLink: " << link->length << " -- ";
+			cout << "rot_abs: " << link->joint.rot_abs << " - ";
+			cout << "rot: " << link->joint.rotation << endl;
 
          int curX = link->joint.X;
          int curY = link->joint.Y;
-         int len  = link->length;
+         int len  = link->prev_link->length;
 
          //double rad = (double) degDiff * ((double)PI/(double)180);
-         double rad = (double) link->joint.rot_abs * ((double)PI/(double)180);
+         double rad = (double) link->prev_link->joint.rot_abs * ((double)PI/(double)180);
 
          //int nextX = curX + (curX*cos(rad) - curX*sin(rad));
          //int nextY = curY + (curY*sin(rad) + curY*cos(rad));
-         if (len == 0 || link->joint.type == BASE_JOINT)
-         {
-            cout << "base joint" << endl;
-            len = link->prev_link->length;
-         }
-
+			
          int nextX = frameX - ( (len)*cos(rad) );// - ( (len)*sin(rad) );
          int nextY = frameY - ( (len)*sin(rad) );// + ( (len)*cos(rad) );
 
