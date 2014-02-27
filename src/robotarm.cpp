@@ -73,9 +73,9 @@ void RobotArm::moveJoint(Link* link, Motion motion, int amt)
    // translate (if prismatic joint) or 
    //    rotate (if revolute joint)
    // in the correct direction (motion)
-   if (motion == CW || motion == CCW)
+   if (motion == CW || motion == CCW)// either link 2 or 3 
    {
-      int deg = amt;
+      int deg = amt; //amt the value in button 
 
       // set this link's rotation to the new value
       link->joint.rotation = deg;
@@ -91,7 +91,7 @@ void RobotArm::moveJoint(Link* link, Motion motion, int amt)
       }
 
       // update absolute rotation
-      if (link->prev_link)
+      if (link->prev_link)  // usually for link 2 and 3 case 
       {
          int newrot = link->prev_link->joint.rot_abs + link->joint.rotation;
          if (newrot >= 360 || newrot < 0)
