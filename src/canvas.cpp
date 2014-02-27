@@ -21,12 +21,13 @@
 #include <stdio.h>
 #include <string.h>
 #include <iostream>
+#include <vector>
 
 using namespace std;
 
 const double PI = 3.1415926;
 
-Canvas::Canvas(RobotArm* _arm)
+   Canvas::Canvas(RobotArm* _arm)
 : robot(_arm)
 {
    int argc = 1;
@@ -57,7 +58,7 @@ void Canvas::drawCircle(int x, int y, int radius)
    glVertex2f(x,y);
    // create points around the mouse point
    for(int i=0; i<=360; ++i )
-   //for(double i = 0; i <= 2*PI; i += (double) PI/ (double) 36 )
+      //for(double i = 0; i <= 2*PI; i += (double) PI/ (double) 36 )
    {
       // useing the unit drawCircle
       glVertex2f(x+sin(i)*radius, y+cos(i)*radius);
@@ -74,10 +75,10 @@ void Canvas::drawLink(int linkNum, double r, double g, double b)
    int y1 = robot->getLink(linkNum+1)->joint.Y;
    //cout << x << " " << y << " " << x1 << " " << y1 << endl;
    /*
-   cout << robot->getLink(1)->joint.X << " " << robot->getLink(1)->joint.Y << endl;
-   cout << robot->getLink(2)->joint.X << " " << robot->getLink(2)->joint.Y << endl;
-   cout << robot->getLink(3)->joint.X << " " << robot->getLink(3)->joint.Y << endl;
-   cout << robot->getLink(4)->joint.X << " " << robot->getLink(4)->joint.Y << endl;
+      cout << robot->getLink(1)->joint.X << " " << robot->getLink(1)->joint.Y << endl;
+      cout << robot->getLink(2)->joint.X << " " << robot->getLink(2)->joint.Y << endl;
+      cout << robot->getLink(3)->joint.X << " " << robot->getLink(3)->joint.Y << endl;
+      cout << robot->getLink(4)->joint.X << " " << robot->getLink(4)->joint.Y << endl;
    // */
 
    // draw the link
@@ -88,10 +89,10 @@ void Canvas::drawLink(int linkNum, double r, double g, double b)
    glVertex2f(x, y);
    glVertex2f(x1, y1);
    /*
-   glVertex2f(x-5,y);
-   glVertex2f(x+5,y);
-   glVertex2f(x1+5,y1);
-   glVertex2f(x1-5,y1);
+      glVertex2f(x-5,y);
+      glVertex2f(x+5,y);
+      glVertex2f(x1+5,y1);
+      glVertex2f(x1-5,y1);
    // */
    glEnd();
 }
@@ -118,7 +119,7 @@ void Canvas::drawRobot()
    // draw link 1 and joint
    drawLink(1, 0, 0, 1);
    drawJoint(1, 0, 0, 1);
-   
+
    // draw link 2 and joint
    drawLink(2, 1, 0, 0);
    drawJoint(2, 1, 0, 0);
@@ -126,17 +127,29 @@ void Canvas::drawRobot()
    // draw link 3 and joint
    drawLink(3, 0, 1, 0);
    drawJoint(3, 0, 1, 0);
-   
+
    // draw the brush (link 4)
    drawJoint(4, 1, 1, 0);
 }
 
 void Canvas::paintCurrentLoc()
 {
+
    Brush* b = static_cast<Brush*>(robot->getLink(RobotArm::LENGTH-1));
-   drawCircle(b->joint.X, b->joint.Y, 5);
+   glColor3f(1,0,0);
+   //  drawCircle(b->joint.X, b->joint.Y, 5);
+   paintspots.push_back(PaintSpots(b->joint.X,b->joint.Y));
 }
 
+void Canvas::drawPaint()
+{
+   for(int i= 0; i<paintspots.size(); i++ )
+   {
+      glColor3f(0,0,0);
+      drawCircle(paintspots.at(i).X, paintspots.at(i).Y, 5);
+   }
+
+}
 void Canvas::display ( void )
 {
    glClear ( GL_COLOR_BUFFER_BIT );
@@ -164,5 +177,7 @@ void Canvas::display ( void )
    // if painting is turned on, paint a drawCircle wherever the brush is
    if (painting)
       paintCurrentLoc();
+        drawPaint();
+
 }
 
