@@ -83,11 +83,17 @@ void Canvas::drawLink(int linkNum, double r, double g, double b)
 
    // draw the link
    glColor3f(r,g,b);
-   glBegin(GL_POLYGON);
+   //glLineWidth(5.0);
+   //glBegin(GL_POLYGON);
+   glBegin(GL_LINES);
+   glVertex2f(x, y);
+   glVertex2f(x1, y1);
+   /*
    glVertex2f(x-5,y);
    glVertex2f(x+5,y);
    glVertex2f(x1+5,y1);
    glVertex2f(x1-5,y1);
+   // */
    glEnd();
 }
 

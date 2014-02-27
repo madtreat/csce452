@@ -46,6 +46,7 @@ void CanvasWidget::changeJoint1(int newVal)
    robot->moveJoint(robot->getLink(1), motion, newVal);
    
    joint1rot = newVal;
+   std::cout << "joint 1 changing" << std::endl;
    printJointLocs();
 }
 
@@ -56,6 +57,7 @@ void CanvasWidget::changeJoint2(int newVal)
    robot->moveJoint(robot->getLink(2), motion, newVal);
    
    joint2rot = newVal;
+   std::cout << "joint 2 changing" << std::endl;
    printJointLocs();
 }
 
@@ -66,6 +68,7 @@ void CanvasWidget::changeJoint3(int newVal)
    robot->moveJoint(robot->getLink(3), motion, amount);
    
    joint3rot = newVal;
+   std::cout << "joint 3 changing" << std::endl;
    printJointLocs();
 }
 

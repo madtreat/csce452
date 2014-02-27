@@ -79,34 +79,75 @@ void RobotArm::moveJoint(Link* link, Motion motion, int amt)
       else //motion == CCW
          degDiff = -abs(deg - link->joint.rotation);
 
+      //*
       // set this link's rotation to the new value
       link->joint.rotation = deg;
-      if (link->joint.rotation <= link->joint.range_min)
+      if (link->joint.rotation < link->joint.range_min)
       {
          // loop back to the end
          link->joint.rotation = link->joint.range_max;//joint.range_min;
       }
-      else if (link->joint.rotation >= link->joint.range_max)
+      else if (link->joint.rotation > link->joint.range_max)
       {
          // loop back to the beginning
          link->joint.rotation = link->joint.range_min;
       }
 
-      // update next link's position based on the current frame's X and Y
-      int frameX = link->joint.X;
-      int frameY = link->joint.Y;
-      int linkLen = link->length;
-      while ((link = link->next_link) != 0)
+      // update absolute rotation
+      if (link->prev_link)
       {
+         int newrot = link->prev_link->joint.rot_abs + link->joint.rotation;
+         if (newrot >= 360 || newrot < 0)
+            newrot %= 360;
+         link->joint.rot_abs = newrot;
+      }
+      else
+      {
+         link->joint.rot_abs = link->joint.rotation;
+      }
+      // */
+      
+      // update next link's position based on the current frame's X and Y
+      int frameX   = link->joint.X;
+      int frameY   = link->joint.Y;
+      int frameRot = link->joint.rotation;
+      int linkLen  = link->length;
+
+      //while ((link = link->next_link) != 0)
+      while (link->next_link != 0)
+      {
+         link = link->next_link;
+         //link->joint.rotation += link->prev_link->joint.rot_abs;
+
+         int newrot = link->prev_link->joint.rot_abs + link->joint.rotation;
+         if (newrot >= 360 || newrot < 0)
+            newrot %= 360;
+         link->joint.rot_abs = newrot;
+
          //cout << "   Link len = " << link->length << endl;
          int curX = link->joint.X;
          int curY = link->joint.Y;
-         double rad = (double) degDiff * ((double)PI/(double)180);
+         int len  = link->length;
+
+         int nextX = 0;
+         int nextY = 0;
+         //double rad = (double) degDiff * ((double)PI/(double)180);
+         double rad = (double) link->joint.rot_abs * ((double)PI/(double)180);
+
          //int nextX = curX + (curX*cos(rad) - curX*sin(rad));
          //int nextY = curY + (curY*sin(rad) + curY*cos(rad));
-         int nextX = frameX + ( (curX-frameX)*cos(rad) ) - ( (curY-frameY)*sin(rad) );
-         int nextY = frameY + ( (curX-frameX)*sin(rad) ) + ( (curY-frameY)*cos(rad) );
-         //cout << "   rad = " << rad << endl;
+         if (len == 0)
+         {
+            nextX = frameX + ( (curX-frameX)*cos(rad) ) - ( (curY-frameY)*sin(rad) );
+            nextY = frameY + ( (curX-frameX)*sin(rad) ) + ( (curY-frameY)*cos(rad) );
+         }
+         else
+         {
+            nextX = frameX + ( (len)*cos(rad) ) - ( (len)*sin(rad) );
+            nextY = frameY + ( (len)*sin(rad) ) + ( (len)*cos(rad) );
+         }
+
+         cout << "   deg = " << deg << ", rad = " << rad << " for link len = " << len << endl;
          //cout << "   cos = " << cos(rad) << endl;
          //cout << "   sin = " << sin(rad) << endl;
          link->joint.X = nextX;
