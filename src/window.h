@@ -18,7 +18,7 @@ class Window : public QWidget
 
 public:
    // sizes for the control panel widgets
-   static const int CONTROL_WIDTH = 200;
+   static const int CONTROL_WIDTH = 230;
    static const int JOINT_HEIGHT  = 30;
 
    Window();
@@ -31,6 +31,8 @@ public:
 
 public slots:
    void togglePaintText(bool);
+   void toggleJointControlsVisible(bool);
+   void toggleWorldControlsVisible(bool);
 
 private:
    RobotArm*      arm;
@@ -41,8 +43,13 @@ private:
 
    QGridLayout*   layout;
    QWidget*       controlPanel;
+   QWidget*       jointControls;
+   QWidget*       worldControls;
+
    QVBoxLayout*   controlLayout;
    QPushButton*   paintButton;
+   QPushButton*   jointButton;
+   QPushButton*   worldButton;
    
    void initJointControls();
    void initWorldControls();

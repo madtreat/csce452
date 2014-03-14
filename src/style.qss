@@ -6,6 +6,11 @@ QWidget {
    border-color:     gray;
 }
 
+QWidget#container {
+   border-style:     none;
+}
+/**/
+
 QWidget#joint1 {
    background-color: red;
 }
@@ -41,8 +46,14 @@ QPushButton {
 }
 
 QPushButton:checked {
-   background-color: rgb(150, 150, 0);
+   background-color: rgb(150, 150, 150);
    color:            black;
+   border-style:     inset;
+}
+
+QPushBUtton#controls:checked {
+   /*background-color: gray;*/
+   color:            green;
    border-style:     inset;
 }
 
@@ -50,9 +61,6 @@ QSpinBox {
    background-color: white;
    color:            black;
    font:             14px;
-}
-
-QSpinBox::up-arrow, QSpinBox::down-arrow {
 }
 
 QSpinBox::up-button, QSpinBox::down-button {

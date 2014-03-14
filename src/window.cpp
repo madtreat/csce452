@@ -13,6 +13,7 @@
 #include <QPushButton>
 #include <QFile>
 #include <QApplication>
+#include <QGroupBox>
 
 Window::Window()
 : QWidget()
@@ -33,6 +34,7 @@ Window::Window()
    //--------------------------------------------------------//
    layout->addWidget(controlPanel, 0, 1);
 
+   // Start animating
    QTimer* timer = new QTimer(this);
    connect(timer, SIGNAL(timeout()), canvasWidget, SLOT(animate()));
    timer->start();
@@ -47,20 +49,17 @@ Window::~Window()
 
 void Window::initStyles()
 {
-   //QFile file("../src/styles.qss");
    QFile file(":/style");
    file.open(QFile::ReadOnly);
    
    controlPanelStyle = QLatin1String(file.readAll());
-   qDebug() << "STYLE READ:";
-   qDebug() << controlPanelStyle;
 }
 
+//--------------------------------------------------------//
+// Create the canvas and its container widget
+//--------------------------------------------------------//
 void Window::initCanvas()
 {
-   //--------------------------------------------------------//
-   // Create the canvas and its container widget
-   //--------------------------------------------------------//
    // Create RobotArm here so we can call canvas::drawLinks
    arm          = new RobotArm();
    canvas       = new Canvas(arm);
@@ -79,11 +78,11 @@ void Window::initLayout()
    layout->addWidget(canvasWidget, 0, 0);
 }
 
+//--------------------------------------------------------//
+// Create the control panel layout and widgets
+//--------------------------------------------------------//
 void Window::initControlPanel()
 {
-   //--------------------------------------------------------//
-   // Create the control panel layout and widgets
-   //--------------------------------------------------------//
    QSizePolicy policy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
    controlPanel  = new QWidget(this);
@@ -100,40 +99,66 @@ void Window::initControlPanel()
 
 void Window::initJointControls()
 {
-   QLabel* label = new QLabel("Joint Mode", this);
-   label->setAlignment(Qt::AlignHCenter);
+   QWidget* jointPanel = new QWidget(this);
+
+   jointControls = new QWidget(this);
+   jointControls->setObjectName("container");
 
    QWidget* joint1 = createJointControl(1, Qt::blue);
    QWidget* joint2 = createJointControl(2, Qt::red);
    QWidget* joint3 = createJointControl(3, Qt::green);
 
-   QWidget* jointControls = new QWidget(this);
-
    QVBoxLayout* jointLayout = new QVBoxLayout(jointControls);
-   jointLayout->addWidget(label);
+   jointLayout->setContentsMargins(0, 0, 0, 0);
    jointLayout->addWidget(joint1);
    jointLayout->addWidget(joint2);
    jointLayout->addWidget(joint3);
-   controlLayout->addWidget(jointControls);
+
+   QString label = "Joint Mode";
+   jointButton = new QPushButton(label, this);
+   jointButton->setObjectName("controls");
+   jointButton->setCheckable(true);
+   connect(jointButton, SIGNAL(toggled(bool)),
+           this,        SLOT  (toggleJointControlsVisible(bool)));
+   jointButton->setChecked(true);
+
+   QVBoxLayout* panelLayout = new QVBoxLayout(jointPanel);
+   panelLayout->setContentsMargins(5, 5, 5, 5);
+   panelLayout->addWidget(jointButton);
+   panelLayout->addWidget(jointControls);
+   controlLayout->addWidget(jointPanel);
 }
 
 void Window::initWorldControls()
 {
-   QLabel* label = new QLabel("World Mode", this);
-   label->setAlignment(Qt::AlignHCenter);
+   QWidget* worldPanel = new QWidget(this);
+
+   worldControls = new QWidget(this);
+   worldControls->setObjectName("container");
 
    QWidget* joint1 = createWorldControl(1, Qt::blue);
    QWidget* joint2 = createWorldControl(2, Qt::red);
    QWidget* joint3 = createWorldControl(3, Qt::green);
 
-   QWidget* worldControls = new QWidget(this);
-
    QVBoxLayout* worldLayout = new QVBoxLayout(worldControls);
-   worldLayout->addWidget(label);
+   worldLayout->setContentsMargins(0, 0, 0, 0);
    worldLayout->addWidget(joint1);
    worldLayout->addWidget(joint2);
    worldLayout->addWidget(joint3);
-   controlLayout->addWidget(worldControls);
+
+   QString label = "World Mode";
+   worldButton = new QPushButton(label, this);
+   worldButton->setObjectName("controls");
+   worldButton->setCheckable(true);
+   connect(worldButton, SIGNAL(toggled(bool)),
+           this,        SLOT  (toggleWorldControlsVisible(bool)));
+   worldButton->setChecked(true);
+
+   QVBoxLayout* panelLayout = new QVBoxLayout(worldPanel);
+   panelLayout->setContentsMargins(5, 5, 5, 5);
+   panelLayout->addWidget(worldButton);
+   panelLayout->addWidget(worldControls);
+   controlLayout->addWidget(worldPanel);
 }
 
 void Window::initBrushControls()
@@ -151,29 +176,40 @@ void Window::togglePaintText(bool enabled)
       paintButton->setText("Paint");
 }
 
-QWidget* Window::createJointControl
-(
-   int    id,     // which joint is this? 
-   QColor color   // the color of this joint
-)
+void Window::toggleJointControlsVisible(bool enabled)
+{
+   jointControls->setVisible(enabled);
+   if (enabled)
+      jointButton->setText("Joint Mode");
+   else
+      jointButton->setText("Show Joint Mode");
+}
+
+void Window::toggleWorldControlsVisible(bool enabled)
+{
+   worldControls->setVisible(enabled);
+   if (enabled)
+      worldButton->setText("World Mode");
+   else
+      worldButton->setText("Show World Mode");
+}
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - -//
+// Joint Controls: widget { gridlayout { label, spinbox } }
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - -//
+QWidget* Window::createJointControl(int    id, QColor color)
 {
    // This joint
    Joint j        = arm->getLink(id)->joint;
    QString name   = "joint" + QString::number(id);
    QString label  = "Joint " + QString::number(id);
 
-   // - - - - - - - - - - - - - - - - - - - - - - - - - - - -//
-   // Joint Controls: widget { gridlayout { label, spinbox } }
-   // - - - - - - - - - - - - - - - - - - - - - - - - - - - -//
    QWidget*     joint   = new QWidget(this);
-   QGridLayout* jLayout = new QGridLayout(joint);
    joint->setObjectName(name);
    joint->setMinimumHeight(JOINT_HEIGHT);
-   jLayout->setContentsMargins(5, 5, 5, 5);
 
    QLabel*      jLabel  = new QLabel(label, joint);
    jLabel->setAlignment(Qt::AlignCenter);
-   jLayout->addWidget(jLabel, 0, 0);
 
    QSpinBox*    jSpin   = new QSpinBox(joint);
    jSpin->setObjectName(name);
@@ -207,76 +243,96 @@ QWidget* Window::createJointControl
    
    // set the default value afterward connecting so it will update the canvas
    jSpin->setValue(j.rotation);
-   jLayout->addWidget(jSpin, 0, 1);
+
+   QGridLayout* jLayout = new QGridLayout(joint);
+   jLayout->setContentsMargins(5, 5, 5, 5);
+   jLayout->addWidget(jLabel, 0, 0);
+   jLayout->addWidget(jSpin, 0, 1, 1, 2);
 
    return joint;
 }
 
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - -//
+// World Controls: widget { gridlayout { label, spinbox, spinbox } }
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - -//
 QWidget* Window::createWorldControl(int id, QColor color)
 {
    // This joint
    Joint j = arm->getLink(id)->joint;
-   QString name   = "joint" + QString::number(id);
-   QString label  = "Joint " + QString::number(id);
+   QString name  = "joint" + QString::number(id);
+   QString label = "Joint " + QString::number(id);
 
-   // - - - - - - - - - - - - - - - - - - - - - - - - - - - -//
-   // Joint Controls: widget { gridlayout { label, spinbox } }
-   // - - - - - - - - - - - - - - - - - - - - - - - - - - - -//
-   QWidget* joint       = new QWidget(this);
-   QGridLayout* jLayout = new QGridLayout(joint);
-
+   //QGroupBox* joint = new QGroupBox(label, this);
+   QWidget* joint = new QWidget(this);
    joint->setObjectName(name);
    joint->setMinimumHeight(JOINT_HEIGHT);
-   jLayout->setContentsMargins(5, 5, 5, 5);
 
-   QLabel*      jLabel  = new QLabel(label, joint);
+   QLabel* jLabel = new QLabel(label, joint);
    jLabel->setAlignment(Qt::AlignCenter);
-   jLayout->addWidget(jLabel, 0, 0);
+   QLabel* xLabel = new QLabel(tr("X="), joint);
+   xLabel->setAlignment(Qt::AlignCenter);
+   QLabel* yLabel = new QLabel(tr("Y="), joint);
+   yLabel->setAlignment(Qt::AlignCenter);
 
-   QSpinBox*    jSpin   = new QSpinBox(joint);
-   jSpin->setObjectName(name);
-   jSpin->setMinimumHeight(JOINT_HEIGHT);
-   jSpin->setRange(j.range_min, j.range_max);
-
-   if (j.type == REVOLUTE)
-      jSpin->setSuffix(" deg");
-   else
-      jSpin->setSuffix(" px");
-
+   QSpinBox* jSpinX = new QSpinBox(joint);
+   jSpinX->setObjectName(name);
+   jSpinX->setMinimumHeight(JOINT_HEIGHT);
+   jSpinX->setRange(j.range_min, j.range_max);
    // allow the joint to wrap if revolute
-   jSpin->setWrapping(j.type == REVOLUTE);
+   jSpinX->setWrapping(j.type == REVOLUTE);
+
+   QSpinBox* jSpinY = new QSpinBox(joint);
+   jSpinY->setObjectName(name);
+   jSpinY->setMinimumHeight(JOINT_HEIGHT);
+   jSpinY->setRange(j.range_min, j.range_max);
+   // allow the joint to wrap if revolute
+   jSpinY->setWrapping(j.type == REVOLUTE);
 
    // Connect the signal to the joint's slot
    if (id == 1)
    {
-      connect( jSpin,         SIGNAL(valueChanged(int)),
-               canvasWidget,  SLOT  (changeJoint1(int)));
+      connect( jSpinX,        SIGNAL(valueChanged(int)),
+               canvasWidget,  SLOT  (changeJoint1LocX(int)));
+      connect( jSpinY,        SIGNAL(valueChanged(int)),
+               canvasWidget,  SLOT  (changeJoint1LocY(int)));
    }
    else if (id == 2)
    {
-      connect( jSpin,         SIGNAL(valueChanged(int)),
-               canvasWidget,  SLOT  (changeJoint2(int)));
+      connect( jSpinX,        SIGNAL(valueChanged(int)),
+               canvasWidget,  SLOT  (changeJoint2LocX(int)));
+      connect( jSpinY,        SIGNAL(valueChanged(int)),
+               canvasWidget,  SLOT  (changeJoint2LocY(int)));
    }
    else if (id == 3)
    {
-      connect( jSpin,         SIGNAL(valueChanged(int)),
-               canvasWidget,  SLOT  (changeJoint3(int)));
+      connect( jSpinX,        SIGNAL(valueChanged(int)),
+               canvasWidget,  SLOT  (changeJoint3LocX(int)));
+      connect( jSpinY,        SIGNAL(valueChanged(int)),
+               canvasWidget,  SLOT  (changeJoint3LocY(int)));
    }
    
    // set the default value afterward connecting so it will update the canvas
-   jSpin->setValue(j.rotation);
-   jLayout->addWidget(jSpin, 0, 1);
+   jSpinX->setValue(j.X);
+   jSpinY->setValue(j.Y);
+
+   QGridLayout* jLayout = new QGridLayout(joint);
+   jLayout->setContentsMargins(5, 5, 5, 5);
+   jLayout->addWidget(jLabel, 0, 0, 1, 3);
+   jLayout->addWidget(xLabel, 1, 0);
+   jLayout->addWidget(jSpinX, 1, 1, 1, 2);
+   jLayout->addWidget(yLabel, 2, 0);
+   jLayout->addWidget(jSpinY, 2, 1, 1, 2);
 
    return joint;
 }
 
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - -//
+// Add the brush activator button to the control panel
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - -//
 QWidget* Window::createBrushControl()
 {
    QString name = "brush";
 
-   // - - - - - - - - - - - - - - - - - - - - - - - - - - - -//
-   // Add the brush activator button to the control panel
-   // - - - - - - - - - - - - - - - - - - - - - - - - - - - -//
    QWidget*     paintWidget = new QWidget(this);
    QGridLayout* paintLayout = new QGridLayout(paintWidget);
 

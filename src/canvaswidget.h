@@ -26,6 +26,12 @@ public slots:
    void changeJoint1(int);
    void changeJoint2(int);
    void changeJoint3(int);
+   void changeJoint1LocX(int);
+   void changeJoint1LocY(int);
+   void changeJoint2LocX(int);
+   void changeJoint2LocY(int);
+   void changeJoint3LocX(int);
+   void changeJoint3LocY(int);
    void togglePaint(bool);
 
 protected:
