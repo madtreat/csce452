@@ -51,12 +51,6 @@ QPushButton:checked {
    border-style:     inset;
 }
 
-QPushBUtton#controls:checked {
-   /*background-color: gray;*/
-   color:            green;
-   border-style:     inset;
-}
-
 QSpinBox {
    background-color: white;
    color:            black;

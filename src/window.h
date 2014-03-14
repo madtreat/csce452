@@ -18,7 +18,7 @@ class Window : public QWidget
 
 public:
    // sizes for the control panel widgets
-   static const int CONTROL_WIDTH = 230;
+   static const int CONTROL_WIDTH = 160;
    static const int JOINT_HEIGHT  = 30;
 
    Window();
@@ -27,7 +27,7 @@ public:
    void initStyles();
    void initCanvas();
    void initLayout();
-   void initControlPanel();
+   QWidget* initControlPanel();
 
 public slots:
    void togglePaintText(bool);
@@ -46,14 +46,14 @@ private:
    QWidget*       jointControls;
    QWidget*       worldControls;
 
-   QVBoxLayout*   controlLayout;
+   QGridLayout*   controlLayout;
    QPushButton*   paintButton;
    QPushButton*   jointButton;
    QPushButton*   worldButton;
    
-   void initJointControls();
-   void initWorldControls();
-   void initBrushControls();
+   QWidget* initJointControls();
+   QWidget* initWorldControls();
+   QWidget* initBrushControls();
 
    QString  getControlStyle(QColor widget);
 

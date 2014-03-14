@@ -14,6 +14,7 @@
 #include <QFile>
 #include <QApplication>
 #include <QGroupBox>
+#include <QSpacerItem>
 
 Window::Window()
 : QWidget()
@@ -21,13 +22,18 @@ Window::Window()
    initStyles();
    initCanvas();
    initLayout();
-   initControlPanel();
+   QWidget* controlLabel = initControlPanel();
 
-   initJointControls();
-   controlLayout->addSpacing(15);
-   initWorldControls();
-   controlLayout->addSpacing(15);
-   initBrushControls();
+   QWidget* jointPanel = initJointControls();
+   QWidget* worldPanel = initWorldControls();
+   QWidget* brushPanel = initBrushControls();
+
+   controlLayout->addWidget(controlLabel, 0, 0, 1, 2);
+   controlLayout->addWidget(brushPanel,   1, 0, 1, 2);
+   controlLayout->addWidget(jointPanel,   2, 0, 1, 1);
+   controlLayout->addWidget(worldPanel,   2, 1, 1, 1);
+   //controlLayout->addSpacing(15);
+   //controlLayout->addSpacing(15);
 
    //--------------------------------------------------------//
    // Add control panel to main grid layout
@@ -81,25 +87,28 @@ void Window::initLayout()
 //--------------------------------------------------------//
 // Create the control panel layout and widgets
 //--------------------------------------------------------//
-void Window::initControlPanel()
+QWidget* Window::initControlPanel()
 {
    QSizePolicy policy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
    controlPanel  = new QWidget(this);
-   controlPanel->setMinimumWidth(CONTROL_WIDTH);
+   controlPanel->setMinimumWidth(2*CONTROL_WIDTH+24);
    controlPanel->setSizePolicy(policy);
    controlPanel->setStyleSheet(controlPanelStyle);
-   controlLayout = new QVBoxLayout(controlPanel);
+
+   controlLayout = new QGridLayout(controlPanel);
 
    // Control Panel Label
-   QLabel*      controlLabel = new QLabel(tr("Controls"));
+   QLabel* controlLabel = new QLabel(tr("Controls"));
    controlLabel->setAlignment(Qt::AlignHCenter);
-   controlLayout->addWidget(controlLabel);
+   return controlLabel;
 }
 
-void Window::initJointControls()
+QWidget* Window::initJointControls()
 {
    QWidget* jointPanel = new QWidget(this);
+   jointPanel->setMinimumWidth(CONTROL_WIDTH);
+   jointPanel->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred));//Fixed));
 
    jointControls = new QWidget(this);
    jointControls->setObjectName("container");
@@ -126,12 +135,15 @@ void Window::initJointControls()
    panelLayout->setContentsMargins(5, 5, 5, 5);
    panelLayout->addWidget(jointButton);
    panelLayout->addWidget(jointControls);
-   controlLayout->addWidget(jointPanel);
+
+   return jointPanel;
 }
 
-void Window::initWorldControls()
+QWidget* Window::initWorldControls()
 {
    QWidget* worldPanel = new QWidget(this);
+   worldPanel->setMinimumWidth(CONTROL_WIDTH);
+   worldPanel->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred));//Fixed));
 
    worldControls = new QWidget(this);
    worldControls->setObjectName("container");
@@ -158,14 +170,15 @@ void Window::initWorldControls()
    panelLayout->setContentsMargins(5, 5, 5, 5);
    panelLayout->addWidget(worldButton);
    panelLayout->addWidget(worldControls);
-   controlLayout->addWidget(worldPanel);
+
+   return worldPanel;
 }
 
-void Window::initBrushControls()
+QWidget* Window::initBrushControls()
 {
-   QWidget* brush = createBrushControl();
+   QWidget* brushPanel = createBrushControl();
 
-   controlLayout->addWidget(brush);
+   return brushPanel;
 }
 
 void Window::togglePaintText(bool enabled)
@@ -179,19 +192,23 @@ void Window::togglePaintText(bool enabled)
 void Window::toggleJointControlsVisible(bool enabled)
 {
    jointControls->setVisible(enabled);
+   /*
    if (enabled)
       jointButton->setText("Joint Mode");
    else
       jointButton->setText("Show Joint Mode");
+   // */
 }
 
 void Window::toggleWorldControlsVisible(bool enabled)
 {
    worldControls->setVisible(enabled);
+   /*
    if (enabled)
       worldButton->setText("World Mode");
    else
       worldButton->setText("Show World Mode");
+   // */
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - -//
@@ -246,8 +263,9 @@ QWidget* Window::createJointControl(int    id, QColor color)
 
    QGridLayout* jLayout = new QGridLayout(joint);
    jLayout->setContentsMargins(5, 5, 5, 5);
-   jLayout->addWidget(jLabel, 0, 0);
-   jLayout->addWidget(jSpin, 0, 1, 1, 2);
+   jLayout->addWidget(jLabel, 0, 0, 1, 1);
+   jLayout->addWidget(jSpin, 1, 0, 1, 1);
+   jLayout->addWidget(new QLabel(tr("")), 2, 0, 1, 1);
 
    return joint;
 }
