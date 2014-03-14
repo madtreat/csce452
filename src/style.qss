@@ -1,0 +1,96 @@
+QWidget {
+   background-color: black;
+   border-style:     outset;
+   border-width:     2px;
+   border-radius:    10px;
+   border-color:     gray;
+}
+
+QWidget#joint1 {
+   background-color: red;
+}
+
+QWidget#joint2 {
+   background-color: green;
+}
+
+QWidget#joint3 {
+   background-color: blue;
+}
+
+QWidget#brush {
+   background-color: yellow;
+}
+
+QLabel {
+   font:             bold 14px;
+   background-color: white;
+   color:            green;
+   padding:          0 5 0 5;
+}
+
+QPushButton {
+   background-color: black;
+   color:            red;
+   padding:          0 5 0 5;
+   border-style:     outset;
+   border-width:     2px;
+   border-radius:    10px;
+   border-color:     gray;
+   font:             bold 14px;
+}
+
+QPushButton:checked {
+   background-color: rgb(150, 150, 0);
+   color:            black;
+   border-style:     inset;
+}
+
+QSpinBox {
+   background-color: white;
+   color:            black;
+   font:             14px;
+}
+
+QSpinBox::up-arrow, QSpinBox::down-arrow {
+}
+
+QSpinBox::up-button, QSpinBox::down-button {
+   subcontrol-origin:   border;
+   border-width:     4;
+   width:            24px;
+   height:           24px;
+}
+
+QSpinBox::up-button {
+   subcontrol-position: right;
+}
+
+QSpinBox::down-button {
+   subcontrol-position: left;
+}
+
+QSpinBox#joint1::up-arrow {
+   border-image:     url(:/icons/arrow-right-red);
+}
+
+QSpinBox#joint2::up-arrow {
+   border-image:     url(:/icons/arrow-right-green);
+}
+
+QSpinBox#joint3::up-arrow {
+   border-image:     url(:/icons/arrow-right-blue);
+}
+
+QSpinBox#joint1::down-arrow {
+   border-image:     url(:/icons/arrow-left-red);
+}
+
+QSpinBox#joint2::down-arrow {
+   border-image:     url(:/icons/arrow-left-green);
+}
+
+QSpinBox#joint3::down-arrow {
+   border-image:     url(:/icons/arrow-left-blue);
+}
+

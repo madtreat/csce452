@@ -117,16 +117,16 @@ void Canvas::drawRobot()
    glEnd();
 
    // draw link 1 and joint
-   drawLink(1, 0, 0, 1);
-   drawJoint(1, 0, 0, 1);
+   drawLink(1, 1, 0, 0);
+   drawJoint(1, 1, 0, 0);
 
    // draw link 2 and joint
-   drawLink(2, 1, 0, 0);
-   drawJoint(2, 1, 0, 0);
+   drawLink(2, 0, 1, 0);
+   drawJoint(2, 0, 1, 0);
 
    // draw link 3 and joint
-   drawLink(3, 0, 1, 0);
-   drawJoint(3, 0, 1, 0);
+   drawLink(3, 0, 0, 1);
+   drawJoint(3, 0, 0, 1);
 
    // draw the brush (link 4)
    drawJoint(4, 1, 1, 0);
@@ -138,7 +138,7 @@ void Canvas::paintCurrentLoc()
    Brush* b = static_cast<Brush*>(robot->getLink(RobotArm::LENGTH-1));
    glColor3f(1,0,0);
    //  drawCircle(b->joint.X, b->joint.Y, 5);
-   paintspots.push_back(PaintSpots(b->joint.X,b->joint.Y));
+   paintspots.push_back(PaintSpot(b->joint.X,b->joint.Y));
 }
 
 void Canvas::drawPaint()

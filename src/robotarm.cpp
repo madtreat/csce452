@@ -21,7 +21,7 @@ RobotArm::RobotArm()
    Base*  base  = new Base(300);
    Link*  link1 = new Link(Joint(PRISMATIC, 0, 300, 150, 320, 430), 150, base);
    Link*  link2 = new Link(Joint(REVOLUTE,  0, 360,   0, 320, 280), 100, link1);
-   Link*  link3 = new Link(Joint(REVOLUTE,  0, 360,   0, 320, 180), 75, link2);
+   Link*  link3 = new Link(Joint(REVOLUTE,  0, 360,   0, 320, 180),  75, link2);
    Brush* brush = new Brush(link3, 320, 105);
 
    // Set the successor links

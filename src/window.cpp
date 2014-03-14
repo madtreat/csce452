@@ -5,128 +5,32 @@
 #include "robotarm.h"
 
 #include <QLabel>
+#include <QDebug>
 #include <QGridLayout>
 #include <QVBoxLayout>
 #include <QSpinBox>
 #include <QTimer>
 #include <QPushButton>
+#include <QFile>
+#include <QApplication>
 
 Window::Window()
 : QWidget()
 {
-   // Create the main/top-level grid layout
-   QGridLayout* layout = new QGridLayout(this);
-   layout->setContentsMargins(0, 0, 0, 0);
+   initStyles();
+   initCanvas();
+   initLayout();
+   initControlPanel();
 
-   //--------------------------------------------------------//
-   // Create the canvas and its container widget
-   //--------------------------------------------------------//
-   // Create RobotArm here so we can call canvas::drawLinks
-   RobotArm* arm = new RobotArm();
-   canvas        = new Canvas(arm);
-   canvasWidget  = new CanvasWidget(canvas, arm, this);
-   
-   // Add to main grid layout
-   layout->addWidget(canvasWidget, 0, 0);
-
-   //--------------------------------------------------------//
-   // Create the control panel layout and widgets
-   //--------------------------------------------------------//
-   QWidget*     controlPanel  = new QWidget(this);
-   //controlPanel->setStyleSheet("QWidget {background-color: black; forground: red}");
-   QVBoxLayout* controlLayout = new QVBoxLayout(controlPanel);
-
-   // Control Panel Label
-   QLabel*      controlLabel = new QLabel(tr("Controls"));
-   controlLabel->setAlignment(Qt::AlignHCenter);
-   controlLayout->addWidget(controlLabel);
-
-   // - - - - - - - - - - - - - - - - - - - - - - - - - - - -//
-   // Joint 1 Controls: widget { gridlayout { label, spinbox } }
-   // - - - - - - - - - - - - - - - - - - - - - - - - - - - -//
-   QWidget*     joint1   = new QWidget(this);
-   QGridLayout* j1Layout = new QGridLayout(joint1);
-   joint1->setStyleSheet(getControlStyle(Qt::blue));
-   j1Layout->setContentsMargins(5, 5, 5, 5);
-
-   QLabel*      j1Label  = new QLabel(tr("Joint 1"), joint1);
-   j1Label->setAlignment(Qt::AlignCenter);
-   j1Layout->addWidget(j1Label, 0, 0);
-
-   QSpinBox*    j1Spin   = new QSpinBox(joint1);
-   j1Spin->setRange(0, 300);
-   j1Spin->setSuffix(" px");
-   j1Spin->setWrapping(false); // do not allow the P joint to wrap
-   connect(j1Spin, SIGNAL(valueChanged(int)), canvasWidget, SLOT(changeJoint1(int)));
-   j1Spin->setValue(150);
-   j1Layout->addWidget(j1Spin, 0, 1);
-
-   controlLayout->addWidget(joint1);
-
-   // - - - - - - - - - - - - - - - - - - - - - - - - - - - -//
-   // Joint 2 Controls: widget { gridlayout { label, spinbox } }
-   // - - - - - - - - - - - - - - - - - - - - - - - - - - - -//
-   QWidget*     joint2   = new QWidget(this);
-   QGridLayout* j2Layout = new QGridLayout(joint2);
-   joint2->setStyleSheet(getControlStyle(Qt::red));
-   j2Layout->setContentsMargins(5, 5, 5, 5);
-
-   QLabel*      j2Label  = new QLabel(tr("Joint 2"), joint2);
-   j2Label->setAlignment(Qt::AlignCenter);
-   j2Layout->addWidget(j2Label, 0, 0);
-
-   QSpinBox*    j2Spin   = new QSpinBox(joint2);
-   j2Spin->setRange(0, 359);
-   j2Spin->setSuffix(" deg");
-   j2Spin->setWrapping(true); // allow the R joint to wrap
-   connect(j2Spin, SIGNAL(valueChanged(int)), canvasWidget, SLOT(changeJoint2(int)));
-   j2Spin->setValue(0);
-   j2Layout->addWidget(j2Spin, 0, 1);
-
-   controlLayout->addWidget(joint2);
-
-   // - - - - - - - - - - - - - - - - - - - - - - - - - - - -//
-   // Joint 3 Controls: widget { gridlayout { label, spinbox } }
-   // - - - - - - - - - - - - - - - - - - - - - - - - - - - -//
-   QWidget*     joint3   = new QWidget(this);
-   QGridLayout* j3Layout = new QGridLayout(joint3);
-   joint3->setStyleSheet(getControlStyle(Qt::green));
-   j3Layout->setContentsMargins(5, 5, 5, 5);
-
-   QLabel*      j3Label  = new QLabel(tr("Joint 3"), joint3);
-   j3Label->setAlignment(Qt::AlignCenter);
-   j3Layout->addWidget(j3Label, 0, 0);
-
-   QSpinBox*    j3Spin   = new QSpinBox(joint3);
-   j3Spin->setRange(0, 359);
-   j3Spin->setSuffix(" deg");
-   j3Spin->setWrapping(true); // allow the R joint to wrap
-   connect(j3Spin, SIGNAL(valueChanged(int)), canvasWidget, SLOT(changeJoint3(int)));
-   j3Spin->setValue(0);
-   j3Layout->addWidget(j3Spin, 0, 1);
-   
-   controlLayout->addWidget(joint3);
-
-   // - - - - - - - - - - - - - - - - - - - - - - - - - - - -//
-   // Add the brush activator button to the control panel
-   // - - - - - - - - - - - - - - - - - - - - - - - - - - - -//
-   QWidget*     paintWidget = new QWidget(this);
-   QGridLayout* paintLayout = new QGridLayout(paintWidget);
-   paintWidget->setStyleSheet(getControlStyle(Qt::yellow));
-   paintLayout->setContentsMargins(5, 5, 5, 5);
-
-   QPushButton* paintButton = new QPushButton("Paint", paintWidget);
-   paintButton->setCheckable(true);
-   connect(paintButton, SIGNAL(toggled(bool)), canvasWidget, SLOT(togglePaint(bool)));
-   paintLayout->addWidget(paintButton, 0, 0);
-
-   controlLayout->addWidget(paintWidget);
+   initJointControls();
+   controlLayout->addSpacing(15);
+   initWorldControls();
+   controlLayout->addSpacing(15);
+   initBrushControls();
 
    //--------------------------------------------------------//
    // Add control panel to main grid layout
-   // ...After adding some vertical spacing to the bottom
    //--------------------------------------------------------//
-   controlLayout->addSpacing(250);
    layout->addWidget(controlPanel, 0, 1);
 
    QTimer* timer = new QTimer(this);
@@ -141,38 +45,257 @@ Window::~Window()
    delete canvas;
 }
 
-QString Window::getControlStyle(QColor widget)
+void Window::initStyles()
 {
-   QString style;
+   //QFile file("../src/styles.qss");
+   QFile file(":/style");
+   file.open(QFile::ReadOnly);
    
-   // set widget color
-   style += "QWidget {background-color: ";
-   style += widget.name();
-   //style += "; margin: 5 5 5 5";
-   style += ";}";
-
-   // set label color
-   style += "QLabel {background-color: ";
-   style += "white";
-   style += "; color: ";
-   style += "black";//widget.name();
-   style += "; padding: 0 5 0 5";
-   style += ";}";
-
-   // set spinbox color
-   style += "QSpinBox {background-color: ";
-   style += "white";
-   style += "; color: ";
-   style += "black";//widget.name();
-   style += ";}";
-
-   // set push button color
-   style += "QPushButton {background-color: ";
-   style += "black";
-   style += "; color: ";
-   style += "red";
-   style += "; padding: 0 5 0 5";
-   style += ";}";
-
-   return style;
+   controlPanelStyle = QLatin1String(file.readAll());
+   qDebug() << "STYLE READ:";
+   qDebug() << controlPanelStyle;
 }
+
+void Window::initCanvas()
+{
+   //--------------------------------------------------------//
+   // Create the canvas and its container widget
+   //--------------------------------------------------------//
+   // Create RobotArm here so we can call canvas::drawLinks
+   arm          = new RobotArm();
+   canvas       = new Canvas(arm);
+   canvasWidget = new CanvasWidget(canvas, arm, this);
+}
+
+void Window::initLayout()
+{
+   // Create the main/top-level grid layout
+   layout = new QGridLayout(this);
+   layout->setContentsMargins(0, 0, 0, 0);
+
+   // Add to main grid layout
+   if (!canvasWidget)
+      initCanvas();
+   layout->addWidget(canvasWidget, 0, 0);
+}
+
+void Window::initControlPanel()
+{
+   //--------------------------------------------------------//
+   // Create the control panel layout and widgets
+   //--------------------------------------------------------//
+   QSizePolicy policy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+
+   controlPanel  = new QWidget(this);
+   controlPanel->setMinimumWidth(CONTROL_WIDTH);
+   controlPanel->setSizePolicy(policy);
+   controlPanel->setStyleSheet(controlPanelStyle);
+   controlLayout = new QVBoxLayout(controlPanel);
+
+   // Control Panel Label
+   QLabel*      controlLabel = new QLabel(tr("Controls"));
+   controlLabel->setAlignment(Qt::AlignHCenter);
+   controlLayout->addWidget(controlLabel);
+}
+
+void Window::initJointControls()
+{
+   QLabel* label = new QLabel("Joint Mode", this);
+   label->setAlignment(Qt::AlignHCenter);
+
+   QWidget* joint1 = createJointControl(1, Qt::blue);
+   QWidget* joint2 = createJointControl(2, Qt::red);
+   QWidget* joint3 = createJointControl(3, Qt::green);
+
+   QWidget* jointControls = new QWidget(this);
+
+   QVBoxLayout* jointLayout = new QVBoxLayout(jointControls);
+   jointLayout->addWidget(label);
+   jointLayout->addWidget(joint1);
+   jointLayout->addWidget(joint2);
+   jointLayout->addWidget(joint3);
+   controlLayout->addWidget(jointControls);
+}
+
+void Window::initWorldControls()
+{
+   QLabel* label = new QLabel("World Mode", this);
+   label->setAlignment(Qt::AlignHCenter);
+
+   QWidget* joint1 = createWorldControl(1, Qt::blue);
+   QWidget* joint2 = createWorldControl(2, Qt::red);
+   QWidget* joint3 = createWorldControl(3, Qt::green);
+
+   QWidget* worldControls = new QWidget(this);
+
+   QVBoxLayout* worldLayout = new QVBoxLayout(worldControls);
+   worldLayout->addWidget(label);
+   worldLayout->addWidget(joint1);
+   worldLayout->addWidget(joint2);
+   worldLayout->addWidget(joint3);
+   controlLayout->addWidget(worldControls);
+}
+
+void Window::initBrushControls()
+{
+   QWidget* brush = createBrushControl();
+
+   controlLayout->addWidget(brush);
+}
+
+void Window::togglePaintText(bool enabled)
+{
+   if (enabled)
+      paintButton->setText("Stop Painting");
+   else
+      paintButton->setText("Paint");
+}
+
+QWidget* Window::createJointControl
+(
+   int    id,     // which joint is this? 
+   QColor color   // the color of this joint
+)
+{
+   // This joint
+   Joint j        = arm->getLink(id)->joint;
+   QString name   = "joint" + QString::number(id);
+   QString label  = "Joint " + QString::number(id);
+
+   // - - - - - - - - - - - - - - - - - - - - - - - - - - - -//
+   // Joint Controls: widget { gridlayout { label, spinbox } }
+   // - - - - - - - - - - - - - - - - - - - - - - - - - - - -//
+   QWidget*     joint   = new QWidget(this);
+   QGridLayout* jLayout = new QGridLayout(joint);
+   joint->setObjectName(name);
+   joint->setMinimumHeight(JOINT_HEIGHT);
+   jLayout->setContentsMargins(5, 5, 5, 5);
+
+   QLabel*      jLabel  = new QLabel(label, joint);
+   jLabel->setAlignment(Qt::AlignCenter);
+   jLayout->addWidget(jLabel, 0, 0);
+
+   QSpinBox*    jSpin   = new QSpinBox(joint);
+   jSpin->setObjectName(name);
+   jSpin->setMinimumHeight(JOINT_HEIGHT);
+   jSpin->setRange(j.range_min, j.range_max);
+
+   if (j.type == REVOLUTE)
+      jSpin->setSuffix(" deg");
+   else
+      jSpin->setSuffix(" px");
+
+   // allow the joint to wrap if revolute
+   jSpin->setWrapping(j.type == REVOLUTE);
+
+   // Connect the signal to the joint's slot
+   if (id == 1)
+   {
+      connect( jSpin,         SIGNAL(valueChanged(int)),
+               canvasWidget,  SLOT  (changeJoint1(int)));
+   }
+   else if (id == 2)
+   {
+      connect( jSpin,         SIGNAL(valueChanged(int)),
+               canvasWidget,  SLOT  (changeJoint2(int)));
+   }
+   else if (id == 3)
+   {
+      connect( jSpin,         SIGNAL(valueChanged(int)),
+               canvasWidget,  SLOT  (changeJoint3(int)));
+   }
+   
+   // set the default value afterward connecting so it will update the canvas
+   jSpin->setValue(j.rotation);
+   jLayout->addWidget(jSpin, 0, 1);
+
+   return joint;
+}
+
+QWidget* Window::createWorldControl(int id, QColor color)
+{
+   // This joint
+   Joint j = arm->getLink(id)->joint;
+   QString name   = "joint" + QString::number(id);
+   QString label  = "Joint " + QString::number(id);
+
+   // - - - - - - - - - - - - - - - - - - - - - - - - - - - -//
+   // Joint Controls: widget { gridlayout { label, spinbox } }
+   // - - - - - - - - - - - - - - - - - - - - - - - - - - - -//
+   QWidget* joint       = new QWidget(this);
+   QGridLayout* jLayout = new QGridLayout(joint);
+
+   joint->setObjectName(name);
+   joint->setMinimumHeight(JOINT_HEIGHT);
+   jLayout->setContentsMargins(5, 5, 5, 5);
+
+   QLabel*      jLabel  = new QLabel(label, joint);
+   jLabel->setAlignment(Qt::AlignCenter);
+   jLayout->addWidget(jLabel, 0, 0);
+
+   QSpinBox*    jSpin   = new QSpinBox(joint);
+   jSpin->setObjectName(name);
+   jSpin->setMinimumHeight(JOINT_HEIGHT);
+   jSpin->setRange(j.range_min, j.range_max);
+
+   if (j.type == REVOLUTE)
+      jSpin->setSuffix(" deg");
+   else
+      jSpin->setSuffix(" px");
+
+   // allow the joint to wrap if revolute
+   jSpin->setWrapping(j.type == REVOLUTE);
+
+   // Connect the signal to the joint's slot
+   if (id == 1)
+   {
+      connect( jSpin,         SIGNAL(valueChanged(int)),
+               canvasWidget,  SLOT  (changeJoint1(int)));
+   }
+   else if (id == 2)
+   {
+      connect( jSpin,         SIGNAL(valueChanged(int)),
+               canvasWidget,  SLOT  (changeJoint2(int)));
+   }
+   else if (id == 3)
+   {
+      connect( jSpin,         SIGNAL(valueChanged(int)),
+               canvasWidget,  SLOT  (changeJoint3(int)));
+   }
+   
+   // set the default value afterward connecting so it will update the canvas
+   jSpin->setValue(j.rotation);
+   jLayout->addWidget(jSpin, 0, 1);
+
+   return joint;
+}
+
+QWidget* Window::createBrushControl()
+{
+   QString name = "brush";
+
+   // - - - - - - - - - - - - - - - - - - - - - - - - - - - -//
+   // Add the brush activator button to the control panel
+   // - - - - - - - - - - - - - - - - - - - - - - - - - - - -//
+   QWidget*     paintWidget = new QWidget(this);
+   QGridLayout* paintLayout = new QGridLayout(paintWidget);
+
+   paintWidget->setObjectName(name);
+   paintWidget->setMinimumHeight(JOINT_HEIGHT);
+   paintLayout->setContentsMargins(5, 5, 5, 5);
+
+   paintButton = new QPushButton("Paint", paintWidget);
+   paintButton->setCheckable(true);
+
+   // connect the button to the canvas widget
+   connect( paintButton,  SIGNAL (toggled(bool)),
+            canvasWidget, SLOT   (togglePaint(bool)));
+   // connect the button to change the text
+   connect( paintButton,  SIGNAL (toggled(bool)),
+            this,         SLOT   (togglePaintText(bool)));
+
+   paintLayout->addWidget(paintButton, 0, 0);
+
+   return paintWidget;
+}
+

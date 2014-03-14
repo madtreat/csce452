@@ -65,10 +65,18 @@ set(HEADERS_MOC
    canvaswidget.h
    window.h
 )
-#QT4_WRAP_CPP(MOC_SRC ${HEADERS_MOC})
+
+# Resources (.qrc file(s), contains locations to icons, stylesheets, etc.)
+set(RESOURCES
+   resources.qrc
+)
+
+# Use the appropriate resources
+qt5_add_resources(RESOURCES_ADDED ${RESOURCES} )
+set_source_files_properties(${RESOURCES_ADDED} PROPERTIES GENERATED ON)
 
 # Create the executable
-add_executable(paintbot ${SOURCES} ${HEADERS} ${MOC_SRC})
+add_executable(paintbot ${SOURCES} ${HEADERS} ${MOC_SRC} ${RESOURCES_ADDED})
 
 # Link to the correct/necessary libraries
 target_link_libraries(paintbot
