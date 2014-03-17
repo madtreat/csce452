@@ -1,5 +1,7 @@
 # Build environment
 [Bb]uild
+.swo
+.swp
 
 # Compiled Object files
 *.slo

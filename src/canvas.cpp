@@ -119,16 +119,16 @@ void Canvas::drawRobot()
    glEnd();
 
    // draw link 1 and joint
-   drawLink(1, 0, 0, 1);
-   drawJoint(1, 0, 0, 1);
+   drawLink(1, 1, 0, 0);
+   drawJoint(1, 1, 0, 0);
 
    // draw link 2 and joint
-   drawLink(2, 1, 0, 0);
-   drawJoint(2, 1, 0, 0);
+   drawLink(2, 0, 1, 0);
+   drawJoint(2, 0, 1, 0);
 
    // draw link 3 and joint
-   drawLink(3, 0, 1, 0);
-   drawJoint(3, 0, 1, 0);
+   drawLink(3, 0, 0, 1);
+   drawJoint(3, 0, 0, 1);
 
    // draw the brush (link 4)
    drawJoint(4, 1, 1, 0);
@@ -136,24 +136,25 @@ void Canvas::drawRobot()
 
 void Canvas::paintCurrentLoc()
 {
-	vector<PaintSpots>::iterator it;
+	vector<PaintSpot>::iterator it;
    Brush* b = static_cast<Brush*>(robot->getLink(RobotArm::LENGTH-1));
    glColor3f(1,0,0);
-   //  drawCircle(b->joint.X, b->joint.Y, 5);
-   PaintSpots spot(b->joint.X,b->joint.Y,brushSize);
-   it = find(paintspots.begin(),paintspots.end(),spot);
- if( it == paintspots.end()) 
- {
-  paintspots.push_back(spot);
- }
+
+   PaintSpot spot(b->joint.X, b->joint.Y, brushSize);
+   it = find(paintspots.begin(), paintspots.end(), spot);
+   if( it == paintspots.end()) 
+   {
+      paintspots.push_back(spot);
+   }
 }
 
 void Canvas::drawPaint()
 {
    for(int i= 0; i<paintspots.size(); i++ )
    {
+      PaintSpot spot = paintspots.at(i);
       glColor3f(0,0,0);
-      drawCircle(paintspots.at(i).X, paintspots.at(i).Y, 5);
+      drawCircle(spot.X, spot.Y, spot.size);
    }
 
 }

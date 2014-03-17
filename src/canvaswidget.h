@@ -23,9 +23,16 @@ public:
 
 public slots:
    void animate();
+   void changeBrushSize(int);
    void changeJoint1(int);
    void changeJoint2(int);
    void changeJoint3(int);
+   void changeJoint1LocX(int);
+   void changeJoint1LocY(int);
+   void changeJoint2LocX(int);
+   void changeJoint2LocY(int);
+   void changeJoint3LocX(int);
+   void changeJoint3LocY(int);
    void togglePaint(bool);
 
 protected:
@@ -41,6 +48,7 @@ private:
    RobotArm* robot;
 
    // remember the old values for the joint configurations
+   int brushSize;
    int joint1rot;
    int joint2rot;
    int joint3rot;

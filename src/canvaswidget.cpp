@@ -10,6 +10,7 @@ CanvasWidget::CanvasWidget(Canvas* _canvas, RobotArm* _arm, QWidget* _parent)
 : QGLWidget(QGLFormat(QGL::SampleBuffers), _parent),
   canvas(_canvas),
   robot(_arm),
+  brushSize(5),
   joint1rot(0),
   joint2rot(0),
   joint3rot(0)
@@ -40,10 +41,14 @@ void CanvasWidget::animate()
    repaint();
 }
 
+void CanvasWidget::changeBrushSize(int newSize)
+{
+   brushSize = newSize;
+   canvas->setBrushSize(brushSize);
+}
+
 void CanvasWidget::changeJoint1(int newVal)
 {
-   std::cout << "about to move joint 1" << endl;
-   printJointLocs();
    Motion motion = (newVal < joint1rot) ? LEFT : RIGHT;
    robot->moveJoint(robot->getLink(1), motion, newVal);
    
@@ -69,6 +74,66 @@ void CanvasWidget::changeJoint3(int newVal)
    
    joint3rot = newVal;
    std::cout << "joint 3 changing" << std::endl;
+   printJointLocs();
+}
+
+void CanvasWidget::changeJoint1LocX(int newVal)
+{
+   Motion motion = (newVal < joint1rot) ? LEFT : RIGHT;
+   //robot->moveJoint(robot->getLink(1), motion, newVal);
+   
+   //joint1rot = newVal;
+   std::cout << "joint 1 X location changing" << std::endl;
+   printJointLocs();
+}
+
+void CanvasWidget::changeJoint1LocY(int newVal)
+{
+   Motion motion = (newVal < joint1rot) ? LEFT : RIGHT;
+   //robot->moveJoint(robot->getLink(1), motion, newVal);
+   
+   //joint1rot = newVal;
+   std::cout << "joint 1 Y location changing" << std::endl;
+   printJointLocs();
+}
+
+void CanvasWidget::changeJoint2LocX(int newVal)
+{
+   Motion motion = (newVal < joint2rot) ? CW : CCW;
+   //robot->moveJoint(robot->getLink(2), motion, newVal);
+   
+   //joint2rot = newVal;
+   std::cout << "joint 2 X location changing" << std::endl;
+   printJointLocs();
+}
+
+void CanvasWidget::changeJoint2LocY(int newVal)
+{
+   Motion motion = (newVal < joint2rot) ? CW : CCW;
+   //robot->moveJoint(robot->getLink(2), motion, newVal);
+   
+   //joint2rot = newVal;
+   std::cout << "joint 2 Y location changing" << std::endl;
+   printJointLocs();
+}
+
+void CanvasWidget::changeJoint3LocX(int newVal)
+{
+   Motion motion = (newVal < joint3rot) ? CW : CCW;
+   //robot->moveJoint(robot->getLink(3), motion, newVal);
+   
+   //joint3rot = newVal;
+   std::cout << "joint 3 X location changing" << std::endl;
+   printJointLocs();
+}
+
+void CanvasWidget::changeJoint3LocY(int newVal)
+{
+   Motion motion = (newVal < joint3rot) ? CW : CCW;
+   //robot->moveJoint(robot->getLink(3), motion, newVal);
+   
+   joint3rot = newVal;
+   //std::cout << "joint 3 Y location changing" << std::endl;
    printJointLocs();
 }
 
