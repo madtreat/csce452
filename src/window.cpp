@@ -17,7 +17,8 @@
 #include <QSpacerItem>
 
 Window::Window()
-: QWidget()
+: QWidget(),
+painting(false)
 {
    initStyles();
    initCanvas();
@@ -185,6 +186,7 @@ QWidget* Window::initBrushControls()
 
 void Window::togglePaintText(bool enabled)
 {
+   painting = enabled;
    if (enabled)
       paintButton->setText("Stop Painting");
    else
@@ -211,6 +213,25 @@ void Window::toggleWorldControlsVisible(bool enabled)
    else
       worldButton->setText("Show World Mode");
    // */
+}
+
+void Window::keyPressEvent(QKeyEvent* event)
+{
+   //qDebug() << "Key Pressed" << event->key();
+   if (event->key() == Qt::Key_Space)
+   {
+   }
+}
+
+void Window::keyReleaseEvent(QKeyEvent* event)
+{
+   //qDebug() << "Key Released" << event->key() << "(" << Qt::Key_Space << ")";
+   if (event->key() == Qt::Key_Space)
+   {
+      qDebug() << "Toggling paint in canvas widget...";
+      painting = !painting;
+      paintButton->toggle();
+   }
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - -//
@@ -271,10 +292,15 @@ QWidget* Window::createJointControl(int id)
       connect( jSpin5,        SIGNAL(valueChanged(int)),
                canvasWidget,  SLOT  (changeJoint3(int)));
    }
+
+   // connect the spin boxes to each other
+   connect( jSpin1,        SIGNAL(valueChanged(int)),
+            jSpin5,        SLOT  (setValue(int)));
+   connect( jSpin5,        SIGNAL(valueChanged(int)),
+            jSpin1,        SLOT  (setValue(int)));
    
    // set the default value afterward connecting so it will update the canvas
    jSpin1->setValue(j.rotation);
-   jSpin5->setValue(j.rotation);
 
    QGridLayout* jLayout = new QGridLayout(joint);
    jLayout->setContentsMargins(5, 5, 5, 5);
@@ -381,6 +407,18 @@ QWidget* Window::createBrushControl()
    paintButton = new QPushButton("Paint", paintWidget);
    paintButton->setCheckable(true);
 
+   QSpinBox* bSpin = new QSpinBox(paintWidget);
+   bSpin->setObjectName(name);
+   bSpin->setMinimumHeight(JOINT_HEIGHT);
+   bSpin->setRange(BRUSH_MIN, BRUSH_MAX);
+   bSpin->setPrefix("Size=");
+   // do not allow the brush size to wrap
+   bSpin->setWrapping(false);
+
+   // connect the brush spin box to the canvas widget
+   connect( bSpin,         SIGNAL(valueChanged(int)),
+            canvasWidget,  SLOT  (changeBrushSize(int)));
+
    // connect the button to the canvas widget
    connect( paintButton,  SIGNAL (toggled(bool)),
             canvasWidget, SLOT   (togglePaint(bool)));
@@ -389,6 +427,7 @@ QWidget* Window::createBrushControl()
             this,         SLOT   (togglePaintText(bool)));
 
    paintLayout->addWidget(paintButton, 0, 0);
+   paintLayout->addWidget(bSpin, 0, 1);
 
    return paintWidget;
 }

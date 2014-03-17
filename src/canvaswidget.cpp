@@ -10,6 +10,7 @@ CanvasWidget::CanvasWidget(Canvas* _canvas, RobotArm* _arm, QWidget* _parent)
 : QGLWidget(QGLFormat(QGL::SampleBuffers), _parent),
   canvas(_canvas),
   robot(_arm),
+  brushSize(5),
   joint1rot(0),
   joint2rot(0),
   joint3rot(0)
@@ -38,6 +39,11 @@ void CanvasWidget::printJointLocs() const
 void CanvasWidget::animate()
 {
    repaint();
+}
+
+void CanvasWidget::changeBrushSize(int newSize)
+{
+   brushSize = newSize;
 }
 
 void CanvasWidget::changeJoint1(int newVal)

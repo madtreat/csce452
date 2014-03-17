@@ -7,6 +7,7 @@
 #include <QColor>
 #include <QGridLayout>
 #include <QPushButton>
+#include <QKeyEvent>
 
 class RobotArm;
 class Canvas;
@@ -18,8 +19,12 @@ class Window : public QWidget
 
 public:
    // sizes for the control panel widgets
-   static const int CONTROL_WIDTH = 132;
-   static const int JOINT_HEIGHT  = 30;
+   static const int CONTROL_WIDTH   = 132;
+   static const int JOINT_HEIGHT    = 30;
+
+   // range for the brush
+   static const int BRUSH_MIN       = 5;
+   static const int BRUSH_MAX       = 40;
 
    Window();
    ~Window();
@@ -34,12 +39,17 @@ public slots:
    void toggleJointControlsVisible(bool);
    void toggleWorldControlsVisible(bool);
 
+protected:
+   void keyPressEvent(QKeyEvent* event);
+   void keyReleaseEvent(QKeyEvent* event);
+
 private:
    RobotArm*      arm;
    Canvas*        canvas;
    CanvasWidget*  canvasWidget;
 
    QString        controlPanelStyle;
+   bool           painting;
 
    QGridLayout*   layout;
    QWidget*       controlPanel;
