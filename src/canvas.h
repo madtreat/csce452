@@ -13,7 +13,15 @@ struct PaintSpots
 {
    int X;
    int Y;
-   PaintSpots(int _x, int _y) : X(_x), Y(_y) {}
+   int size; // radius
+   PaintSpots(int _x, int _y, int _s) : X(_x), Y(_y), size(_s) {}
+   bool operator==(const PaintSpots& other)
+   {
+      if( X == other.X &&
+          Y == other.Y )
+         return true; 
+      return false; 
+   }
 };
 
 
@@ -40,7 +48,9 @@ class Canvas
    private:
       RobotArm* robot;
       bool painting;
+      int brushSize;
       std::vector<PaintSpots> paintspots;
+
 };
 
 #endif
