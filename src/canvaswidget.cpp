@@ -44,6 +44,7 @@ void CanvasWidget::animate()
 void CanvasWidget::changeBrushSize(int newSize)
 {
    brushSize = newSize;
+   canvas->setBrushSize(brushSize);
 }
 
 void CanvasWidget::changeJoint1(int newVal)

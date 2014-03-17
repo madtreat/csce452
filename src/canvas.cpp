@@ -22,6 +22,7 @@
 #include <string.h>
 #include <iostream>
 #include <vector>
+#include <algorithm>
 
 using namespace std;
 
@@ -29,7 +30,8 @@ const double PI = 3.1415926;
 
    Canvas::Canvas(RobotArm* _arm)
 : robot(_arm),
-painting(false)
+painting(false),
+brushSize(5)
 {
    int argc = 1;
    char* argv[argc];
@@ -134,19 +136,25 @@ void Canvas::drawRobot()
 
 void Canvas::paintCurrentLoc()
 {
-
+	vector<PaintSpot>::iterator it;
    Brush* b = static_cast<Brush*>(robot->getLink(RobotArm::LENGTH-1));
    glColor3f(1,0,0);
-   //  drawCircle(b->joint.X, b->joint.Y, 5);
-   paintspots.push_back(PaintSpot(b->joint.X,b->joint.Y));
+
+   PaintSpot spot(b->joint.X, b->joint.Y, brushSize);
+   it = find(paintspots.begin(), paintspots.end(), spot);
+   if( it == paintspots.end()) 
+   {
+      paintspots.push_back(spot);
+   }
 }
 
 void Canvas::drawPaint()
 {
    for(int i= 0; i<paintspots.size(); i++ )
    {
+      PaintSpot spot = paintspots.at(i);
       glColor3f(0,0,0);
-      drawCircle(paintspots.at(i).X, paintspots.at(i).Y, 5);
+      drawCircle(spot.X, spot.Y, spot.size);
    }
 
 }
