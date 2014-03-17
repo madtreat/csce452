@@ -53,7 +53,7 @@ void CanvasWidget::changeJoint1(int newVal)
    
    joint1rot = newVal;
    std::cout << "joint 1 changing" << std::endl;
-   printJointLocs();
+   //printJointLocs();
 }
 
 void CanvasWidget::changeJoint2(int newVal)
@@ -63,7 +63,7 @@ void CanvasWidget::changeJoint2(int newVal)
    
    joint2rot = newVal;
    std::cout << "joint 2 changing" << std::endl;
-   printJointLocs();
+   //printJointLocs();
 }
 
 void CanvasWidget::changeJoint3(int newVal)
@@ -73,7 +73,7 @@ void CanvasWidget::changeJoint3(int newVal)
    
    joint3rot = newVal;
    std::cout << "joint 3 changing" << std::endl;
-   printJointLocs();
+   //printJointLocs();
 }
 
 void CanvasWidget::changeJoint1LocX(int newVal)
@@ -83,7 +83,7 @@ void CanvasWidget::changeJoint1LocX(int newVal)
    
    //joint1rot = newVal;
    std::cout << "joint 1 X location changing" << std::endl;
-   printJointLocs();
+   //printJointLocs();
 }
 
 void CanvasWidget::changeJoint1LocY(int newVal)
@@ -93,7 +93,7 @@ void CanvasWidget::changeJoint1LocY(int newVal)
    
    //joint1rot = newVal;
    std::cout << "joint 1 Y location changing" << std::endl;
-   printJointLocs();
+   //printJointLocs();
 }
 
 void CanvasWidget::changeJoint2LocX(int newVal)
@@ -103,7 +103,7 @@ void CanvasWidget::changeJoint2LocX(int newVal)
    
    //joint2rot = newVal;
    std::cout << "joint 2 X location changing" << std::endl;
-   printJointLocs();
+   //printJointLocs();
 }
 
 void CanvasWidget::changeJoint2LocY(int newVal)
@@ -113,7 +113,7 @@ void CanvasWidget::changeJoint2LocY(int newVal)
    
    //joint2rot = newVal;
    std::cout << "joint 2 Y location changing" << std::endl;
-   printJointLocs();
+   //printJointLocs();
 }
 
 void CanvasWidget::changeJoint3LocX(int newVal)
@@ -123,7 +123,7 @@ void CanvasWidget::changeJoint3LocX(int newVal)
    
    //joint3rot = newVal;
    std::cout << "joint 3 X location changing" << std::endl;
-   printJointLocs();
+   //printJointLocs();
 }
 
 void CanvasWidget::changeJoint3LocY(int newVal)
@@ -133,7 +133,7 @@ void CanvasWidget::changeJoint3LocY(int newVal)
    
    joint3rot = newVal;
    //std::cout << "joint 3 Y location changing" << std::endl;
-   printJointLocs();
+   //printJointLocs();
 }
 
 /*

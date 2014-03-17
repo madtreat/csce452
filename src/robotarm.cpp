@@ -39,10 +39,12 @@ RobotArm::RobotArm()
    links[2] = link2;
    links[3] = link3;
    links[4] = brush;
-   cout << link1->joint.X << " " << link1->joint.Y << endl;
+   /*
+	cout << link1->joint.X << " " << link1->joint.Y << endl;
    cout << link2->joint.X << " " << link2->joint.Y << endl;
    cout << link3->joint.X << " " << link3->joint.Y << endl;
    cout << brush->joint.X << " " << brush->joint.Y << endl;
+	// */
 }
 
 RobotArm::~RobotArm()
@@ -97,9 +99,11 @@ void RobotArm::moveJoint(Link* link, Motion motion, int amt)
          if (newrot >= 360 || newrot < 0)
             newrot %= 360;
          link->joint.rot_abs = newrot;
+			/*
 			cout << "Link: " << link->length << " -- ";
 			cout << "rot_abs: " << link->joint.rot_abs << " - ";
 			cout << "rot: " << link->joint.rotation << endl;
+			// */
       }
       else
       {
@@ -121,9 +125,11 @@ void RobotArm::moveJoint(Link* link, Motion motion, int amt)
          if (newrot >= 360 || newrot < 0)
             newrot %= 360;
          link->joint.rot_abs = newrot;
+			/*
 			cout << "NextLink: " << link->length << " -- ";
 			cout << "rot_abs: " << link->joint.rot_abs << " - ";
 			cout << "rot: " << link->joint.rotation << endl;
+			// */
 
          int curX = link->joint.X;
          int curY = link->joint.Y;
@@ -138,7 +144,7 @@ void RobotArm::moveJoint(Link* link, Motion motion, int amt)
          int nextX = frameX - ( (len)*cos(rad) );// - ( (len)*sin(rad) );
          int nextY = frameY - ( (len)*sin(rad) );// + ( (len)*cos(rad) );
 
-         cout << "   deg = " << deg << ", rad = " << rad << " for link len = " << len << endl;
+         //cout << "   deg = " << deg << ", rad = " << rad << " for link len = " << len << endl;
          link->joint.X = nextX;
          link->joint.Y = nextY;
 
