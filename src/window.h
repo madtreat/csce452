@@ -18,7 +18,7 @@ class Window : public QWidget
 
 public:
    // sizes for the control panel widgets
-   static const int CONTROL_WIDTH = 160;
+   static const int CONTROL_WIDTH = 132;
    static const int JOINT_HEIGHT  = 30;
 
    Window();
@@ -57,8 +57,8 @@ private:
 
    QString  getControlStyle(QColor widget);
 
-   QWidget* createJointControl(int id, QColor color);
-   QWidget* createWorldControl(int id, QColor color);
+   QWidget* createJointControl(int id);
+   QWidget* createWorldControl(int id);
    QWidget* createBrushControl();
 };
 

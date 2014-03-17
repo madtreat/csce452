@@ -9,7 +9,6 @@ QWidget {
 QWidget#container {
    border-style:     none;
 }
-/**/
 
 QWidget#joint1 {
    background-color: red;
@@ -21,6 +20,10 @@ QWidget#joint2 {
 
 QWidget#joint3 {
    background-color: blue;
+}
+
+QWidget#joint4 {
+   background-color: yellow;
 }
 
 QWidget#brush {
@@ -84,6 +87,10 @@ QSpinBox#joint3::up-arrow {
    border-image:     url(:/icons/arrow-right-blue);
 }
 
+QSpinBox#joint4::up-arrow {
+   border-image:     url(:/icons/arrow-right-yellow);
+}
+
 QSpinBox#joint1::down-arrow {
    border-image:     url(:/icons/arrow-left-red);
 }
@@ -94,5 +101,9 @@ QSpinBox#joint2::down-arrow {
 
 QSpinBox#joint3::down-arrow {
    border-image:     url(:/icons/arrow-left-blue);
+}
+
+QSpinBox#joint4::down-arrow {
+   border-image:     url(:/icons/arrow-left-yellow);
 }
 

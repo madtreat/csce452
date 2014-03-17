@@ -4,10 +4,12 @@
       <file alias="arrow-right-red">icons/arrow-right-red.png</file>
       <file alias="arrow-right-green">icons/arrow-right-green.png</file>
       <file alias="arrow-right-blue">icons/arrow-right-blue.png</file>
+      <file alias="arrow-right-yellow">icons/arrow-right-yellow.png</file>
       <file alias="arrow-right-gray">icons/arrow-right-gray.png</file>
       <file alias="arrow-left-red">icons/arrow-left-red.png</file>
       <file alias="arrow-left-green">icons/arrow-left-green.png</file>
       <file alias="arrow-left-blue">icons/arrow-left-blue.png</file>
+      <file alias="arrow-left-yellow">icons/arrow-left-yellow.png</file>
       <file alias="arrow-left-gray">icons/arrow-left-gray.png</file>
    </qresource>
    <qresource>
