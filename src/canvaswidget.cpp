@@ -133,8 +133,26 @@ void CanvasWidget::changeJoint3LocY(int newVal)
    //robot->moveJoint(robot->getLink(3), motion, newVal);
    
    joint3rot = newVal;
-   //std::cout << "joint 3 Y location changing" << std::endl;
+   std::cout << "joint 3 Y location changing" << std::endl;
    printJointLocs();
+}
+
+void CanvasWidget::changeJoint4LocX(int newVal)
+{
+   //robot->moveJoint(robot->getLink(3), motion, newVal);
+   
+   //joint3rot = newVal;
+   std::cout << "joint 4 X location changing" << std::endl;
+   //printJointLocs();
+}
+
+void CanvasWidget::changeJoint4LocY(int newVal)
+{
+   //robot->moveJoint(robot->getLink(3), motion, newVal);
+   
+   //joint4rot = newVal;
+   std::cout << "joint 4 Y location changing" << std::endl;
+   //printJointLocs();
 }
 
 /*
