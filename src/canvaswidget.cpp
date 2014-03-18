@@ -31,10 +31,12 @@ QSize CanvasWidget::sizeHint() const
 
 void CanvasWidget::printJointLocs() const
 {
-   std::cout << robot->getLink(1)->joint.X << " " << robot->getLink(1)->joint.Y << std::endl;
-   std::cout << robot->getLink(2)->joint.X << " " << robot->getLink(2)->joint.Y << std::endl;
-   std::cout << robot->getLink(3)->joint.X << " " << robot->getLink(3)->joint.Y << std::endl;
-   std::cout << robot->getLink(4)->joint.X << " " << robot->getLink(4)->joint.Y << std::endl;
+	std::cout << std::endl;
+   std::cout << "l1: " << robot->getLink(1)->joint.X << " " << robot->getLink(1)->joint.Y << std::endl;
+   std::cout << "l2: " << robot->getLink(2)->joint.X << " " << robot->getLink(2)->joint.Y << std::endl;
+   std::cout << "l3: " << robot->getLink(3)->joint.X << " " << robot->getLink(3)->joint.Y << std::endl;
+   std::cout << "br: " << robot->getLink(4)->joint.X << " " << robot->getLink(4)->joint.Y << std::endl;
+	std::cout << std::endl;
 }
 
 void CanvasWidget::animate()
@@ -51,33 +53,33 @@ void CanvasWidget::changeBrushSize(int newSize)
 void CanvasWidget::changeJoint1(int newVal)
 {
    Motion motion = (newVal < joint1rot) ? LEFT : RIGHT;
-   robot->moveJoint(robot->getLink(1), motion, newVal);
+   robot->translateJoint(robot->getLink(1), motion, newVal);
    
    joint1rot = newVal;
    std::cout << "joint 1 changing" << std::endl;
-   //printJointLocs();
+   printJointLocs();
    emit jointsChanged();
 }
 
 void CanvasWidget::changeJoint2(int newVal)
 {
    Motion motion = (newVal < joint2rot) ? CW : CCW;
-   robot->moveJoint(robot->getLink(2), motion, newVal);
+   robot->rotateJoint(robot->getLink(2), motion, newVal);
    
    joint2rot = newVal;
    std::cout << "joint 2 changing" << std::endl;
-   //printJointLocs();
+   printJointLocs();
    emit jointsChanged();
 }
 
 void CanvasWidget::changeJoint3(int newVal)
 {
    Motion motion = (newVal < joint3rot) ? CW : CCW;
-   robot->moveJoint(robot->getLink(3), motion, newVal);
+   robot->rotateJoint(robot->getLink(3), motion, newVal);
    
    joint3rot = newVal;
    std::cout << "joint 3 changing" << std::endl;
-   //printJointLocs();
+   printJointLocs();
    emit jointsChanged();
 }
 
@@ -89,7 +91,7 @@ void CanvasWidget::changeBrushLocX(int newVal)
    Motion motion = (newVal < prevX) ? X_DEC : X_INC;
 
    int dif = abs(prevX - newVal);//robot->getLink(1)->joint.X;
-   robot->moveJoint(robot->getLink(4), motion, dif);
+   robot->translateBrush(robot->getLink(4), motion, newVal);
    
    std::cout << "joint 4 X location changing" << std::endl;
    printJointLocs();
@@ -104,7 +106,7 @@ void CanvasWidget::changeBrushLocY(int newVal)
    Motion motion = (newVal < prevY) ? Y_DEC : Y_INC;
 
    int dif = abs(prevY - newVal);//robot->getLink(1)->joint.X;
-   robot->moveJoint(robot->getLink(4), motion, dif);
+   robot->translateBrush(robot->getLink(4), motion, dif);
    
    std::cout << "joint 4 Y location changing" << std::endl;
    printJointLocs();
