@@ -89,7 +89,7 @@ void CanvasWidget::changeBrushLocX(int newVal)
    if (newVal == prevX)
       return; // dont do anything if same
 
-   robot->translateBrush(robot->getLink(4), newVal, robot->getBrush()->joint.Y);
+   robot->translateBrush(robot->getBrush(), newVal, robot->getBrush()->joint.Y);
    
    std::cout << "joint 4 X location changing" << std::endl;
    printJointLocs();
@@ -102,7 +102,7 @@ void CanvasWidget::changeBrushLocY(int newVal)
    if (newVal == prevY)
       return; // dont do anything if same
 
-   robot->translateBrush(robot->getLink(4), robot->getBrush()->joint.X, newVal);
+   robot->translateBrush(robot->getBrush(), robot->getBrush()->joint.X, newVal);
    
    std::cout << "joint 4 Y location changing" << std::endl;
    printJointLocs();

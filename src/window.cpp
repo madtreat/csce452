@@ -261,15 +261,39 @@ void Window::updateJointPos()
 
 void Window::keyPressEvent(QKeyEvent* event)
 {
-   //qDebug() << "Key Pressed" << event->key();
+   qDebug() << "Key Pressed" << event->key();
    if (event->key() == Qt::Key_Space)
    {
+   }
+   // move right
+   else if (event->key() == Qt::Key_Right || event->key() == Qt::Key_D)
+   {
+      int newX = 2 + arm->getBrush()->joint.X;
+      canvasWidget->changeBrushLocX(newX);
+   }
+   // move left
+   else if (event->key() == Qt::Key_Left || event->key() == Qt::Key_A)
+   {
+      int newX = -2 + arm->getBrush()->joint.X;
+      canvasWidget->changeBrushLocX(newX);
+   }
+   // move up
+   else if (event->key() == Qt::Key_Up || event->key() == Qt::Key_W)
+   {
+      int newY = 2 + arm->getBrush()->joint.Y;
+      canvasWidget->changeBrushLocY(newY);
+   }
+   // move down
+   else if (event->key() == Qt::Key_Down || event->key() == Qt::Key_S)
+   {
+      int newY = -2 + arm->getBrush()->joint.Y;
+      canvasWidget->changeBrushLocY(newY);
    }
 }
 
 void Window::keyReleaseEvent(QKeyEvent* event)
 {
-   //qDebug() << "Key Released" << event->key() << "(" << Qt::Key_Space << ")";
+   qDebug() << "Key Released" << event->key() << "(" << Qt::Key_Space << ")";
    if (event->key() == Qt::Key_Space)
    {
       qDebug() << "Toggling paint in canvas widget...";
@@ -295,6 +319,30 @@ void Window::keyReleaseEvent(QKeyEvent* event)
    {
       // focus brush control
       //brushSpinX->setFocus();
+   }
+   // move right
+   else if (event->key() == Qt::Key_Right || event->key() == Qt::Key_D)
+   {
+      int newX = 2 + arm->getBrush()->joint.X;
+      canvasWidget->changeBrushLocX(newX);
+   }
+   // move left
+   else if (event->key() == Qt::Key_Left || event->key() == Qt::Key_A)
+   {
+      int newX = -2 + arm->getBrush()->joint.X;
+      canvasWidget->changeBrushLocX(newX);
+   }
+   // move up (NOT, it is actually reversed)
+   else if (event->key() == Qt::Key_Up || event->key() == Qt::Key_W)
+   {
+      int newY = -2 + arm->getBrush()->joint.Y;
+      canvasWidget->changeBrushLocY(newY);
+   }
+   // move down (NOT, it is actually reversed)
+   else if (event->key() == Qt::Key_Down || event->key() == Qt::Key_S)
+   {
+      int newY = 2 + arm->getBrush()->joint.Y;
+      canvasWidget->changeBrushLocY(newY);
    }
 }
 
