@@ -106,7 +106,7 @@ void CanvasWidget::changeBrushLocY(int newVal)
    Motion motion = (newVal < prevY) ? Y_DEC : Y_INC;
 
    int dif = abs(prevY - newVal);//robot->getLink(1)->joint.X;
-   robot->translateBrush(robot->getLink(4), motion, dif);
+   robot->translateBrush(robot->getLink(4), motion, newVal);
    
    std::cout << "joint 4 Y location changing" << std::endl;
    printJointLocs();

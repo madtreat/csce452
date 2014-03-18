@@ -279,22 +279,22 @@ void Window::keyReleaseEvent(QKeyEvent* event)
    else if (event->key() == Qt::Key_1)
    {
       // focus joint 1 control
-      joint1Spin->setFocus();
+      //joint1Spin->setFocus();
    }
    else if (event->key() == Qt::Key_2)
    {
       // focus joint 2 control
-      joint2Spin->setFocus();
+      //joint2Spin->setFocus();
    }
    else if (event->key() == Qt::Key_3)
    {
       // focus joint 3 control
-      joint3Spin->setFocus();
+      //joint3Spin->setFocus();
    }
    else if (event->key() == Qt::Key_4)
    {
       // focus brush control
-      brushSpinX->setFocus();
+      //brushSpinX->setFocus();
    }
 }
 
