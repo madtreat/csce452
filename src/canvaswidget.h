@@ -21,20 +21,17 @@ public:
    QSize sizeHint() const;
    void printJointLocs() const;
 
+signals:
+   void jointsChanged();
+
 public slots:
    void animate();
    void changeBrushSize(int);
    void changeJoint1(int);
    void changeJoint2(int);
    void changeJoint3(int);
-   void changeJoint1LocX(int);
-   void changeJoint1LocY(int);
-   void changeJoint2LocX(int);
-   void changeJoint2LocY(int);
-   void changeJoint3LocX(int);
-   void changeJoint3LocY(int);
-   void changeJoint4LocX(int);
-   void changeJoint4LocY(int);
+   void changeBrushLocX(int);
+   void changeBrushLocY(int);
    void togglePaint(bool);
 
 protected:

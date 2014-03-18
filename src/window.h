@@ -8,6 +8,7 @@
 #include <QGridLayout>
 #include <QPushButton>
 #include <QKeyEvent>
+#include <QSpinBox>
 
 class RobotArm;
 class Canvas;
@@ -38,6 +39,7 @@ public slots:
    void togglePaintText(bool);
    void toggleJointControlsVisible(bool);
    void toggleWorldControlsVisible(bool);
+   void updateBrushPos();
 
 protected:
    void keyPressEvent(QKeyEvent* event);
@@ -60,6 +62,14 @@ private:
    QPushButton*   paintButton;
    QPushButton*   jointButton;
    QPushButton*   worldButton;
+
+   // for number keys switching between joints
+   QWidget*       joint1Spin;
+   QWidget*       joint2Spin;
+   QWidget*       joint3Spin;
+   QSpinBox*      brushSpinX;
+   QSpinBox*      brushSpinY;
+   QWidget*       brushSizeSpin;
    
    QWidget* initJointControls();
    QWidget* initWorldControls();

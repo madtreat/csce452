@@ -16,6 +16,10 @@ struct Link {
     */
    Joint joint;
    int   length; // in pixels
+   int   range_min_x;
+   int   range_max_x;
+   int   range_min_y;
+   int   range_max_y;
    Link* prev_link;
    Link* next_link;
 

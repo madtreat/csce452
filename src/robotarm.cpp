@@ -19,10 +19,10 @@ RobotArm::RobotArm()
 {
    // Create the links of this paintbot, including predecessors
    Base*  base  = new Base(300);
-   Link*  link1 = new Link(Joint(PRISMATIC, 0, 300, 150, 320, 430), 150, base);
-   Link*  link2 = new Link(Joint(REVOLUTE,  0, 360,   0, 320, 280), 100, link1);
-   Link*  link3 = new Link(Joint(REVOLUTE,  0, 360,   0, 320, 180),  75, link2);
-   Brush* brush = new Brush(link3, 320, 105);
+   Link*  link1 = new Link(Joint(PRISMATIC, 0, 300,   5, 175, 430), 150, base);
+   Link*  link2 = new Link(Joint(REVOLUTE,  0, 360,   0, 175, 280), 100, link1);
+   Link*  link3 = new Link(Joint(REVOLUTE,  0, 360,   0, 175, 180),  75, link2);
+   Brush* brush = new Brush(link3,                       175, 105);
 
    // Set the successor links
    base->next_link = link1;
@@ -170,6 +170,208 @@ void RobotArm::moveJoint(Link* link, Motion motion, int amt)
          link->joint.X += xoffset;
       }
       getBrush()->joint.X += xoffset;
+   }
+
+   // world mode
+   if (motion & X)
+   {
+      int curX = link->joint.X;
+      int curY = link->joint.Y;
+      int softMin = links[1]->joint.range_min;
+      int softMax = links[1]->joint.range_max;
+      int link1X = links[1]->joint.X;
+      int link1Y = links[1]->joint.Y;
+
+      if (motion == X_DEC) 
+      {
+         if (link1X - OFFSET > softMin)
+         {
+            // move all joints left
+            moveJoint(links[1], LEFT, links[1]->joint.rotation - amt);//--links[1]->joint.X);
+         }
+         else
+         {
+            // fancy stuff
+            int link2X = links[2]->joint.X;
+            int link2Y = links[2]->joint.Y;
+
+            // values
+            int l2len = links[2]->length;
+            int l3len = links[3]->length;
+
+            // not really distance, but did not want to sqrt, then square it
+            // is really dist ^ 2
+            long int dist_  = pow((link2X - curX), 2) + pow((link2Y - curY), 2); // 34625
+
+            // law of cosines
+            long int numer  = abs( pow(l2len, 2) + pow(l3len, 2) - dist_ ); // 15625 - 59525
+            int denom  = 2 * l2len * l3len; // 15000
+            long double angle3 = acos( numer / denom );
+
+            // law of sines
+            long double angle2 = asin( sin ( angle3 ) / sqrt(dist_) * links[3]->length );
+
+            // convert angles to degrees
+            angle2 *= 180/PI;
+            angle3 *= 180/PI;
+
+            // use them
+            Motion dir2 = ( (long int) angle2 < links[2]->joint.rotation) ? CW : CCW;
+            moveJoint(links[2], dir2, (long int) angle2);
+            cout << "angle 2: " << (double) angle2 << endl;
+            printf("  dist: %d \n numer: %d \n denom %d \n", dist_, numer, denom);
+
+            Motion dir3 = ( (long int) angle3 < links[3]->joint.rotation) ? CW : CCW;
+            moveJoint(links[3], dir3, (long int) angle3);
+            cout << "angle 3: " << (double) angle3 << endl;
+         }
+      }
+      else if (motion == X_INC)
+      {
+         if (link1X - OFFSET < softMax)
+         {
+            // move all joints right
+            moveJoint(links[1], RIGHT, links[1]->joint.rotation + amt);//++links[1]->joint.X);
+         }
+         else
+         {
+            // fancy stuff
+            int link2X = links[2]->joint.X;
+            int link2Y = links[2]->joint.Y;
+
+            // values
+            int l2len = links[2]->length;
+            int l3len = links[3]->length;
+
+            // not really distance, but did not want to sqrt, then square it
+            // is really dist ^ 2
+            long int dist_  = pow((link2X - curX), 2) + pow((link2Y - curY), 2); // 59525
+
+            // law of cosines
+            long int numer  = abs( pow(l2len, 2) + pow(l3len, 2) - dist_ ); // 15625 - 59525
+            int denom  = 2 * l2len * l3len; // 15000
+            long double angle3 = acos( numer / denom );
+
+            // law of sines
+            long double angle2 = asin( sin ( angle3 ) / sqrt(dist_) * links[3]->length );
+
+            // convert angles to degrees
+            angle2 *= 180/PI;
+            angle3 *= 180/PI;
+
+            // use them
+            Motion dir2 = ( (long int) angle2 < links[2]->joint.rotation) ? CW : CCW;
+            moveJoint(links[2], dir2, (long int) angle2);
+            cout << "angle 2: " << (double) angle2 << endl;
+            printf("  dist: %d \n numer: %d \n denom %d \n", dist_, numer, denom);
+
+            Motion dir3 = ( (long int) angle3 < links[3]->joint.rotation) ? CW : CCW;
+            moveJoint(links[3], dir3, (long int) angle3);
+            cout << "angle 3: " << (double) angle3 << endl;
+         }
+      }
+   }
+   else if (motion & Y)
+   {
+      int curX = link->joint.X;
+      int curY = link->joint.Y;
+      int softMin = links[1]->joint.range_min;
+      int softMax = links[1]->joint.range_max;
+      int link1X = links[1]->joint.X;
+      int link1Y = links[1]->joint.Y;
+
+      if (motion == Y_DEC) 
+      {
+         /*
+         if (link1Y < softMin)
+         {
+            // move all joints left
+            moveJoint(links[1], LEFT, links[1]->joint.rotation - amt);//--links[1]->joint.X);
+         }
+         else
+         // */
+         {
+            // fancy stuff
+            int link2X = links[2]->joint.X;
+            int link2Y = links[2]->joint.Y;
+
+            // values
+            int l2len = links[2]->length;
+            int l3len = links[3]->length;
+
+            // not really distance, but did not want to sqrt, then square it
+            // is really dist ^ 2
+            long int dist_  = pow((link2X - curX), 2) + pow((link2Y - curY), 2); // 59525
+
+            // law of cosines
+            long int numer  = abs( pow(l2len, 2) + pow(l3len, 2) - dist_ ); // 15625 - 59525
+            int denom  = 2 * l2len * l3len; // 15000
+            long double angle3 = acos( numer / denom );
+
+            // law of sines
+            long double angle2 = asin( sin ( angle3 ) / sqrt(dist_) * links[3]->length );
+
+            // convert angles to degrees
+            angle2 *= 180/PI;
+            angle3 *= 180/PI;
+
+            // use them
+            Motion dir2 = ( (long int) angle2 < links[2]->joint.rotation) ? CW : CCW;
+            moveJoint(links[2], dir2, (long int) angle2);
+            cout << "angle 2: " << (double) angle2 << endl;
+            printf("  dist: %d \n numer: %d \n denom %d \n", dist_, numer, denom);
+
+            Motion dir3 = ( (long int) angle3 < links[3]->joint.rotation) ? CW : CCW;
+            moveJoint(links[3], dir3, (long int) angle3);
+            cout << "angle 3: " << (double) angle3 << endl;
+         }
+      }
+      else if (motion == Y_INC)
+      {
+         /*
+         if (link1Y > softMax)
+         {
+            // move all joints right
+            moveJoint(links[1], RIGHT, links[1]->joint.rotation + amt);//++links[1]->joint.X);
+         }
+         else
+         // */
+         {
+            // fancy stuff
+            int link2X = links[2]->joint.X;
+            int link2Y = links[2]->joint.Y;
+
+            // values
+            int l2len = links[2]->length;
+            int l3len = links[3]->length;
+
+            // not really distance, but did not want to sqrt, then square it
+            // is really dist ^ 2
+            long int dist_  = pow((link2X - curX), 2) + pow((link2Y - curY), 2); // 59525
+
+            // law of cosines
+            long int numer  = abs( pow(l2len, 2) + pow(l3len, 2) - dist_ ); // 15625 - 59525
+            int denom  = 2 * l2len * l3len; // 15000
+            long double angle3 = acos( numer / denom );
+
+            // law of sines
+            long double angle2 = asin( sin ( angle3 ) / sqrt(dist_) * links[3]->length );
+
+            // convert angles to degrees
+            angle2 *= 180/PI;
+            angle3 *= 180/PI;
+
+            // use them
+            Motion dir2 = ( (long int) angle2 < links[2]->joint.rotation) ? CW : CCW;
+            moveJoint(links[2], dir2, (long int) angle2);
+            cout << "angle 2: " << (double) angle2 << endl;
+            printf("  dist: %d \n numer: %d \n denom %d \n", dist_, numer, denom);
+
+            Motion dir3 = ( (long int) angle3 < links[3]->joint.rotation) ? CW : CCW;
+            moveJoint(links[3], dir3, (long int) angle3);
+            cout << "angle 3: " << (double) angle3 << endl;
+         }
+      }
    }
 }
 

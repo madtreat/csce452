@@ -36,6 +36,9 @@ painting(false)
    //controlLayout->addSpacing(15);
    //controlLayout->addSpacing(15);
 
+   connect( canvasWidget,  SIGNAL(jointsChanged()),
+            this,          SLOT  (updateBrushPos()));
+
    //--------------------------------------------------------//
    // Add control panel to main grid layout
    //--------------------------------------------------------//
@@ -149,17 +152,21 @@ QWidget* Window::initWorldControls()
    worldControls = new QWidget(this);
    worldControls->setObjectName("container");
 
+   /*
    QWidget* joint1 = createWorldControl(1);
    QWidget* joint2 = createWorldControl(2);
    QWidget* joint3 = createWorldControl(3);
+   // */
    QWidget* brush  = createWorldControl(4);
 
    QVBoxLayout* worldLayout = new QVBoxLayout(worldControls);
    worldLayout->setContentsMargins(0, 0, 0, 0);
    //worldLayout->addWidget(joint1);
    worldLayout->addWidget(brush);
+   /*
    worldLayout->addWidget(joint2);
    worldLayout->addWidget(joint3);
+   */
 
    QString label = "World Mode";
    worldButton = new QPushButton(label, this);
@@ -215,6 +222,16 @@ void Window::toggleWorldControlsVisible(bool enabled)
    // */
 }
 
+void Window::updateBrushPos()
+{
+   if (!brushSpinX || !brushSpinY)
+      return;
+
+   // update the brush spin boxes' values
+   brushSpinX->setValue(arm->getBrush()->joint.X);
+   brushSpinY->setValue(arm->getBrush()->joint.Y);
+}
+
 void Window::keyPressEvent(QKeyEvent* event)
 {
    //qDebug() << "Key Pressed" << event->key();
@@ -232,6 +249,26 @@ void Window::keyReleaseEvent(QKeyEvent* event)
       painting = !painting;
       paintButton->toggle();
    }
+   else if (event->key() == Qt::Key_1)
+   {
+      // focus joint 1 control
+      joint1Spin->setFocus();
+   }
+   else if (event->key() == Qt::Key_2)
+   {
+      // focus joint 2 control
+      joint2Spin->setFocus();
+   }
+   else if (event->key() == Qt::Key_3)
+   {
+      // focus joint 3 control
+      joint3Spin->setFocus();
+   }
+   else if (event->key() == Qt::Key_4)
+   {
+      // focus brush control
+      brushSpinX->setFocus();
+   }
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - -//
@@ -243,6 +280,10 @@ QWidget* Window::createJointControl(int id)
    Joint j        = arm->getLink(id)->joint;
    QString name   = "joint" + QString::number(id);
    QString label  = "Joint " + QString::number(id);
+   if (j.type == REVOLUTE)
+      label += " (deg)";
+   else
+      label += " (px)";
 
    QWidget*     joint   = new QWidget(this);
    joint->setObjectName(name);
@@ -255,20 +296,18 @@ QWidget* Window::createJointControl(int id)
    jSpin1->setObjectName(name);
    jSpin1->setMinimumHeight(JOINT_HEIGHT);
    jSpin1->setRange(j.range_min, j.range_max);
-   if (j.type == REVOLUTE)
-      jSpin1->setSuffix(" deg");
-   else
-      jSpin1->setSuffix(" px");
-   // allow the joint to wrap if revolute
+   jSpin1->setSuffix(" (x1)");
    jSpin1->setWrapping(j.type == REVOLUTE);
+   jSpin1->setKeyboardTracking(false);
 
    QSpinBox*    jSpin5  = new QSpinBox(joint);
    jSpin5->setObjectName(name);
    jSpin5->setMinimumHeight(JOINT_HEIGHT);
    jSpin5->setRange(j.range_min, j.range_max);
    jSpin5->setSingleStep(5);
-   jSpin5->setSuffix(" x5");
+   jSpin5->setSuffix(" (x5)");
    jSpin5->setWrapping(j.type == REVOLUTE);
+   jSpin5->setKeyboardTracking(false);
 
    // Connect the signal to the joint's slot
    if (id == 1)
@@ -277,6 +316,7 @@ QWidget* Window::createJointControl(int id)
                canvasWidget,  SLOT  (changeJoint1(int)));
       connect( jSpin5,        SIGNAL(valueChanged(int)),
                canvasWidget,  SLOT  (changeJoint1(int)));
+      joint1Spin = jSpin5;
    }
    else if (id == 2)
    {
@@ -284,6 +324,7 @@ QWidget* Window::createJointControl(int id)
                canvasWidget,  SLOT  (changeJoint2(int)));
       connect( jSpin5,        SIGNAL(valueChanged(int)),
                canvasWidget,  SLOT  (changeJoint2(int)));
+      joint2Spin = jSpin5;
    }
    else if (id == 3)
    {
@@ -291,6 +332,7 @@ QWidget* Window::createJointControl(int id)
                canvasWidget,  SLOT  (changeJoint3(int)));
       connect( jSpin5,        SIGNAL(valueChanged(int)),
                canvasWidget,  SLOT  (changeJoint3(int)));
+      joint3Spin = jSpin5;
    }
 
    // connect the spin boxes to each other
@@ -302,11 +344,14 @@ QWidget* Window::createJointControl(int id)
    // set the default value afterward connecting so it will update the canvas
    jSpin1->setValue(j.rotation);
 
+   // set tab order
+   QWidget::setTabOrder(jSpin5, jSpin1);
+
    QGridLayout* jLayout = new QGridLayout(joint);
    jLayout->setContentsMargins(5, 5, 5, 5);
    jLayout->addWidget(jLabel, 0, 0, 1, 1);
-   jLayout->addWidget(jSpin1, 1, 0, 1, 1);
-   jLayout->addWidget(jSpin5, 2, 0, 1, 1);
+   jLayout->addWidget(jSpin1, 2, 0, 1, 1);
+   jLayout->addWidget(jSpin5, 1, 0, 1, 1);
 
    return joint;
 }
@@ -334,52 +379,42 @@ QWidget* Window::createWorldControl(int id)
    QSpinBox* jSpinX = new QSpinBox(joint);
    jSpinX->setObjectName(name);
    jSpinX->setMinimumHeight(JOINT_HEIGHT);
-   jSpinX->setRange(j.range_min, j.range_max);
+   if (id == 4)
+      jSpinX->setRange(arm->getBrush()->range_min_x, arm->getBrush()->range_max_x);
+   else
+      jSpinX->setRange(j.range_min, j.range_max);
    jSpinX->setPrefix("X=");
-   // allow the joint to wrap if revolute
    jSpinX->setWrapping(j.type == REVOLUTE);
+   jSpinX->setKeyboardTracking(false);
 
    QSpinBox* jSpinY = new QSpinBox(joint);
    jSpinY->setObjectName(name);
    jSpinY->setMinimumHeight(JOINT_HEIGHT);
-   jSpinY->setRange(j.range_min, j.range_max);
+   if (id == 4)
+      jSpinY->setRange(arm->getBrush()->range_min_y, arm->getBrush()->range_max_y);
+   else
+      jSpinY->setRange(j.range_min, j.range_max);
    jSpinY->setPrefix("Y=");
-   // allow the joint to wrap if revolute
    jSpinY->setWrapping(j.type == REVOLUTE);
+   jSpinY->setKeyboardTracking(false);
 
    // Connect the signals to the joint's slot
-   if (id == 1)
+   if (id == 4)
    {
       connect( jSpinX,        SIGNAL(valueChanged(int)),
-               canvasWidget,  SLOT  (changeJoint1LocX(int)));
+               canvasWidget,  SLOT  (changeBrushLocX(int)));
       connect( jSpinY,        SIGNAL(valueChanged(int)),
-               canvasWidget,  SLOT  (changeJoint1LocY(int)));
-   }
-   else if (id == 2)
-   {
-      connect( jSpinX,        SIGNAL(valueChanged(int)),
-               canvasWidget,  SLOT  (changeJoint2LocX(int)));
-      connect( jSpinY,        SIGNAL(valueChanged(int)),
-               canvasWidget,  SLOT  (changeJoint2LocY(int)));
-   }
-   else if (id == 3)
-   {
-      connect( jSpinX,        SIGNAL(valueChanged(int)),
-               canvasWidget,  SLOT  (changeJoint3LocX(int)));
-      connect( jSpinY,        SIGNAL(valueChanged(int)),
-               canvasWidget,  SLOT  (changeJoint3LocY(int)));
-   }
-   else if (id == 4)
-   {
-      connect( jSpinX,        SIGNAL(valueChanged(int)),
-               canvasWidget,  SLOT  (changeJoint4LocX(int)));
-      connect( jSpinY,        SIGNAL(valueChanged(int)),
-               canvasWidget,  SLOT  (changeJoint4LocY(int)));
+               canvasWidget,  SLOT  (changeBrushLocY(int)));
    }
    
    // set the default value afterward connecting so it will update the canvas
    jSpinX->setValue(j.X);
    jSpinY->setValue(j.Y);
+
+   // set tab order
+   QWidget::setTabOrder(jSpinX, jSpinY);
+   brushSpinX = jSpinX;
+   brushSpinY = jSpinY;
 
    QGridLayout* jLayout = new QGridLayout(joint);
    jLayout->setContentsMargins(5, 5, 5, 5);
@@ -425,6 +460,8 @@ QWidget* Window::createBrushControl()
    // connect the button to change the text
    connect( paintButton,  SIGNAL (toggled(bool)),
             this,         SLOT   (togglePaintText(bool)));
+
+   brushSizeSpin = bSpin;
 
    paintLayout->addWidget(paintButton, 0, 0);
    paintLayout->addWidget(bSpin, 0, 1);

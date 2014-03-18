@@ -13,7 +13,13 @@ enum Motion {
    CW    = 1,
    CCW   = 2,
    LEFT  = 4 | CCW,
-   RIGHT = 4 | CW
+   RIGHT = 4 | CW,
+   X     = 8,
+   X_DEC = X | LEFT,
+   X_INC = X | RIGHT,
+   Y     = 16,
+   Y_DEC = Y | LEFT,
+   Y_INC = Y | RIGHT
 };
 
 class RobotArm {
