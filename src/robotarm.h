@@ -42,7 +42,7 @@ public:
    
 	void rotateJoint(Link* link, Motion motion, int deg);
    void translateJoint(Link* link, Motion motion, int amt);
-	void translateBrush(Link* brush, Motion motion, int newVal);
+	void translateBrush(Link* brush, int newX, int newY);
 
 private:
    Link* links[LENGTH];
