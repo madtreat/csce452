@@ -70,7 +70,7 @@ Link* RobotArm::getLink(int link)
 }
 
 // Rotation joint
-void RobotArm::rotateJoint(Link* link, Motion motion, int deg)
+void RobotArm::rotateJoint(Link* link, Motion, int deg)
 {
    // set this link's rotation to the new value
    link->joint.rotation = deg;
@@ -126,9 +126,13 @@ void RobotArm::rotateJoint(Link* link, Motion motion, int deg)
 }
 
 // Translate prismatic Joint
-void RobotArm::translateJoint(Link* link, Motion motion, int newX)
+void RobotArm::translateJoint(Link* link, Motion, int newX)
 {
-   int xoffset = newX - link->joint.rotation;
+   if (newX < -5)
+      newX = -5;
+   if (newX > 465)
+      newX = 465;
+   int delta_x = newX - link->joint.rotation;
 
    link->joint.X = OFFSET_X + newX;
    link->joint.rotation = newX;
@@ -136,18 +140,21 @@ void RobotArm::translateJoint(Link* link, Motion motion, int newX)
    while( link->next_link != getBrush())
    {
       link = link->next_link;
-      link->joint.X += xoffset;
+      link->joint.X += delta_x;
    }
-   getBrush()->joint.X += xoffset;
+   getBrush()->joint.X += delta_x;
 }
 
-// Translate brush using x and y buttons
+// Translate the brush, computing the locations of all joints by 
+// Inverse Kinematics
 void RobotArm::translateBrush(Link* brush, int newX, int newY)
 {
+   //if (newX + OFFSET_X < 
 	// get Brush
 	int curX = brush->joint.X;
 	int curY = brush->joint.Y;
 	// get link lengths (should be 100 and 75 respectively)
+   int l1len = links[1]->length;
 	int l2len = links[2]->length;
 	int l3len = links[3]->length;
 
@@ -156,37 +163,91 @@ void RobotArm::translateBrush(Link* brush, int newX, int newY)
 		
    // not really distance, but did not want to sqrt, then square it
    // is really dist ^ 2 (c^2)
-   long int hyp_2  = pow((newX - links[2]->joint.X), 2) + pow((newX - links[2]->joint.Y), 2);
+   int deltaX_2 = pow((newX - links[2]->joint.X), 2);
+   int deltaY_2 = pow((newY - links[2]->joint.Y), 2);
+   long int hyp_2  = deltaX_2 + deltaY_2;
 
    // law of cosines
    int numer  = pow(l2len, 2) + pow(l3len, 2) - hyp_2;
    int denom  = 2 * l2len * l3len;
-   double angle3 = acos( (double) numer / (double) denom );
+   //double angle3 = acos( (double) numer / (double) denom );
 
    // law of sines
-   double angle2 = asin( ( sin(angle3) / sqrt(hyp_2) ) * l3len );
+   //double angle2 = asin( ( sin(angle3) / sqrt(hyp_2) ) * l3len );
    
-   //*
+   
+   /******************************************/
+
+   /****      This is the difference      ****/
+   // The following is team DROP DATABASE's code
+   /******************************************/
+   //Theta3 = cos^-1((-(X3 - X0)^2 - (Y3 - L0)^2 + L3^2 + L2^2) / (L3 * L2))
+	double theta3 = acos( ( -hyp_2 + pow(l2len, 2) + pow(l3len, 2) ) / denom );
+   // == our angle3
+	//Phi2 = cos^-1(((X3 - X0)^2 + (Y3 - L0)^2 - L3^2 + L2^2) / (sqrt((X3 - X0)^2 + (Y3 - L0)^2) * L2))
+	double phi2 = acos( ( hyp_2 + pow(l2len, 2) - pow(l3len, 2) ) / 
+                       ( 2 * l2len * sqrt(hyp_2)));
+	//Phi1 = cos^-1(((X3 - X0)^2 + (Y3 - L0)^2 + L1^2  - (X3 - X0)^2 - (Y3)^2) / (2sqrt((X3 - X0)^2 + (Y3 - L0)^2) * L1))
+	double phi1 = acos( ( hyp_2 + pow(l1len, 2) - deltaX_2 - pow(newY, 2) /
+                       ( 2 * l1len * sqrt(hyp_2))));
+	double theta2 = phi1 - phi2;
+
+   double theta2_deg = theta2 * 180.0/PI;
+   double theta3_deg = theta3 * 180.0/PI;
+   
+   double angle2 = theta2_deg;
+   double angle3 = theta3_deg;
+
+   // assign them
+   /*
+   if (newX < links[1]->joint.range_min)
+      links[1]->joint.X = links[1]->joint.range_min;
+   else if (newX + OFFSET_X > links[1]->joint.range_max)
+      links[1]->joint.X = links[1]->joint.range_max;
+   // */
+   // need to take the offset into account
+   links[1]->joint.X = newX;
+
+   /*
+   links[2]->joint.X = links[2]->length * ( cos(theta2)        + sin(theta2) );
+   links[2]->joint.Y = links[2]->joint.Y * ( -1.0*sin(theta2)   + cos(theta2) );
+
+   links[3]->joint.X = links[3]->joint.X * ( cos(theta3)        + sin(theta3) );
+   links[3]->joint.Y = links[3]->joint.Y * ( -1.0*sin(theta3)   + cos(theta3) );
+   // */
+   // I replaced the above with these to attempt combining theirs with ours
+   rotateJoint(links[2], Motion(), (int) theta2);
+   rotateJoint(links[3], Motion(), (int) 90-theta3);
+
+   links[4]->joint.X = newX;
+   links[4]->joint.Y = newY;
+
+   /*
    cout << "dist:    "<< hyp_2 << endl
          << "numer:   "<< numer << endl
          << "denom:   "<< denom << endl
          << "div:     "<< (double) numer / (double) denom << endl;
    // */
 
-   cout << "angle 2R: " << angle2 << endl;
-   cout << "angle 3R: " << angle3 << endl;
+   cout << "angle 2R: " << theta2 << endl;
+   cout << "angle 3R: " << theta3 << endl;
    // convert angles to degrees
-   angle2 = 90 - angle2 * (double) 180/ (double) PI;// - 90;
-   angle3 = 90 - angle3 * (double) 180/ (double) PI;// - 90;
+   //angle2 = angle2 * (double) 180/ (double) PI;// - 90;
+   //angle3 = angle3 * (double) 180/ (double) PI;// - 90;
+   cout << "angle 2 : " << theta2_deg << endl;
+   cout << "angle 3 : " << theta3_deg << endl;
    
+   /*
    std::cout << std::endl;
    std::cout << "*l1: " << links[1]->joint.X << " " << links[1]->joint.Y << std::endl;
    std::cout << "*l2: " << links[2]->joint.X << " " << links[2]->joint.Y << std::endl;
    std::cout << "*l3: " << links[3]->joint.X << " " << links[3]->joint.Y << std::endl;
    std::cout << "*br: " << links[4]->joint.X << " " << links[4]->joint.Y << std::endl;
    std::cout << std::endl;
-   
+   // */
+
    // use them
+   /*
    translateJoint(links[1], RIGHT, links[1]->joint.rotation - diff);
 
    Motion dir2 = ( (int) angle2 < links[2]->joint.rotation) ? CW : CCW;
@@ -194,8 +255,7 @@ void RobotArm::translateBrush(Link* brush, int newX, int newY)
    
    Motion dir3 = ( (int) angle3 < links[3]->joint.rotation) ? CW : CCW;
    rotateJoint(links[3], dir3, (int) angle3);
-   cout << "angle 2: "<< (int) angle2 << endl;
-   cout << "angle 3: " << (int) angle3 << endl;
+   // */
    
    // pray they work
    // prayer();
