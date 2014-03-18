@@ -17,6 +17,7 @@ const double PI = 3.1415926;
 
 RobotArm::RobotArm()
 {
+   // TODO: make these not hard coded
    // Create the links of this paintbot, including predecessors
    Base*  base  = new Base(300);
    Link*  link1 = new Link(Joint(PRISMATIC, 0, 300,   5, 175, 430), 150, base);
