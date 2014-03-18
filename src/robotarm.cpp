@@ -21,10 +21,10 @@ RobotArm::RobotArm()
    // TODO: make these not hard coded
    // Create the links of this paintbot, including predecessors
    Base*  base  = new Base(300);
-   Link*  link1 = new Link(Joint(PRISMATIC, 0, 300,   5, 175, 430), 150, base);
-   Link*  link2 = new Link(Joint(REVOLUTE,  0, 360,   0, 175, 280), 100, link1);
-   Link*  link3 = new Link(Joint(REVOLUTE,  0, 360,   0, 175, 180),  75, link2);
-   Brush* brush = new Brush(link3,                       175, 105);
+   Link*  link1 = new Link(Joint(PRISMATIC, 0, 300,  20, 190, 430), 150, base);
+   Link*  link2 = new Link(Joint(REVOLUTE,  0, 360,   0, 190, 280), 100, link1);
+   Link*  link3 = new Link(Joint(REVOLUTE,  0, 360,   0, 190, 180),  75, link2);
+   Brush* brush = new Brush(link3,                       190, 105);
 
    // Set the successor links
    base->next_link = link1;
@@ -149,7 +149,6 @@ void RobotArm::translateJoint(Link* link, Motion, int newX)
 // Inverse Kinematics
 void RobotArm::translateBrush(Link* brush, int newX, int newY)
 {
-   //if (newX + OFFSET_X < 
 	// get Brush
 	int curX = brush->joint.X;
 	int curY = brush->joint.Y;
@@ -160,9 +159,6 @@ void RobotArm::translateBrush(Link* brush, int newX, int newY)
 	int l2len = links[2]->length;
 	int l3len = links[3]->length;
 
-   // total distanced moved in this direction
-   int diff = abs(curX - newX);
-		
    int deltaX_2 = 0;
    int deltaY_2 = 0;
    long int hyp_2 = 1;
@@ -178,42 +174,19 @@ void RobotArm::translateBrush(Link* brush, int newX, int newY)
    double phi1 = 0;
    double phi2 = 0;
 
-   //*
    while (true)
    {
-      // */
-      // not really distance, but did not want to sqrt, then square it
-      // is really dist ^ 2 (c^2)
       deltaX_2 = pow((link1X - links[2]->joint.X), 2);
-      deltaY_2 = pow((newY - links[2]->joint.Y), 2);
+      deltaY_2 = pow((newY   - links[2]->joint.Y), 2);
       hyp_2  = deltaX_2 + deltaY_2;
 
       // law of cosines
       numer  = pow(l2len, 2) + pow(l3len, 2) - hyp_2;
       denom  = 2 * l2len * l3len;
-/*
-      if (abs( (double)numer / (double)denom ) > 1.0)
-         link1X++;
-      else
-         break;
-   }
-   // */
 
-   //double angle3 = acos( (double) numer / (double) denom );
-
-   // law of sines
-   //double angle2 = asin( ( sin(angle3) / sqrt(hyp_2) ) * l3len );
-   
-   
-      /******************************************/
-
-      /****      This is the difference      ****/
-      // The following is team DROP DATABASE's code
-      /******************************************/
       //Theta3 = cos^-1((-(X3 - X0)^2 - (Y3 - L0)^2 + L3^2 + L2^2) / (L3 * L2))
       double t3val = ( -hyp_2 + pow(l2len, 2) + pow(l3len, 2) ) / denom;
       theta3 = acos( t3val );
-      // == our angle3
 
       //Phi2 = cos^-1(((X3 - X0)^2 + (Y3 - L0)^2 - L3^2 + L2^2) / (sqrt((X3 - X0)^2 + (Y3 - L0)^2) * L2))
       double p2val =  ( hyp_2 + pow(l2len, 2) - pow(l3len, 2) ) / 
@@ -226,10 +199,20 @@ void RobotArm::translateBrush(Link* brush, int newX, int newY)
       phi1 = acos( p1val );
 
 
+
       if (abs(t3val) > 1.0 || abs(p2val) > 1.0 )//|| abs(p1val) > 1.0)
       {
-         link1X++;
-         //translateBrush(brush, ++newX, newY);
+         if (newY == 105)
+         {
+            phi1 = 0;
+            phi2 = 0;
+            theta2 = 0;
+            theta3 = 0;
+         }
+         else
+         {
+            link1X += 5;
+         }
       }
       else
       {
@@ -246,13 +229,14 @@ void RobotArm::translateBrush(Link* brush, int newX, int newY)
    }   
    
 
-   //*
+   /*
    cout << "dist:    "<< hyp_2 << endl;
    cout << "numer:   "<< numer << endl;
    cout << "denom:   "<< denom << endl;
    cout << "div:     "<< (double) numer / (double) denom << endl;
    // */
-
+   
+   /*
    cout << "     theta2 : " << theta2 << endl;
    cout << "     theta3 : " << theta3 << endl;
    cout << "       phi1 : " << phi1 << endl;
@@ -265,47 +249,45 @@ void RobotArm::translateBrush(Link* brush, int newX, int newY)
    cout << "  sin(phi)2 : " << sin(phi2) << endl;
    cout << "sin(theta)2d: " << sin(theta2_deg) << endl;
    cout << "sin(theta)3d: " << sin(theta3_deg) << endl;
+   // */
+
 
    // assign them
+   if (link1X < OFFSET_X)
+      link1X = OFFSET_X;
+   if (link1X > 640-OFFSET_X)
+      link1X = 640-OFFSET_X;
    
-   
-   //*
-   if (link1X < links[1]->joint.range_min)
-      links[1]->joint.X = links[1]->joint.range_min;
-   else if (link1X + OFFSET_X > links[1]->joint.range_max)
-      links[1]->joint.X = links[1]->joint.range_max;
-   // */
    // need to take the offset into account
    links[1]->joint.X = link1X;//newX;
    links[2]->joint.X = link1X;//newX;
 
    /*
-   links[2]->joint.X = links[2]->length * ( cos(theta2)        + sin(theta2) );
-   links[2]->joint.Y = links[2]->length * ( -1.0*sin(theta2)   + cos(theta2) );
    links[3]->joint.X = l2X + l2len * ( cos(phi2)        + sin(phi2) );
    links[3]->joint.Y = l2Y + l2len * ( -1.0*sin(phi2)   + cos(phi2) );
    // */
-   // I replaced the above with these to attempt combining theirs with ours
-   //rotateJoint(links[2], Motion(), (int) cos(theta2)     + sin(theta2));
-   //rotateJoint(links[3], Motion(), (int) -1.0*sin(theta3)+ cos(90-theta3));
-   //links[2]->joint.X += links[2]->length * sin(theta2_deg);
-   //links[2]->joint.Y += links[2]->length * cos(theta2_deg);
 
-   links[3]->joint.X = links[2]->joint.X + l2len * sin(phi2);//theta3_deg);
-   if (cos(phi2) > 0.0)
+   links[3]->joint.X = l2X + l2len * sin(phi2);//theta3_deg);
+   if (newY <= 280)//-25)
    {
-      links[3]->joint.Y = links[2]->joint.Y + l2len * -cos(phi2);//theta3_deg);
+      links[3]->joint.Y = l2Y + l2len * -cos(phi2);//theta3_deg);
    }
+   /*
+   else if (newY > 280-25 && newY < 280+25)
+   {
+      links[3]->joint.Y = l2Y + l2len * cos(90-phi2);
+   }
+   // */
    else
    {
-      links[3]->joint.Y = links[2]->joint.Y + l2len * cos(phi2);//theta3_deg);
+      links[3]->joint.Y = l2Y + l2len * cos(phi2);//theta3_deg);
    }
 
 
    links[4]->joint.X = newX;
    links[4]->joint.Y = newY;
 
-
+   /*
    cout << "angle 2R: " << theta2 << endl;
    cout << "angle 3R: " << theta3 << endl;
    // convert angles to degrees
@@ -313,27 +295,8 @@ void RobotArm::translateBrush(Link* brush, int newX, int newY)
    //angle3 = angle3 * (double) 180/ (double) PI;// - 90;
    cout << "angle 2 : " << theta2_deg << endl;
    cout << "angle 3 : " << theta3_deg << endl;
-   
-   /*
-   std::cout << std::endl;
-   std::cout << "*l1: " << links[1]->joint.X << " " << links[1]->joint.Y << std::endl;
-   std::cout << "*l2: " << links[2]->joint.X << " " << links[2]->joint.Y << std::endl;
-   std::cout << "*l3: " << links[3]->joint.X << " " << links[3]->joint.Y << std::endl;
-   std::cout << "*br: " << links[4]->joint.X << " " << links[4]->joint.Y << std::endl;
-   std::cout << std::endl;
    // */
 
-   // use them
-   /*
-   translateJoint(links[1], RIGHT, links[1]->joint.rotation - diff);
-
-   Motion dir2 = ( (int) angle2 < links[2]->joint.rotation) ? CW : CCW;
-   rotateJoint(links[2], dir2, (int) angle2);
-   
-   Motion dir3 = ( (int) angle3 < links[3]->joint.rotation) ? CW : CCW;
-   rotateJoint(links[3], dir3, (int) angle3);
-   // */
-   
    // pray they work
    // prayer();
 }
