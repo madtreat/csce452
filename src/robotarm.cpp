@@ -200,19 +200,17 @@ void RobotArm::translateBrush(Link* brush, int newX, int newY)
 
 
 
+      if (newY == 105)
+      {
+         phi1 = 0;
+         phi2 = 0;
+         theta2 = 0;
+         theta3 = 0;
+         break;
+      }
       if (abs(t3val) > 1.0 || abs(p2val) > 1.0 )//|| abs(p1val) > 1.0)
       {
-         if (newY == 105)
-         {
-            phi1 = 0;
-            phi2 = 0;
-            theta2 = 0;
-            theta3 = 0;
-         }
-         else
-         {
-            link1X += 5;
-         }
+         link1X += 5;
       }
       else
       {
