@@ -155,7 +155,7 @@ QWidget* Window::initWorldControls()
    worldControls->setObjectName("container");
 
    //*
-   QWidget* joint1 = createWorldControl(1);
+   //QWidget* joint1 = createWorldControl(1);
    QWidget* joint2 = createWorldControl(2);
    QWidget* joint3 = createWorldControl(3);
    // */
@@ -336,37 +336,43 @@ QWidget* Window::createJointControl(int id)
    jSpin5->setWrapping(j.type == REVOLUTE);
    jSpin5->setKeyboardTracking(false);
 
+	// connect the spin boxes to each other
+   connect( jSpin1,        SIGNAL(valueChanged(int)),
+            jSpin5,        SLOT  (setValue(int)));
+   connect( jSpin5,        SIGNAL(valueChanged(int)),
+            jSpin1,        SLOT  (setValue(int)));
+	
    // Connect the signal to the joint's slot
    if (id == 1)
    {
       connect( jSpin1,        SIGNAL(valueChanged(int)),
                canvasWidget,  SLOT  (changeJoint1(int)));
-      connect( jSpin5,        SIGNAL(valueChanged(int)),
+      /*
+		connect( jSpin5,        SIGNAL(valueChanged(int)),
                canvasWidget,  SLOT  (changeJoint1(int)));
+		// */
       joint1Spin = jSpin5;
    }
    else if (id == 2)
    {
       connect( jSpin1,        SIGNAL(valueChanged(int)),
                canvasWidget,  SLOT  (changeJoint2(int)));
-      connect( jSpin5,        SIGNAL(valueChanged(int)),
+      /*
+		connect( jSpin5,        SIGNAL(valueChanged(int)),
                canvasWidget,  SLOT  (changeJoint2(int)));
+		// */
       joint2Spin = jSpin5;
    }
    else if (id == 3)
    {
       connect( jSpin1,        SIGNAL(valueChanged(int)),
                canvasWidget,  SLOT  (changeJoint3(int)));
-      connect( jSpin5,        SIGNAL(valueChanged(int)),
+      /*
+		connect( jSpin5,        SIGNAL(valueChanged(int)),
                canvasWidget,  SLOT  (changeJoint3(int)));
+		// */
       joint3Spin = jSpin5;
    }
-
-   // connect the spin boxes to each other
-   connect( jSpin1,        SIGNAL(valueChanged(int)),
-            jSpin5,        SLOT  (setValue(int)));
-   connect( jSpin5,        SIGNAL(valueChanged(int)),
-            jSpin1,        SLOT  (setValue(int)));
    
    // set the default value afterward connecting so it will update the canvas
    jSpin1->setValue(j.rotation);

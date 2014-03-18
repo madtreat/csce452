@@ -27,6 +27,11 @@ public:
    static const int NUM_LINKS = 3;
    // the size of links is NUM_LINKS + base + brush (hence the +2)
    static const int LENGTH = NUM_LINKS + 2;
+	
+	// offset for X values to center them on the canvas
+	static const int OFFSET_X = 640/2 - 150;
+	static const int OFFSET_Y = 480-50;
+	//TODO:-----possibly move these^^^-----------
 
    RobotArm();
    ~RobotArm();
@@ -35,7 +40,9 @@ public:
    Link* getBase()  {return links[0];}
    Link* getBrush() {return links[LENGTH-1];}
    
-   void moveJoint(Link* link, Motion motion, int amt);
+	void rotateJoint(Link* link, Motion motion, int deg);
+   void translateJoint(Link* link, Motion motion, int amt);
+	void translateBrush(Link* brush, Motion motion, int newVal);
 
 private:
    Link* links[LENGTH];
