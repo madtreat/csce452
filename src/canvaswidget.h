@@ -23,6 +23,7 @@ public:
 
 signals:
    void jointsChanged();
+   void brushPosChanged();
 
 public slots:
    void animate();

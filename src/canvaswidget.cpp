@@ -91,9 +91,9 @@ void CanvasWidget::changeBrushLocX(int newVal)
    int dif = abs(prevX - newVal);//robot->getLink(1)->joint.X;
    robot->moveJoint(robot->getLink(4), motion, dif);
    
-   //joint3rot = newVal;
    std::cout << "joint 4 X location changing" << std::endl;
    printJointLocs();
+   emit brushPosChanged();
 }
 
 void CanvasWidget::changeBrushLocY(int newVal)
@@ -106,9 +106,9 @@ void CanvasWidget::changeBrushLocY(int newVal)
    int dif = abs(prevY - newVal);//robot->getLink(1)->joint.X;
    robot->moveJoint(robot->getLink(4), motion, dif);
    
-   //joint4rot = newVal;
    std::cout << "joint 4 Y location changing" << std::endl;
-   //printJointLocs();
+   printJointLocs();
+   emit brushPosChanged();
 }
 
 /*

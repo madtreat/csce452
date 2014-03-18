@@ -40,6 +40,7 @@ public slots:
    void toggleJointControlsVisible(bool);
    void toggleWorldControlsVisible(bool);
    void updateBrushPos();
+   void updateJointPos();
 
 protected:
    void keyPressEvent(QKeyEvent* event);
@@ -63,13 +64,13 @@ private:
    QPushButton*   jointButton;
    QPushButton*   worldButton;
 
-   // for number keys switching between joints
-   QWidget*       joint1Spin;
-   QWidget*       joint2Spin;
-   QWidget*       joint3Spin;
+   // for number keys switching between joints and keeping all values up to date
+   QSpinBox*      joint1Spin;
+   QSpinBox*      joint2Spin;
+   QSpinBox*      joint3Spin;
    QSpinBox*      brushSpinX;
    QSpinBox*      brushSpinY;
-   QWidget*       brushSizeSpin;
+   QSpinBox*      brushSizeSpin;
    
    QWidget* initJointControls();
    QWidget* initWorldControls();

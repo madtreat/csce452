@@ -38,6 +38,8 @@ painting(false)
 
    connect( canvasWidget,  SIGNAL(jointsChanged()),
             this,          SLOT  (updateBrushPos()));
+   connect( canvasWidget,  SIGNAL(brushPosChanged()),
+            this,          SLOT  (updateJointPos()));
 
    //--------------------------------------------------------//
    // Add control panel to main grid layout
@@ -152,7 +154,7 @@ QWidget* Window::initWorldControls()
    worldControls = new QWidget(this);
    worldControls->setObjectName("container");
 
-   /*
+   //*
    QWidget* joint1 = createWorldControl(1);
    QWidget* joint2 = createWorldControl(2);
    QWidget* joint3 = createWorldControl(3);
@@ -163,10 +165,10 @@ QWidget* Window::initWorldControls()
    worldLayout->setContentsMargins(0, 0, 0, 0);
    //worldLayout->addWidget(joint1);
    worldLayout->addWidget(brush);
-   /*
+   //*
    worldLayout->addWidget(joint2);
    worldLayout->addWidget(joint3);
-   */
+   // */
 
    QString label = "World Mode";
    worldButton = new QPushButton(label, this);
@@ -227,9 +229,34 @@ void Window::updateBrushPos()
    if (!brushSpinX || !brushSpinY)
       return;
 
+   // block all signals from being emitted from the canvasWidget while all values are updated
+   // to avoid infinite signal-update loops
+   canvasWidget->blockSignals(true);
+
    // update the brush spin boxes' values
    brushSpinX->setValue(arm->getBrush()->joint.X);
    brushSpinY->setValue(arm->getBrush()->joint.Y);
+
+   // allow canvasWidget's signals to emit again
+   canvasWidget->blockSignals(false);
+}
+
+void Window::updateJointPos()
+{
+   if (!joint1Spin || !joint2Spin || !joint3Spin)
+      return;
+
+   // block all signals from being emitted from the canvasWidget while all values are updated
+   // to avoid infinite signal-update loops
+   canvasWidget->blockSignals(true);
+
+   // update brush spin boxes' values
+   joint1Spin->setValue(arm->getLink(1)->joint.rotation);
+   joint2Spin->setValue(arm->getLink(2)->joint.rotation);
+   joint3Spin->setValue(arm->getLink(3)->joint.rotation);
+
+   // allow canvasWidget's signals to emit again
+   canvasWidget->blockSignals(false);
 }
 
 void Window::keyPressEvent(QKeyEvent* event)
