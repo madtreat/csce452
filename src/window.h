@@ -10,6 +10,8 @@
 #include <QKeyEvent>
 #include <QSpinBox>
 
+#include "myQSpinBox.h"
+
 class RobotArm;
 class Canvas;
 class CanvasWidget;
@@ -65,12 +67,12 @@ private:
    QPushButton*   worldButton;
 
    // for number keys switching between joints and keeping all values up to date
-   QSpinBox*      joint1Spin;
-   QSpinBox*      joint2Spin;
-   QSpinBox*      joint3Spin;
-   QSpinBox*      brushSpinX;
-   QSpinBox*      brushSpinY;
-   QSpinBox*      brushSizeSpin;
+   myQSpinBox*      joint1Spin;
+   myQSpinBox*      joint2Spin;
+   myQSpinBox*      joint3Spin;
+   myQSpinBox*      brushSpinX;
+   myQSpinBox*      brushSpinY;
+   myQSpinBox*      brushSizeSpin;
    
    QWidget* initJointControls();
    QWidget* initWorldControls();
