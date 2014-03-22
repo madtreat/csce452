@@ -27,3 +27,10 @@ execute the following steps from the root directory of the project:
 
 and to run the project (from the build directory):
    $ ./src/paintbot
+
+arguments:
+   -s [port]         Run as server on [port]
+   -c [host] [port]  Run as client connecting to [host] on [port]
+   -d [delay]        Add delay in [delay] seconds
+                     If -s or -c does not exist run as standard with no connections
+                     -s and -c can not be used at the same time
