@@ -48,7 +48,8 @@ public:
    // connection functions
    bool startServer();     // for servers
    bool connectToServer(); // for clients
-   void processMessage(QString cmd);  // parse and execute an incoming command
+   void processMessageFromClient(QString msg); // parse and execute
+   void processMessageFromServer(QString msg); // parse and execute
 
    void initStyles();
    void initCanvas();
@@ -60,6 +61,8 @@ public slots:
    void disconnectClient();
    void readMessage();
    void sendMessage(QString);
+   void notifyClient();// create message: server -> client
+   void notifyServer();// create message: client -> server
 
    void togglePaintText(bool);
    void toggleJointControlsVisible(bool);
@@ -80,8 +83,8 @@ private:
    QTcpSocket*    socket; // used by clients and servers - the client's connection
    QTcpServer*    server; // used by server only
 
+   // Qt CSS-like style sheet
    QString        controlPanelStyle;
-   bool           painting;
 
    QGridLayout*   layout;
    QWidget*       controlPanel;
@@ -100,6 +103,10 @@ private:
    QSpinBox*      brushSpinX;
    QSpinBox*      brushSpinY;
    QSpinBox*      brushSizeSpin;
+
+   // private functions
+   static int     jointToNum(QString name);
+   static QString numToJoint(int     num);
    
    QWidget* initJointControls();
    QWidget* initWorldControls();

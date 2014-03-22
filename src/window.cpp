@@ -20,8 +20,7 @@ Window::Window(ConnectionInfo _info)
 : QWidget(),
 conn(_info),
 socket(NULL),
-server(NULL),
-painting(false)
+server(NULL)
 {
    initStyles();
    initCanvas();
@@ -141,17 +140,174 @@ void Window::readMessage()
 {
    int bytes = socket->bytesAvailable();
    QString data = socket->readAll();
-   processMessage(data);
+
+   if (conn.type == SERVER)
+      processMessageFromClient(data);
+   else if (conn.type == CLIENT)
+      processMessageFromServer(data);
 }
 
 // send a message to the client (if a server) or to the server (if a client)
-void Window::sendMessage(QString cmd)
+void Window::sendMessage(QString msg)
 {
-   socket->write(cmd.toLatin1().data());
+   if (socket)
+      socket->write(msg.toLatin1().data());
+   else
+      qDebug() << "Error: socket not connected";
 }
 
-void Window::processMessage(QString cmd)
+void Window::processMessageFromClient(QString msg)
 {
+   // read and process a message from the client
+   // do stuff
+   QStringList parts = msg.split(":");
+   QString jointName = parts[0];
+
+   bool ok           = false;
+   int newVal        = parts[1].toInt(&ok);
+   int jointNum      = jointToNum(jointName);
+
+   if (!ok || jointNum == 0) // the link changing should NEVER be the base/link 0
+   {
+      qDebug() << "Error processing message from client";
+   }
+   
+   // set the new values
+   if (jointNum == 1)
+      joint1Spin->setValue(newVal);
+   else if (jointNum == 2)
+      joint2Spin->setValue(newVal);
+   else if (jointNum == 3)
+      joint3Spin->setValue(newVal);
+   else if (jointName == "BrushX")
+      brushSpinX->setValue(newVal);
+   else if (jointName == "BrushY")
+      brushSpinY->setValue(newVal);
+
+   notifyClient();
+}
+
+void Window::processMessageFromServer(QString msg)
+{
+   QStringList lines = msg.split("\n");
+   for (int i = 0; i < lines.size(); i++)
+   {
+      QStringList parts = lines.at(i).split(":");
+      QString joint  = parts.at(0);
+
+      int newSpinVal = parts.at(1).toInt(); // ignoring potential corruption 
+      int newX       = parts.at(2).toInt(); // TODO: check corrupted int values
+      int newY       = parts.at(3).toInt();
+
+      int linkNum = jointToNum(joint);
+      Link* link = arm->getLink(linkNum);
+      if (joint == "Brush")
+      {
+         int brushSize = newSpinVal & 0xff;
+         int painting  = newSpinVal >> 8;
+         brushSizeSpin->setValue(brushSize);
+         paintButton->setChecked((bool) painting);
+      }
+      else
+      {
+         link->joint.rotation = newSpinVal;
+      }
+      link->joint.X        = newX;
+      link->joint.Y        = newY;
+   }
+}
+
+int Window::jointToNum(QString name)
+{
+   if (name == "Brush" || name == "BrushX" || name == "BrushY")
+      return RobotArm::LENGTH-1; // the brush is link 4/joint 4
+
+   // parse the last character of name ( "Joint1" | "Joint2" | etc. )
+   QChar digit = name.at(name.size()-1);
+   int num = digit.digitValue();
+
+   if (num == -1)
+      return 0;
+   
+   return num;
+}
+
+QString Window::numToJoint(int num)
+{
+   if (num == RobotArm::LENGTH-1)
+      return "Brush";
+
+   QString joint = "Joint";
+   joint += QString::number(num);
+   return joint;
+}
+
+/* 
+   After the server updates all positions, package up the new values
+   and send them to the client
+   
+   Message structure (spaces added only for easier viewing):
+      Joint1 : newVal : newX : newY \n
+      Joint2 : newVal : newX : newY \n
+      Joint3 : newVal : newX : newY \n
+      Brush  : newVal : newX : newY \n
+   where 
+      newVal = the new spin box value  (joint.rotation)
+         EXCEPT:
+            brush newVal   = (painting << 8) | brushSize
+            where painting = {0, 1} (false or true)
+      newX   = the new X value         (joint.X)
+      newY   = the new Y value         (joint.Y)
+  
+ */
+void Window::notifyClient()
+{
+   QString msg = "";
+   for (int i = 1; i < RobotArm::LENGTH; i++)
+   {
+      Link* link = arm->getLink(i);
+
+      msg += numToJoint(i);
+      msg += ":";
+      msg += link->joint.rotation;
+      msg += ":";
+      msg += link->joint.X;
+      msg += ":";
+      msg += link->joint.Y;
+      msg += "\n";
+   }
+   sendMessage(msg);
+}
+
+/*
+   After the client changes any of the values on the control panel:
+   package up the necessary data and send it to the server.
+
+   Message Structure (spaces added only for easier viewing):
+      name : newVal
+   Where
+      name = { 
+         Joint1, 
+         Joint2, 
+         Joint3, 
+         BrushX, 
+         BrushY, 
+         BrushSize, 
+         Painting 
+      }
+      newVal = the new value to be sent corresponding to name
+ */
+void Window::notifyServer()
+{
+   QString msg;
+
+   QString name = "Joint1";
+   int newVal = 0;
+   
+   msg += name;
+   msg += ":";
+   msg += newVal;
+   sendMessage(msg);
 }
 
 void Window::initStyles()
@@ -290,7 +446,6 @@ QWidget* Window::initBrushControls()
 
 void Window::togglePaintText(bool enabled)
 {
-   painting = enabled;
    if (enabled)
       paintButton->setText("Stop Painting");
    else
@@ -392,7 +547,6 @@ void Window::keyReleaseEvent(QKeyEvent* event)
    if (event->key() == Qt::Key_Space)
    {
       qDebug() << "Toggling paint in canvas widget...";
-      painting = !painting;
       paintButton->toggle();
    }
    else if (event->key() == Qt::Key_1)
