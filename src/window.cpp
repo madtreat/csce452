@@ -299,6 +299,10 @@ void Window::notifyClient()
  */
 void Window::notifyServer()
 {
+   // TODO: add delay
+   // FIXME: get the right "name" attribute
+   //          change the client's connect() calls to a new slot
+   //          in the new slot, use the sender() function to get the proper "name"
    QString msg;
 
    QString name = "Joint1";
