@@ -9,10 +9,25 @@
 #include <QPushButton>
 #include <QKeyEvent>
 #include <QSpinBox>
+#include <QtNetwork/QTcpSocket>
+#include <QtNetwork/QTcpServer>
 
 class RobotArm;
 class Canvas;
 class CanvasWidget;
+
+enum AppType {
+   NOCONN = 0,
+   SERVER = 1,
+   CLIENT = 2
+};
+
+struct ConnectionInfo {
+   AppType        type;    // type of connection
+   QHostAddress   host;    // host address
+   quint16        port;    // port number of server
+   int            delay;   // time delay in seconds for connected applications
+};
 
 class Window : public QWidget
 {
@@ -27,8 +42,13 @@ public:
    static const int BRUSH_MIN       = 5;
    static const int BRUSH_MAX       = 40;
 
-   Window();
+   Window(ConnectionInfo _info);
    ~Window();
+
+   // connection functions
+   bool startServer();     // for servers
+   bool connectToServer(); // for clients
+   void processMessage(QString cmd);  // parse and execute an incoming command
 
    void initStyles();
    void initCanvas();
@@ -36,6 +56,11 @@ public:
    QWidget* initControlPanel();
 
 public slots:
+   void connectClient();
+   void disconnectClient();
+   void readMessage();
+   void sendMessage(QString);
+
    void togglePaintText(bool);
    void toggleJointControlsVisible(bool);
    void toggleWorldControlsVisible(bool);
@@ -50,6 +75,10 @@ private:
    RobotArm*      arm;
    Canvas*        canvas;
    CanvasWidget*  canvasWidget;
+
+   ConnectionInfo conn;
+   QTcpSocket*    socket; // used by clients and servers - the client's connection
+   QTcpServer*    server; // used by server only
 
    QString        controlPanelStyle;
    bool           painting;

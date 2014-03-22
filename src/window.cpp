@@ -16,8 +16,11 @@
 #include <QGroupBox>
 #include <QSpacerItem>
 
-Window::Window()
+Window::Window(ConnectionInfo _info)
 : QWidget(),
+conn(_info),
+socket(NULL),
+server(NULL),
 painting(false)
 {
    initStyles();
@@ -33,8 +36,6 @@ painting(false)
    controlLayout->addWidget(brushPanel,   1, 0, 1, 2);
    controlLayout->addWidget(jointPanel,   2, 0, 1, 1);
    controlLayout->addWidget(worldPanel,   2, 1, 1, 1);
-   //controlLayout->addSpacing(15);
-   //controlLayout->addSpacing(15);
 
    connect( canvasWidget,  SIGNAL(jointsChanged()),
             this,          SLOT  (updateBrushPos()));
@@ -45,6 +46,19 @@ painting(false)
    // Add control panel to main grid layout
    //--------------------------------------------------------//
    layout->addWidget(controlPanel, 0, 1);
+
+   // Set up the connection
+   bool success = false;
+   if (conn.type == SERVER)
+      success = startServer();
+   else if (conn.type == CLIENT)
+      success = connectToServer();
+
+   if (!success)
+   {
+      qDebug() << "Error establishing connection...exiting.";
+      exit(1);
+   }
 
    // Start animating
    QTimer* timer = new QTimer(this);
@@ -57,6 +71,87 @@ painting(false)
 Window::~Window()
 {
    delete canvas;
+}
+
+bool Window::startServer()
+{
+   if ( conn.port < 1000 )
+   {
+      qDebug() << "Invalid port";
+      return false;
+   }
+
+   server = new QTcpServer(this);
+   connect( server,  SIGNAL(newConnection()),
+            this,    SLOT  (connectClient()));
+   server->listen(conn.host, conn.port);
+
+   qDebug() << "Server started successfully!";
+   qDebug() << "Listening for connections on port" << conn.port << "\n";
+   return true;
+}
+
+// used for clients connecting to a server
+bool Window::connectToServer()
+{
+   if ( conn.port < 1000 )
+   {
+      qDebug() << "Inalid port";
+      return false;
+   }
+
+   socket->connectToHost(conn.host, conn.port);
+   connect(socket, SIGNAL(connected()), this, SLOT(connectionEstablished()));
+   connect(socket, SIGNAL(readyRead()), this, SLOT(readMessage()));
+   if (socket->waitForConnected(4000))
+   {
+      return true;
+   }
+   else
+   {
+      qDebug() << "Error connecting to server:" << socket->errorString();
+      return false;
+   }
+}
+
+// used for connecting a client to this server
+void Window::connectClient()
+{
+   socket = server->nextPendingConnection();
+   connect(socket, SIGNAL(disconnected()), this, SLOT(disconnectClient()));
+   connect(socket, SIGNAL(readyRead()),    this, SLOT(readMessage()));
+
+   // now that there is a connected client, make the server stop listening 
+   // for new connections
+   server->close();
+}
+
+// used for disconnecting a client from this server
+// and start listening for new connections again
+void Window::disconnectClient()
+{
+   if (server)
+      server->listen(conn.host, conn.port);
+   else
+      startServer();
+}
+
+// read a message from the client (if a server) or from the server (if a client)
+void Window::readMessage()
+{
+   int bytes = socket->bytesAvailable();
+   QString data = socket->readAll();
+   processMessage(data);
+}
+
+// send a message to the client (if a server) or to the server (if a client)
+void Window::sendMessage(QString cmd)
+{
+   socket->write(cmd.toLatin1().data());
+}
+
+void Window::processMessage(QString cmd)
+{
 }
 
 void Window::initStyles()
