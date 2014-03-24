@@ -5,8 +5,10 @@
 #include "robotarm.h"
 #include "window.h"
 #include "link.h"
-
+#include "stdio.h"
+#include "stdlib.h"
 #include <QApplication>
+#include <QDebug>
 #include <iostream>
 #include <unistd.h>
 
@@ -42,26 +44,31 @@ int main(int argc, char* argv[])
    int c;
 
    // get command line args
-   while((c = getopt (argc, argv, "s:h:p:c:d:")) != -1)
+   while((c = getopt (argc, argv, "scd:p:h")) != -1)
       switch(c) {
          case 's': // run as server using port 
             server = true; 
+            cout <<" in server"<<endl; 
             break;
 
          case 'c': // run client using host n port 
             client = true; 
+            cout << "in client"<<endl; 
             break;
 
          case 'd': // initialize delay
             delay = atoi(optarg);
+            cout<< " delay = "<<delay<<endl;
             break;
 
          case 'p': // port 
             port = atoi(optarg);
+            cout<< " port = "<<port<<endl; 
             break; 
 
          case 'h': // set up the host 
             address = optarg; 
+            qDebug() <<" address ="<<address; 
             break; 
 
          default:
