@@ -304,7 +304,7 @@ void Window::notifyClient()
 
    qDebug() << "Sending message to client:" << msg;
    if (conn.delay != 0)
-      usleep(conn.delay*1000); // client-side delay for conn.delay seconds
+      usleep(conn.delay*1000*1000); // client-side delay for conn.delay seconds
    sendMessage(msg);
 }
 
@@ -337,7 +337,7 @@ void Window::notifyServer(QString name, int val)
 
    qDebug() << "Sending message to server:" << msg;
    if (conn.delay != 0)
-      usleep(conn.delay*1000); // client-side delay for conn.delay seconds
+      usleep(conn.delay*1000*1000); // client-side delay for conn.delay seconds
    sendMessage(msg);
 }
 
@@ -592,82 +592,70 @@ void Window::keyPressEvent(QKeyEvent* event)
    {
    }
    // move right
-   else if (event->key() == Qt::Key_Right || event->key() == Qt::Key_D)
+	if (event->key() == Qt::Key_D)
    {
-      int newX = 2 + arm->getBrush()->joint.X;
-      canvasWidget->changeBrushX(newX);
+      int newX = 4 + arm->getBrush()->joint.X;
+      if (conn.type == NOCONN)
+         canvasWidget->changeBrushX(newX);
+      else if (conn.type == CLIENT)
+         changeBrushX(newX);
    }
    // move left
-   else if (event->key() == Qt::Key_Left || event->key() == Qt::Key_A)
+	if (event->key() == Qt::Key_A)
    {
-      int newX = -2 + arm->getBrush()->joint.X;
-      canvasWidget->changeBrushX(newX);
+      int newX = -4 + arm->getBrush()->joint.X;
+      if (conn.type == NOCONN)
+         canvasWidget->changeBrushX(newX);
+      else if (conn.type == CLIENT)
+         changeBrushX(newX);
    }
    // move up
-   else if (event->key() == Qt::Key_Up || event->key() == Qt::Key_W)
+	if (event->key() == Qt::Key_W)
    {
-      int newY = 2 + arm->getBrush()->joint.Y;
-      canvasWidget->changeBrushY(newY);
+      int newY = -4 + arm->getBrush()->joint.Y;
+      if (conn.type == NOCONN)
+         canvasWidget->changeBrushY(newY);
+      else if (conn.type == CLIENT)
+         changeBrushY(newY);
    }
    // move down
-   else if (event->key() == Qt::Key_Down || event->key() == Qt::Key_S)
+	if (event->key() == Qt::Key_S)
    {
-      int newY = -2 + arm->getBrush()->joint.Y;
-      canvasWidget->changeBrushY(newY);
+      int newY = 4 + arm->getBrush()->joint.Y;
+      if (conn.type == NOCONN)
+         canvasWidget->changeBrushY(newY);
+      else if (conn.type == CLIENT)
+         changeBrushY(newY);
    }
 }
 
 void Window::keyReleaseEvent(QKeyEvent* event)
 {
-   qDebug() << "Key Released" << event->key() << "(" << Qt::Key_Space << ")";
+   qDebug() << "Key Released" << event->key();
    if (event->key() == Qt::Key_Space)
    {
       qDebug() << "Toggling paint in canvas widget...";
       paintButton->toggle();
    }
-   else if (event->key() == Qt::Key_1)
+   if (event->key() == Qt::Key_1)
    {
       // focus joint 1 control
       //joint1Spin->setFocus();
    }
-   else if (event->key() == Qt::Key_2)
+   if (event->key() == Qt::Key_2)
    {
       // focus joint 2 control
       //joint2Spin->setFocus();
    }
-   else if (event->key() == Qt::Key_3)
+   if (event->key() == Qt::Key_3)
    {
       // focus joint 3 control
       //joint3Spin->setFocus();
    }
-   else if (event->key() == Qt::Key_4)
+   if (event->key() == Qt::Key_4)
    {
       // focus brush control
       //brushSpinX->setFocus();
-   }
-   // move right
-   else if (event->key() == Qt::Key_Right || event->key() == Qt::Key_D)
-   {
-      int newX = 2 + arm->getBrush()->joint.X;
-      canvasWidget->changeBrushX(newX);
-   }
-   // move left
-   else if (event->key() == Qt::Key_Left || event->key() == Qt::Key_A)
-   {
-      int newX = -2 + arm->getBrush()->joint.X;
-      canvasWidget->changeBrushX(newX);
-   }
-   // move up (NOT, it is actually reversed)
-   else if (event->key() == Qt::Key_Up || event->key() == Qt::Key_W)
-   {
-      int newY = -2 + arm->getBrush()->joint.Y;
-      canvasWidget->changeBrushY(newY);
-   }
-   // move down (NOT, it is actually reversed)
-   else if (event->key() == Qt::Key_Down || event->key() == Qt::Key_S)
-   {
-      int newY = 2 + arm->getBrush()->joint.Y;
-      canvasWidget->changeBrushY(newY);
    }
 }
 
@@ -692,7 +680,7 @@ QWidget* Window::createJointControl(int id)
    QLabel*      jLabel  = new QLabel(label, joint);
    jLabel->setAlignment(Qt::AlignCenter);
 
-   QSpinBox*    jSpin1  = new QSpinBox(joint);
+   myQSpinBox*    jSpin1  = new myQSpinBox(joint);
    jSpin1->setObjectName(name);
    jSpin1->setMinimumHeight(JOINT_HEIGHT);
    jSpin1->setRange(j.range_min, j.range_max);
@@ -700,7 +688,7 @@ QWidget* Window::createJointControl(int id)
    jSpin1->setWrapping(j.type == REVOLUTE);
    jSpin1->setKeyboardTracking(false);
 
-   QSpinBox*    jSpin5  = new QSpinBox(joint);
+   myQSpinBox*    jSpin5  = new myQSpinBox(joint);
    jSpin5->setObjectName(name);
    jSpin5->setMinimumHeight(JOINT_HEIGHT);
    jSpin5->setRange(j.range_min, j.range_max);
@@ -807,7 +795,7 @@ QWidget* Window::createWorldControl(int id)
    QLabel* jLabel = new QLabel(label, joint);
    jLabel->setAlignment(Qt::AlignCenter);
 
-   QSpinBox* jSpinX = new QSpinBox(joint);
+   myQSpinBox* jSpinX = new myQSpinBox(joint);
    jSpinX->setObjectName(name);
    jSpinX->setMinimumHeight(JOINT_HEIGHT);
    if (id == 4)
@@ -818,7 +806,7 @@ QWidget* Window::createWorldControl(int id)
    jSpinX->setWrapping(j.type == REVOLUTE);
    jSpinX->setKeyboardTracking(false);
 
-   QSpinBox* jSpinY = new QSpinBox(joint);
+   myQSpinBox* jSpinY = new myQSpinBox(joint);
    jSpinY->setObjectName(name);
    jSpinY->setMinimumHeight(JOINT_HEIGHT);
    if (id == 4)
@@ -884,7 +872,7 @@ QWidget* Window::createBrushControl()
    paintButton = new QPushButton("Paint", paintWidget);
    paintButton->setCheckable(true);
 
-   QSpinBox* bSpin = new QSpinBox(paintWidget);
+   myQSpinBox* bSpin = new myQSpinBox(paintWidget);
    bSpin->setObjectName(name);
    bSpin->setMinimumHeight(JOINT_HEIGHT);
    bSpin->setRange(BRUSH_MIN, BRUSH_MAX);

@@ -36,7 +36,7 @@ brushSize(5)
    int argc = 1;
    char* argv[argc];
    argv[0] = "paintbot";
-   glutInit(&argc, argv);
+   //glutInit(&argc, argv);
 }
 
 Canvas::~Canvas()

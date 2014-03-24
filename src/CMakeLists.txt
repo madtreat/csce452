@@ -47,6 +47,7 @@ set(SOURCES
    link.cpp
    robotarm.cpp
    window.cpp
+	myQSpinBox.cpp
 )
 
 # List of header files used
@@ -65,6 +66,7 @@ set(HEADERS
 set(HEADERS_MOC
    canvaswidget.h
    window.h
+	myQSpinBox.h
 )
 
 # Resources (.qrc file(s), contains locations to icons, stylesheets, etc.)
