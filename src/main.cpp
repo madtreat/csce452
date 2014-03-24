@@ -83,12 +83,14 @@ int main(int argc, char* argv[])
 
    if(server && port == 0)
    {
+      cout << "Invalid server configuration" << endl << endl;
       printUsage();
       return 1;
    }
 
    if(client && (port == 0 || address == "" ))
    {
+      cout << "Invalid client configuration" << endl << endl;
       printUsage();
       return 1;
    }
