@@ -36,6 +36,10 @@ server(NULL)
       success = connectToServer();
       title += " Client";
    }
+   else if (conn.type == NOCONN)
+   {
+      success = true;
+   }
 
    if (!success)
    {
