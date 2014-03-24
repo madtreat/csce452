@@ -8,14 +8,24 @@
 
 #include <QApplication>
 #include <iostream>
+#include <unistd.h>
 
 using namespace std;
 
 void printUsage()
 {
-   cout<<"paintbot (-s |-c) (-h host) (-p port) (-d delay)"<<endl;
-   //cout<<"  Where"<<endl; 
-    	
+   cout << "Usage: paintbot (-s | -c) (-h host) (-p port) (-d delay)" << endl;
+   cout << "   Where" << endl; 
+   cout << "         -s    Run as a server" << endl;
+   cout << "         -c    Run as a client" << endl;
+   cout << "         -p    Use the port given" << endl;
+   cout << "                  REQUIRED FOR: server, client" << endl;
+   cout << "         -h    Use the host address given" << endl;
+   cout << "                  REQUIRED FOR: client" << endl;
+   cout << "         -d    Use the delay given" << endl;
+   cout << "                  OPTIONAL" << endl;
+   cout << "   Note that if no -s or -c argument is specified, this will run as" << endl;
+   cout << "   a basic (connectionless) standalone application" << endl;
 }
 
 int main(int argc, char* argv[])
@@ -29,52 +39,52 @@ int main(int argc, char* argv[])
    bool server = false; 
    bool client = false; 
    // parse args
-  int c;
+   int c;
 
-  // get command line args
-  while((c = getopt (argc, argv, "s:h:p:c:d:")) != -1)
-    switch(c) {
-      case 's': // run as server using port 
-        server = true; 
-        break;
+   // get command line args
+   while((c = getopt (argc, argv, "s:h:p:c:d:")) != -1)
+      switch(c) {
+         case 's': // run as server using port 
+            server = true; 
+            break;
 
-      case 'c': // run client using host n port 
-        client = true; 
-        break;
+         case 'c': // run client using host n port 
+            client = true; 
+            break;
 
-      case 'd': // initialize delay
-        delay = atoi(optarg);
-        break;
+         case 'd': // initialize delay
+            delay = atoi(optarg);
+            break;
 
-      case 'p': // port 
-        port = atoi(optarg);
-	break; 
+         case 'p': // port 
+            port = atoi(optarg);
+            break; 
 
-      case 'h': // set up the host 
-	 address = optarg; 
-	break; 
-      
-	default:
-        abort();
-    }
-	
-    if (server && client)
-	{
-	 printUsage();
-	return 1;
-	}
+         case 'h': // set up the host 
+            address = optarg; 
+            break; 
 
-    if(server && port == 0)
-	{
-	printUsage();
-	return 1;
-	}
+         default:
+            abort();
+      }
 
-    if(client && (port == 0 || address == "" ))
-	{
-	printUsage();
-	return 1;
-	}
+   if (server && client)
+   {
+      printUsage();
+      return 1;
+   }
+
+   if(server && port == 0)
+   {
+      printUsage();
+      return 1;
+   }
+
+   if(client && (port == 0 || address == "" ))
+   {
+      printUsage();
+      return 1;
+   }
 
    ConnectionInfo info;
    info.type   = type;
