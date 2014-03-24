@@ -62,8 +62,19 @@ public slots:
    void readMessage();
    void sendMessage(QString);
    void notifyClient();// create message: server -> client
-   void notifyServer();// create message: client -> server
+   void notifyServer(QString name, int val);// create message: client -> server
 
+   // notifyServer() helper functions/slots
+   // These are for client to send the appropriate command to the server
+   void changeJoint1(int);
+   void changeJoint2(int);
+   void changeJoint3(int);
+   void changeBrushX(int);
+   void changeBrushY(int);
+   void changeBrushSize(int);
+   void changePainting(bool);
+
+   // other usefull helper functions/slots
    void togglePaintText(bool);
    void toggleJointControlsVisible(bool);
    void toggleWorldControlsVisible(bool);

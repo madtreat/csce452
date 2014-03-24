@@ -15,6 +15,7 @@
 #include <QApplication>
 #include <QGroupBox>
 #include <QSpacerItem>
+#include <unistd.h>
 
 Window::Window(ConnectionInfo _info)
 : QWidget(),
@@ -207,6 +208,7 @@ void Window::processMessageFromServer(QString msg)
          int painting  = newSpinVal >> 8;
          brushSizeSpin->setValue(brushSize);
          paintButton->setChecked((bool) painting);
+         togglePaintText((bool) painting);
       }
       else
       {
@@ -297,21 +299,62 @@ void Window::notifyClient()
       }
       newVal = the new value to be sent corresponding to name
  */
-void Window::notifyServer()
+void Window::notifyServer(QString name, int val)
 {
    // TODO: add delay
-   // FIXME: get the right "name" attribute
-   //          change the client's connect() calls to a new slot
-   //          in the new slot, use the sender() function to get the proper "name"
    QString msg;
-
-   QString name = "Joint1";
-   int newVal = 0;
-   
    msg += name;
    msg += ":";
-   msg += newVal;
+   msg += QString::number(val);
+
+   if (conn.delay != 0)
+      usleep(conn.delay*1000); // client-side delay for conn.delay seconds
    sendMessage(msg);
+}
+
+void Window::changeJoint1(int newVal)
+{
+   QString name = "Joint1";
+   notifyServer(name, newVal);
+}
+
+void Window::changeJoint2(int newVal)
+{
+   QString name = "Joint2";
+   notifyServer(name, newVal);
+}
+
+void Window::changeJoint3(int newVal)
+{
+   QString name = "Joint3";
+   notifyServer(name, newVal);
+}
+
+void Window::changeBrushX(int newVal)
+{
+   QString name = "BrushX";
+   notifyServer(name, newVal);
+}
+
+void Window::changeBrushY(int newVal)
+{
+   QString name = "BrushY";
+   notifyServer(name, newVal);
+}
+
+void Window::changeBrushSize(int newVal)
+{
+   QString name = "BrushSize";
+   notifyServer(name, newVal);
+}
+
+void Window::changePainting(bool enabled)
+{
+   QString name = "Painting";
+   if (enabled)
+      notifyServer(name, 1);
+   else
+      notifyServer(name, 0);
 }
 
 void Window::initStyles()
@@ -523,25 +566,25 @@ void Window::keyPressEvent(QKeyEvent* event)
    else if (event->key() == Qt::Key_Right || event->key() == Qt::Key_D)
    {
       int newX = 2 + arm->getBrush()->joint.X;
-      canvasWidget->changeBrushLocX(newX);
+      canvasWidget->changeBrushX(newX);
    }
    // move left
    else if (event->key() == Qt::Key_Left || event->key() == Qt::Key_A)
    {
       int newX = -2 + arm->getBrush()->joint.X;
-      canvasWidget->changeBrushLocX(newX);
+      canvasWidget->changeBrushX(newX);
    }
    // move up
    else if (event->key() == Qt::Key_Up || event->key() == Qt::Key_W)
    {
       int newY = 2 + arm->getBrush()->joint.Y;
-      canvasWidget->changeBrushLocY(newY);
+      canvasWidget->changeBrushY(newY);
    }
    // move down
    else if (event->key() == Qt::Key_Down || event->key() == Qt::Key_S)
    {
       int newY = -2 + arm->getBrush()->joint.Y;
-      canvasWidget->changeBrushLocY(newY);
+      canvasWidget->changeBrushY(newY);
    }
 }
 
@@ -577,25 +620,25 @@ void Window::keyReleaseEvent(QKeyEvent* event)
    else if (event->key() == Qt::Key_Right || event->key() == Qt::Key_D)
    {
       int newX = 2 + arm->getBrush()->joint.X;
-      canvasWidget->changeBrushLocX(newX);
+      canvasWidget->changeBrushX(newX);
    }
    // move left
    else if (event->key() == Qt::Key_Left || event->key() == Qt::Key_A)
    {
       int newX = -2 + arm->getBrush()->joint.X;
-      canvasWidget->changeBrushLocX(newX);
+      canvasWidget->changeBrushX(newX);
    }
    // move up (NOT, it is actually reversed)
    else if (event->key() == Qt::Key_Up || event->key() == Qt::Key_W)
    {
       int newY = -2 + arm->getBrush()->joint.Y;
-      canvasWidget->changeBrushLocY(newY);
+      canvasWidget->changeBrushY(newY);
    }
    // move down (NOT, it is actually reversed)
    else if (event->key() == Qt::Key_Down || event->key() == Qt::Key_S)
    {
       int newY = 2 + arm->getBrush()->joint.Y;
-      canvasWidget->changeBrushLocY(newY);
+      canvasWidget->changeBrushY(newY);
    }
 }
 
@@ -643,11 +686,20 @@ QWidget* Window::createJointControl(int id)
    connect( jSpin5,        SIGNAL(valueChanged(int)),
             jSpin1,        SLOT  (setValue(int)));
 	
-   // Connect the signal to the joint's slot
+   // Connect the signals to the canvas widget's slot if this is not a client
+   // if it IS a client, connect the signals to this class' slots to notify the server
    if (id == 1)
    {
-      connect( jSpin1,        SIGNAL(valueChanged(int)),
-               canvasWidget,  SLOT  (changeJoint1(int)));
+      if (conn.type == SERVER || conn.type == NOCONN)
+      {
+         connect( jSpin1,        SIGNAL(valueChanged(int)),
+                  canvasWidget,  SLOT  (changeJoint1(int)));
+      }
+      else if (conn.type == CLIENT)
+      {
+         connect( jSpin1,        SIGNAL(valueChanged(int)),
+                  this,          SLOT  (changeJoint1(int)));
+      }
       /*
 		connect( jSpin5,        SIGNAL(valueChanged(int)),
                canvasWidget,  SLOT  (changeJoint1(int)));
@@ -656,8 +708,16 @@ QWidget* Window::createJointControl(int id)
    }
    else if (id == 2)
    {
-      connect( jSpin1,        SIGNAL(valueChanged(int)),
-               canvasWidget,  SLOT  (changeJoint2(int)));
+      if (conn.type == SERVER || conn.type == NOCONN)
+      {
+         connect( jSpin1,        SIGNAL(valueChanged(int)),
+                  canvasWidget,  SLOT  (changeJoint2(int)));
+      }
+      else if (conn.type == CLIENT)
+      {
+         connect( jSpin1,        SIGNAL(valueChanged(int)),
+                  this,          SLOT  (changeJoint2(int)));
+      }
       /*
 		connect( jSpin5,        SIGNAL(valueChanged(int)),
                canvasWidget,  SLOT  (changeJoint2(int)));
@@ -666,8 +726,16 @@ QWidget* Window::createJointControl(int id)
    }
    else if (id == 3)
    {
-      connect( jSpin1,        SIGNAL(valueChanged(int)),
-               canvasWidget,  SLOT  (changeJoint3(int)));
+      if (conn.type == SERVER || conn.type == NOCONN)
+      {
+         connect( jSpin1,        SIGNAL(valueChanged(int)),
+                  canvasWidget,  SLOT  (changeJoint3(int)));
+      }
+      else if (conn.type == CLIENT)
+      {
+         connect( jSpin1,        SIGNAL(valueChanged(int)),
+                  this,          SLOT  (changeJoint3(int)));
+      }
       /*
 		connect( jSpin5,        SIGNAL(valueChanged(int)),
                canvasWidget,  SLOT  (changeJoint3(int)));
@@ -675,7 +743,7 @@ QWidget* Window::createJointControl(int id)
       joint3Spin = jSpin5;
    }
    
-   // set the default value afterward connecting so it will update the canvas
+   // set the default value after connecting so it will update the canvas
    jSpin1->setValue(j.rotation);
 
    // set tab order
@@ -732,16 +800,27 @@ QWidget* Window::createWorldControl(int id)
    jSpinY->setWrapping(j.type == REVOLUTE);
    jSpinY->setKeyboardTracking(false);
 
-   // Connect the signals to the joint's slot
+   // Connect the signals to the canvas widget's slot if this is not a client
+   // if it IS a client, connect the signals to this class' slots to notify the server
    if (id == 4)
    {
-      connect( jSpinX,        SIGNAL(valueChanged(int)),
-               canvasWidget,  SLOT  (changeBrushLocX(int)));
-      connect( jSpinY,        SIGNAL(valueChanged(int)),
-               canvasWidget,  SLOT  (changeBrushLocY(int)));
+      if (conn.type == SERVER || conn.type == NOCONN)
+      {
+         connect( jSpinX,        SIGNAL(valueChanged(int)),
+                  canvasWidget,  SLOT  (changeBrushX(int)));
+         connect( jSpinY,        SIGNAL(valueChanged(int)),
+                  canvasWidget,  SLOT  (changeBrushY(int)));
+      }
+      else if (conn.type == CLIENT)
+      {
+         connect( jSpinX,        SIGNAL(valueChanged(int)),
+                  this,          SLOT  (changeBrushX(int)));
+         connect( jSpinY,        SIGNAL(valueChanged(int)),
+                  this,          SLOT  (changeBrushY(int)));
+      }
    }
    
-   // set the default value afterward connecting so it will update the canvas
+   // set the default value after connecting so it will update the canvas
    jSpinX->setValue(j.X);
    jSpinY->setValue(j.Y);
 
@@ -784,16 +863,28 @@ QWidget* Window::createBrushControl()
    // do not allow the brush size to wrap
    bSpin->setWrapping(false);
 
-   // connect the brush spin box to the canvas widget
-   connect( bSpin,         SIGNAL(valueChanged(int)),
-            canvasWidget,  SLOT  (changeBrushSize(int)));
+   if (conn.type == SERVER || conn.type == NOCONN)
+   {
+      // connect the brush spin box to the canvas widget
+      connect( bSpin,         SIGNAL(valueChanged(int)),
+               canvasWidget,  SLOT  (changeBrushSize(int)));
 
-   // connect the button to the canvas widget
-   connect( paintButton,  SIGNAL (toggled(bool)),
-            canvasWidget, SLOT   (togglePaint(bool)));
-   // connect the button to change the text
-   connect( paintButton,  SIGNAL (toggled(bool)),
-            this,         SLOT   (togglePaintText(bool)));
+      // connect the button to the canvas widget
+      connect( paintButton,  SIGNAL (toggled(bool)),
+               canvasWidget, SLOT   (togglePaint(bool)));
+      // connect the button to change the text
+      connect( paintButton,  SIGNAL (toggled(bool)),
+               this,         SLOT   (togglePaintText(bool)));
+   }
+   else if (conn.type == CLIENT)
+   {
+      // connect the brush spin box to the notifyServer() helper
+      connect( bSpin,         SIGNAL(valueChanged(int)),
+               this,          SLOT  (changeBrushSize(int)));
+      // connect the button to change the text
+      connect( paintButton,  SIGNAL (toggled(bool)),
+               this,         SLOT   (changePainting(bool)));
+   }
 
    brushSizeSpin = bSpin;
 
