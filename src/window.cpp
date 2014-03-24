@@ -15,10 +15,13 @@
 #include <QApplication>
 #include <QGroupBox>
 #include <QSpacerItem>
+#include <unistd.h>
 
-Window::Window()
+Window::Window(ConnectionInfo _info)
 : QWidget(),
-painting(false)
+conn(_info),
+socket(NULL),
+server(NULL)
 {
    initStyles();
    initCanvas();
@@ -33,8 +36,6 @@ painting(false)
    controlLayout->addWidget(brushPanel,   1, 0, 1, 2);
    controlLayout->addWidget(jointPanel,   2, 0, 1, 1);
    controlLayout->addWidget(worldPanel,   2, 1, 1, 1);
-   //controlLayout->addSpacing(15);
-   //controlLayout->addSpacing(15);
 
    connect( canvasWidget,  SIGNAL(jointsChanged()),
             this,          SLOT  (updateBrushPos()));
@@ -45,6 +46,19 @@ painting(false)
    // Add control panel to main grid layout
    //--------------------------------------------------------//
    layout->addWidget(controlPanel, 0, 1);
+
+   // Set up the connection
+   bool success = false;
+   if (conn.type == SERVER)
+      success = startServer();
+   else if (conn.type == CLIENT)
+      success = connectToServer();
+
+   if (!success)
+   {
+      qDebug() << "Error establishing connection...exiting.";
+      exit(1);
+   }
 
    // Start animating
    QTimer* timer = new QTimer(this);
@@ -57,6 +71,290 @@ painting(false)
 Window::~Window()
 {
    delete canvas;
+}
+
+bool Window::startServer()
+{
+   if ( conn.port < 1000 )
+   {
+      qDebug() << "Invalid port";
+      return false;
+   }
+
+   server = new QTcpServer(this);
+   connect( server,  SIGNAL(newConnection()),
+            this,    SLOT  (connectClient()));
+   server->listen(conn.host, conn.port);
+
+   qDebug() << "Server started successfully!";
+   qDebug() << "Listening for connections on port" << conn.port << "\n";
+   return true;
+}
+
+// used for clients connecting to a server
+bool Window::connectToServer()
+{
+   if ( conn.port < 1000 )
+   {
+      qDebug() << "Inalid port";
+      return false;
+   }
+
+   socket->connectToHost(conn.host, conn.port);
+   connect(socket, SIGNAL(connected()), this, SLOT(connectionEstablished()));
+   connect(socket, SIGNAL(readyRead()), this, SLOT(readMessage()));
+   if (socket->waitForConnected(4000))
+   {
+      return true;
+   }
+   else
+   {
+      qDebug() << "Error connecting to server:" << socket->errorString();
+      return false;
+   }
+}
+
+// used for connecting a client to this server
+void Window::connectClient()
+{
+   socket = server->nextPendingConnection();
+   connect(socket, SIGNAL(disconnected()), this, SLOT(disconnectClient()));
+   connect(socket, SIGNAL(readyRead()),    this, SLOT(readMessage()));
+
+   // now that there is a connected client, make the server stop listening 
+   // for new connections
+   server->close();
+}
+
+// used for disconnecting a client from this server
+// and start listening for new connections again
+void Window::disconnectClient()
+{
+   if (server)
+      server->listen(conn.host, conn.port);
+   else
+      startServer();
+}
+
+// read a message from the client (if a server) or from the server (if a client)
+void Window::readMessage()
+{
+   int bytes = socket->bytesAvailable();
+   QString data = socket->readAll();
+
+   if (conn.type == SERVER)
+      processMessageFromClient(data);
+   else if (conn.type == CLIENT)
+      processMessageFromServer(data);
+}
+
+// send a message to the client (if a server) or to the server (if a client)
+void Window::sendMessage(QString msg)
+{
+   if (socket)
+      socket->write(msg.toLatin1().data());
+   else
+      qDebug() << "Error: socket not connected";
+}
+
+void Window::processMessageFromClient(QString msg)
+{
+   // read and process a message from the client
+   // do stuff
+   QStringList parts = msg.split(":");
+   QString jointName = parts[0];
+
+   bool ok           = false;
+   int newVal        = parts[1].toInt(&ok);
+   int jointNum      = jointToNum(jointName);
+
+   if (!ok || jointNum == 0) // the link changing should NEVER be the base/link 0
+   {
+      qDebug() << "Error processing message from client";
+   }
+   
+   // set the new values
+   if (jointNum == 1)
+      joint1Spin->setValue(newVal);
+   else if (jointNum == 2)
+      joint2Spin->setValue(newVal);
+   else if (jointNum == 3)
+      joint3Spin->setValue(newVal);
+   else if (jointName == "BrushX")
+      brushSpinX->setValue(newVal);
+   else if (jointName == "BrushY")
+      brushSpinY->setValue(newVal);
+
+   notifyClient();
+}
+
+void Window::processMessageFromServer(QString msg)
+{
+   QStringList lines = msg.split("\n");
+   for (int i = 0; i < lines.size(); i++)
+   {
+      QStringList parts = lines.at(i).split(":");
+      QString joint  = parts.at(0);
+
+      int newSpinVal = parts.at(1).toInt(); // ignoring potential corruption 
+      int newX       = parts.at(2).toInt(); // TODO: check corrupted int values
+      int newY       = parts.at(3).toInt();
+
+      int linkNum = jointToNum(joint);
+      Link* link = arm->getLink(linkNum);
+      if (joint == "Brush")
+      {
+         int brushSize = newSpinVal & 0xff;
+         int painting  = newSpinVal >> 8;
+         brushSizeSpin->setValue(brushSize);
+         paintButton->setChecked((bool) painting);
+         togglePaintText((bool) painting);
+      }
+      else
+      {
+         link->joint.rotation = newSpinVal;
+      }
+      link->joint.X        = newX;
+      link->joint.Y        = newY;
+   }
+}
+
+int Window::jointToNum(QString name)
+{
+   if (name == "Brush" || name == "BrushX" || name == "BrushY")
+      return RobotArm::LENGTH-1; // the brush is link 4/joint 4
+
+   // parse the last character of name ( "Joint1" | "Joint2" | etc. )
+   QChar digit = name.at(name.size()-1);
+   int num = digit.digitValue();
+
+   if (num == -1)
+      return 0;
+   
+   return num;
+}
+
+QString Window::numToJoint(int num)
+{
+   if (num == RobotArm::LENGTH-1)
+      return "Brush";
+
+   QString joint = "Joint";
+   joint += QString::number(num);
+   return joint;
+}
+
+/* 
+   After the server updates all positions, package up the new values
+   and send them to the client
+   
+   Message structure (spaces added only for easier viewing):
+      Joint1 : newVal : newX : newY \n
+      Joint2 : newVal : newX : newY \n
+      Joint3 : newVal : newX : newY \n
+      Brush  : newVal : newX : newY \n
+   where 
+      newVal = the new spin box value  (joint.rotation)
+         EXCEPT:
+            brush newVal   = (painting << 8) | brushSize
+            where painting = {0, 1} (false or true)
+      newX   = the new X value         (joint.X)
+      newY   = the new Y value         (joint.Y)
+  
+ */
+void Window::notifyClient()
+{
+   QString msg = "";
+   for (int i = 1; i < RobotArm::LENGTH; i++)
+   {
+      Link* link = arm->getLink(i);
+
+      msg += numToJoint(i);
+      msg += ":";
+      msg += link->joint.rotation;
+      msg += ":";
+      msg += link->joint.X;
+      msg += ":";
+      msg += link->joint.Y;
+      msg += "\n";
+   }
+   sendMessage(msg);
+}
+
+/*
+   After the client changes any of the values on the control panel:
+   package up the necessary data and send it to the server.
+
+   Message Structure (spaces added only for easier viewing):
+      name : newVal
+   Where
+      name = { 
+         Joint1, 
+         Joint2, 
+         Joint3, 
+         BrushX, 
+         BrushY, 
+         BrushSize, 
+         Painting 
+      }
+      newVal = the new value to be sent corresponding to name
+ */
+void Window::notifyServer(QString name, int val)
+{
+   // TODO: add delay
+   QString msg;
+   msg += name;
+   msg += ":";
+   msg += QString::number(val);
+
+   if (conn.delay != 0)
+      usleep(conn.delay*1000); // client-side delay for conn.delay seconds
+   sendMessage(msg);
+}
+
+void Window::changeJoint1(int newVal)
+{
+   QString name = "Joint1";
+   notifyServer(name, newVal);
+}
+
+void Window::changeJoint2(int newVal)
+{
+   QString name = "Joint2";
+   notifyServer(name, newVal);
+}
+
+void Window::changeJoint3(int newVal)
+{
+   QString name = "Joint3";
+   notifyServer(name, newVal);
+}
+
+void Window::changeBrushX(int newVal)
+{
+   QString name = "BrushX";
+   notifyServer(name, newVal);
+}
+
+void Window::changeBrushY(int newVal)
+{
+   QString name = "BrushY";
+   notifyServer(name, newVal);
+}
+
+void Window::changeBrushSize(int newVal)
+{
+   QString name = "BrushSize";
+   notifyServer(name, newVal);
+}
+
+void Window::changePainting(bool enabled)
+{
+   QString name = "Painting";
+   if (enabled)
+      notifyServer(name, 1);
+   else
+      notifyServer(name, 0);
 }
 
 void Window::initStyles()
@@ -195,7 +493,6 @@ QWidget* Window::initBrushControls()
 
 void Window::togglePaintText(bool enabled)
 {
-   painting = enabled;
    if (enabled)
       paintButton->setText("Stop Painting");
    else
@@ -269,25 +566,25 @@ void Window::keyPressEvent(QKeyEvent* event)
    else if (event->key() == Qt::Key_Right || event->key() == Qt::Key_D)
    {
       int newX = 2 + arm->getBrush()->joint.X;
-      canvasWidget->changeBrushLocX(newX);
+      canvasWidget->changeBrushX(newX);
    }
    // move left
    else if (event->key() == Qt::Key_Left || event->key() == Qt::Key_A)
    {
       int newX = -2 + arm->getBrush()->joint.X;
-      canvasWidget->changeBrushLocX(newX);
+      canvasWidget->changeBrushX(newX);
    }
    // move up
    else if (event->key() == Qt::Key_Up || event->key() == Qt::Key_W)
    {
       int newY = 2 + arm->getBrush()->joint.Y;
-      canvasWidget->changeBrushLocY(newY);
+      canvasWidget->changeBrushY(newY);
    }
    // move down
    else if (event->key() == Qt::Key_Down || event->key() == Qt::Key_S)
    {
       int newY = -2 + arm->getBrush()->joint.Y;
-      canvasWidget->changeBrushLocY(newY);
+      canvasWidget->changeBrushY(newY);
    }
 }
 
@@ -297,7 +594,6 @@ void Window::keyReleaseEvent(QKeyEvent* event)
    if (event->key() == Qt::Key_Space)
    {
       qDebug() << "Toggling paint in canvas widget...";
-      painting = !painting;
       paintButton->toggle();
    }
    else if (event->key() == Qt::Key_1)
@@ -324,25 +620,25 @@ void Window::keyReleaseEvent(QKeyEvent* event)
    else if (event->key() == Qt::Key_Right || event->key() == Qt::Key_D)
    {
       int newX = 2 + arm->getBrush()->joint.X;
-      canvasWidget->changeBrushLocX(newX);
+      canvasWidget->changeBrushX(newX);
    }
    // move left
    else if (event->key() == Qt::Key_Left || event->key() == Qt::Key_A)
    {
       int newX = -2 + arm->getBrush()->joint.X;
-      canvasWidget->changeBrushLocX(newX);
+      canvasWidget->changeBrushX(newX);
    }
    // move up (NOT, it is actually reversed)
    else if (event->key() == Qt::Key_Up || event->key() == Qt::Key_W)
    {
       int newY = -2 + arm->getBrush()->joint.Y;
-      canvasWidget->changeBrushLocY(newY);
+      canvasWidget->changeBrushY(newY);
    }
    // move down (NOT, it is actually reversed)
    else if (event->key() == Qt::Key_Down || event->key() == Qt::Key_S)
    {
       int newY = 2 + arm->getBrush()->joint.Y;
-      canvasWidget->changeBrushLocY(newY);
+      canvasWidget->changeBrushY(newY);
    }
 }
 
@@ -390,11 +686,20 @@ QWidget* Window::createJointControl(int id)
    connect( jSpin5,        SIGNAL(valueChanged(int)),
             jSpin1,        SLOT  (setValue(int)));
 	
-   // Connect the signal to the joint's slot
+   // Connect the signals to the canvas widget's slot if this is not a client
+   // if it IS a client, connect the signals to this class' slots to notify the server
    if (id == 1)
    {
-      connect( jSpin1,        SIGNAL(valueChanged(int)),
-               canvasWidget,  SLOT  (changeJoint1(int)));
+      if (conn.type == SERVER || conn.type == NOCONN)
+      {
+         connect( jSpin1,        SIGNAL(valueChanged(int)),
+                  canvasWidget,  SLOT  (changeJoint1(int)));
+      }
+      else if (conn.type == CLIENT)
+      {
+         connect( jSpin1,        SIGNAL(valueChanged(int)),
+                  this,          SLOT  (changeJoint1(int)));
+      }
       /*
 		connect( jSpin5,        SIGNAL(valueChanged(int)),
                canvasWidget,  SLOT  (changeJoint1(int)));
@@ -403,8 +708,16 @@ QWidget* Window::createJointControl(int id)
    }
    else if (id == 2)
    {
-      connect( jSpin1,        SIGNAL(valueChanged(int)),
-               canvasWidget,  SLOT  (changeJoint2(int)));
+      if (conn.type == SERVER || conn.type == NOCONN)
+      {
+         connect( jSpin1,        SIGNAL(valueChanged(int)),
+                  canvasWidget,  SLOT  (changeJoint2(int)));
+      }
+      else if (conn.type == CLIENT)
+      {
+         connect( jSpin1,        SIGNAL(valueChanged(int)),
+                  this,          SLOT  (changeJoint2(int)));
+      }
       /*
 		connect( jSpin5,        SIGNAL(valueChanged(int)),
                canvasWidget,  SLOT  (changeJoint2(int)));
@@ -413,8 +726,16 @@ QWidget* Window::createJointControl(int id)
    }
    else if (id == 3)
    {
-      connect( jSpin1,        SIGNAL(valueChanged(int)),
-               canvasWidget,  SLOT  (changeJoint3(int)));
+      if (conn.type == SERVER || conn.type == NOCONN)
+      {
+         connect( jSpin1,        SIGNAL(valueChanged(int)),
+                  canvasWidget,  SLOT  (changeJoint3(int)));
+      }
+      else if (conn.type == CLIENT)
+      {
+         connect( jSpin1,        SIGNAL(valueChanged(int)),
+                  this,          SLOT  (changeJoint3(int)));
+      }
       /*
 		connect( jSpin5,        SIGNAL(valueChanged(int)),
                canvasWidget,  SLOT  (changeJoint3(int)));
@@ -422,7 +743,7 @@ QWidget* Window::createJointControl(int id)
       joint3Spin = jSpin5;
    }
    
-   // set the default value afterward connecting so it will update the canvas
+   // set the default value after connecting so it will update the canvas
    jSpin1->setValue(j.rotation);
 
    // set tab order
@@ -479,16 +800,27 @@ QWidget* Window::createWorldControl(int id)
    jSpinY->setWrapping(j.type == REVOLUTE);
    jSpinY->setKeyboardTracking(false);
 
-   // Connect the signals to the joint's slot
+   // Connect the signals to the canvas widget's slot if this is not a client
+   // if it IS a client, connect the signals to this class' slots to notify the server
    if (id == 4)
    {
-      connect( jSpinX,        SIGNAL(valueChanged(int)),
-               canvasWidget,  SLOT  (changeBrushLocX(int)));
-      connect( jSpinY,        SIGNAL(valueChanged(int)),
-               canvasWidget,  SLOT  (changeBrushLocY(int)));
+      if (conn.type == SERVER || conn.type == NOCONN)
+      {
+         connect( jSpinX,        SIGNAL(valueChanged(int)),
+                  canvasWidget,  SLOT  (changeBrushX(int)));
+         connect( jSpinY,        SIGNAL(valueChanged(int)),
+                  canvasWidget,  SLOT  (changeBrushY(int)));
+      }
+      else if (conn.type == CLIENT)
+      {
+         connect( jSpinX,        SIGNAL(valueChanged(int)),
+                  this,          SLOT  (changeBrushX(int)));
+         connect( jSpinY,        SIGNAL(valueChanged(int)),
+                  this,          SLOT  (changeBrushY(int)));
+      }
    }
    
-   // set the default value afterward connecting so it will update the canvas
+   // set the default value after connecting so it will update the canvas
    jSpinX->setValue(j.X);
    jSpinY->setValue(j.Y);
 
@@ -531,16 +863,28 @@ QWidget* Window::createBrushControl()
    // do not allow the brush size to wrap
    bSpin->setWrapping(false);
 
-   // connect the brush spin box to the canvas widget
-   connect( bSpin,         SIGNAL(valueChanged(int)),
-            canvasWidget,  SLOT  (changeBrushSize(int)));
+   if (conn.type == SERVER || conn.type == NOCONN)
+   {
+      // connect the brush spin box to the canvas widget
+      connect( bSpin,         SIGNAL(valueChanged(int)),
+               canvasWidget,  SLOT  (changeBrushSize(int)));
 
-   // connect the button to the canvas widget
-   connect( paintButton,  SIGNAL (toggled(bool)),
-            canvasWidget, SLOT   (togglePaint(bool)));
-   // connect the button to change the text
-   connect( paintButton,  SIGNAL (toggled(bool)),
-            this,         SLOT   (togglePaintText(bool)));
+      // connect the button to the canvas widget
+      connect( paintButton,  SIGNAL (toggled(bool)),
+               canvasWidget, SLOT   (togglePaint(bool)));
+      // connect the button to change the text
+      connect( paintButton,  SIGNAL (toggled(bool)),
+               this,         SLOT   (togglePaintText(bool)));
+   }
+   else if (conn.type == CLIENT)
+   {
+      // connect the brush spin box to the notifyServer() helper
+      connect( bSpin,         SIGNAL(valueChanged(int)),
+               this,          SLOT  (changeBrushSize(int)));
+      // connect the button to change the text
+      connect( paintButton,  SIGNAL (toggled(bool)),
+               this,         SLOT   (changePainting(bool)));
+   }
 
    brushSizeSpin = bSpin;
 
