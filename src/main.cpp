@@ -34,7 +34,7 @@ int main(int argc, char* argv[])
 {
    QApplication app(argc, argv);
 
-   AppType    type = SERVER;
+   AppType    type = NOCONN;
    QString address = "";
    int        port = 0;
    int       delay = 0;
@@ -44,31 +44,28 @@ int main(int argc, char* argv[])
    int c;
 
    // get command line args
-   while((c = getopt (argc, argv, "scd:p:h")) != -1)
+   while((c = getopt (argc, argv, "sch:p:d:")) != -1)
       switch(c) {
          case 's': // run as server using port 
             server = true; 
-            cout <<" in server"<<endl; 
+            type = SERVER;
             break;
 
          case 'c': // run client using host n port 
-            client = true; 
-            cout << "in client"<<endl; 
+            client = true;
+            type = CLIENT;
             break;
 
          case 'd': // initialize delay
             delay = atoi(optarg);
-            cout<< " delay = "<<delay<<endl;
             break;
 
          case 'p': // port 
             port = atoi(optarg);
-            cout<< " port = "<<port<<endl; 
             break; 
 
          case 'h': // set up the host 
             address = optarg; 
-            qDebug() <<" address ="<<address; 
             break; 
 
          default:

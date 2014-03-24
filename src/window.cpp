@@ -48,11 +48,18 @@ server(NULL)
    layout->addWidget(controlPanel, 0, 1);
 
    // Set up the connection
+   QString title = "PaintBot";
    bool success = false;
    if (conn.type == SERVER)
+   {
       success = startServer();
+      title += " Server";
+   }
    else if (conn.type == CLIENT)
+   {
       success = connectToServer();
+      title += " Client";
+   }
 
    if (!success)
    {
@@ -65,7 +72,7 @@ server(NULL)
    connect(timer, SIGNAL(timeout()), canvasWidget, SLOT(animate()));
    timer->start();
 
-   setWindowTitle("PaintBot");
+   setWindowTitle(title);
 }
 
 Window::~Window()
@@ -278,6 +285,8 @@ void Window::notifyClient()
       msg += link->joint.Y;
       msg += "\n";
    }
+   if (conn.delay != 0)
+      usleep(conn.delay*1000); // client-side delay for conn.delay seconds
    sendMessage(msg);
 }
 
