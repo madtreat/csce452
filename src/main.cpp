@@ -38,8 +38,9 @@ int main(int argc, char* argv[])
    QString address = "";
    int        port = 0;
    int       delay = 0;
-   bool server = false; 
-   bool client = false; 
+   bool     server = false; 
+   bool     client = false; 
+
    // parse args
    int c;
 

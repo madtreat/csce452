@@ -23,6 +23,26 @@ conn(_info),
 socket(NULL),
 server(NULL)
 {
+   // Set up the connection
+   QString title = "PaintBot";
+   bool success = false;
+   if (conn.type == SERVER)
+   {
+      success = startServer();
+      title += " Server";
+   }
+   else if (conn.type == CLIENT)
+   {
+      success = connectToServer();
+      title += " Client";
+   }
+
+   if (!success)
+   {
+      qDebug() << "Error establishing connection...exiting.";
+      exit(1);
+   }
+
    initStyles();
    initCanvas();
    initLayout();
@@ -47,25 +67,6 @@ server(NULL)
    //--------------------------------------------------------//
    layout->addWidget(controlPanel, 0, 1);
 
-   // Set up the connection
-   QString title = "PaintBot";
-   bool success = false;
-   if (conn.type == SERVER)
-   {
-      success = startServer();
-      title += " Server";
-   }
-   else if (conn.type == CLIENT)
-   {
-      success = connectToServer();
-      title += " Client";
-   }
-
-   if (!success)
-   {
-      qDebug() << "Error establishing connection...exiting.";
-      exit(1);
-   }
 
    // Start animating
    QTimer* timer = new QTimer(this);
@@ -107,8 +108,10 @@ bool Window::connectToServer()
       return false;
    }
 
+   qDebug() << "Connecting to server...";
+   socket = new QTcpSocket(this);
    socket->connectToHost(conn.host, conn.port);
-   connect(socket, SIGNAL(connected()), this, SLOT(connectionEstablished()));
+   //connect(socket, SIGNAL(connected()), this, SLOT(connectionEstablished()));
    connect(socket, SIGNAL(readyRead()), this, SLOT(readMessage()));
    if (socket->waitForConnected(4000))
    {
