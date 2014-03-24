@@ -212,7 +212,11 @@ void Window::processMessageFromServer(QString msg)
    QStringList lines = msg.split("\n");
    for (int i = 0; i < lines.size(); i++)
    {
+      if (lines.at(i) == "")
+         continue;
       QStringList parts = lines.at(i).split(":");
+      qDebug() << "==> line[" << i << "] =" << lines.at(i);
+      qDebug() << "==> parts =" << parts;
       QString joint  = parts.at(0);
 
       int newSpinVal = parts.at(1).toInt(); // ignoring potential corruption 
@@ -290,13 +294,15 @@ void Window::notifyClient()
 
       msg += numToJoint(i);
       msg += ":";
-      msg += link->joint.rotation;
+      msg += QString::number(link->joint.rotation);
       msg += ":";
-      msg += link->joint.X;
+      msg += QString::number(link->joint.X);
       msg += ":";
-      msg += link->joint.Y;
+      msg += QString::number(link->joint.Y);
       msg += "\n";
    }
+
+   qDebug() << "Sending message to client:" << msg;
    if (conn.delay != 0)
       usleep(conn.delay*1000); // client-side delay for conn.delay seconds
    sendMessage(msg);
