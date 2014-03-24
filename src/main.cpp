@@ -11,6 +11,13 @@
 
 using namespace std;
 
+void printUsage()
+{
+   cout<<"paintbot (-s |-c) (-h host) (-p port) (-d delay)"<<endl;
+   //cout<<"  Where"<<endl; 
+    	
+}
+
 int main(int argc, char* argv[])
 {
    QApplication app(argc, argv);
