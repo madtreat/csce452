@@ -90,8 +90,7 @@ bool Window::startServer()
    }
 
    server = new QTcpServer(this);
-   connect( server,  SIGNAL(newConnection()),
-            this,    SLOT  (connectClient()));
+   connect( server, SIGNAL(newConnection()), this, SLOT(connectClient()));
    server->listen(conn.host, conn.port);
 
    qDebug() << "Server started successfully!";
@@ -128,6 +127,7 @@ bool Window::connectToServer()
 void Window::connectClient()
 {
    socket = server->nextPendingConnection();
+   qDebug() << "Client connected from" << socket->peerAddress() << "on port" << socket->peerPort();
    connect(socket, SIGNAL(disconnected()), this, SLOT(disconnectClient()));
    connect(socket, SIGNAL(readyRead()),    this, SLOT(readMessage()));
 
@@ -171,29 +171,38 @@ void Window::processMessageFromClient(QString msg)
 {
    // read and process a message from the client
    // do stuff
-   QStringList parts = msg.split(":");
-   QString jointName = parts[0];
-
-   bool ok           = false;
-   int newVal        = parts[1].toInt(&ok);
-   int jointNum      = jointToNum(jointName);
-
-   if (!ok || jointNum == 0) // the link changing should NEVER be the base/link 0
+   QStringList lines = msg.split("\n");
+   for (int i = 0; i < lines.length(); i++)
    {
-      qDebug() << "Error processing message from client";
+      if (lines.at(i) == "")
+         continue;
+      qDebug() << "==> line[" << i << "] =" << lines.at(i);
+
+      QStringList parts = lines.at(i).split(":");
+      qDebug() << "==> parts =" << parts;
+      QString jointName = parts[0];
+
+      bool ok           = false;
+      int newVal        = parts[1].toInt(&ok);
+      int jointNum      = jointToNum(jointName);
+
+      if (!ok || jointNum == 0) // the link changing should NEVER be the base/link 0
+      {
+         qDebug() << "Error processing message from client";
+      }
+      
+      // set the new values
+      if (jointNum == 1)
+         joint1Spin->setValue(newVal);
+      else if (jointNum == 2)
+         joint2Spin->setValue(newVal);
+      else if (jointNum == 3)
+         joint3Spin->setValue(newVal);
+      else if (jointName == "BrushX")
+         brushSpinX->setValue(newVal);
+      else if (jointName == "BrushY")
+         brushSpinY->setValue(newVal);
    }
-   
-   // set the new values
-   if (jointNum == 1)
-      joint1Spin->setValue(newVal);
-   else if (jointNum == 2)
-      joint2Spin->setValue(newVal);
-   else if (jointNum == 3)
-      joint3Spin->setValue(newVal);
-   else if (jointName == "BrushX")
-      brushSpinX->setValue(newVal);
-   else if (jointName == "BrushY")
-      brushSpinY->setValue(newVal);
 
    notifyClient();
 }
@@ -318,7 +327,9 @@ void Window::notifyServer(QString name, int val)
    msg += name;
    msg += ":";
    msg += QString::number(val);
+   msg += "\n";
 
+   qDebug() << "Sending message to server:" << msg;
    if (conn.delay != 0)
       usleep(conn.delay*1000); // client-side delay for conn.delay seconds
    sendMessage(msg);

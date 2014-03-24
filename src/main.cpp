@@ -50,6 +50,7 @@ int main(int argc, char* argv[])
          case 's': // run as server using port 
             server = true; 
             type = SERVER;
+            address = "127.0.0.1";
             break;
 
          case 'c': // run client using host n port 
