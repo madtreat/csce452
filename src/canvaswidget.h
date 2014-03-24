@@ -31,9 +31,8 @@ public slots:
    void changeJoint1(int);
    void changeJoint2(int);
    void changeJoint3(int);
-   //void changeBrushLoc(int);
-   void changeBrushLocX(int);
-   void changeBrushLocY(int);
+   void changeBrushX(int);
+   void changeBrushY(int);
    void togglePaint(bool);
 
 protected:

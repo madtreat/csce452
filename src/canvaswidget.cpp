@@ -83,7 +83,7 @@ void CanvasWidget::changeJoint3(int newVal)
    emit jointsChanged();
 }
 
-void CanvasWidget::changeBrushLocX(int newVal)
+void CanvasWidget::changeBrushX(int newVal)
 {
    int prevX = robot->getBrush()->joint.X;
    if (newVal == prevX)
@@ -96,7 +96,7 @@ void CanvasWidget::changeBrushLocX(int newVal)
    emit brushPosChanged();
 }
 
-void CanvasWidget::changeBrushLocY(int newVal)
+void CanvasWidget::changeBrushY(int newVal)
 {
    int prevY = robot->getBrush()->joint.Y;
    if (newVal == prevY)

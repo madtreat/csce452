@@ -152,21 +152,23 @@ void RobotArm::translateBrush(Link* brush, int newX, int newY)
 	// get Brush
 	int curX = brush->joint.X;
 	int curY = brush->joint.Y;
-   int l2X = links[2]->joint.X;
-   int l2Y = links[2]->joint.Y;
-	// get link lengths (should be 100 and 75 respectively)
+	// get joints
+	int link1X = newX;
+   int link2X = links[2]->joint.X;
+   int link2Y = links[2]->joint.Y;
+	// get link lengths (should be 150, 100, and 75 respectively)
    int l1len = links[1]->length;
 	int l2len = links[2]->length;
 	int l3len = links[3]->length;
 
+	// Integer declarations
    int deltaX_2 = 0;
    int deltaY_2 = 0;
    long int hyp_2 = 1;
    int numer = 0;
    int denom = 1;
 
-   int link1X = newX;
-
+	// Double declarations
    double theta2 = 0;
    double theta2_deg = 0;
    double theta3 = 0;
@@ -180,19 +182,19 @@ void RobotArm::translateBrush(Link* brush, int newX, int newY)
       deltaY_2 = pow((newY   - links[2]->joint.Y), 2);
       hyp_2  = deltaX_2 + deltaY_2;
 
-      // law of cosines
+      // Law of cosines
       numer  = pow(l2len, 2) + pow(l3len, 2) - hyp_2;
       denom  = 2 * l2len * l3len;
 
-      //Theta3 = cos^-1((-(X3 - X0)^2 - (Y3 - L0)^2 + L3^2 + L2^2) / (L3 * L2))
+      // Theta3 = cos^-1((-(X3 - X0)^2 - (Y3 - L0)^2 + L3^2 + L2^2) / (L3 * L2))
       double t3val = ( -hyp_2 + pow(l2len, 2) + pow(l3len, 2) ) / denom;
       theta3 = acos( t3val );
 
-      //Phi2 = cos^-1(((X3 - X0)^2 + (Y3 - L0)^2 - L3^2 + L2^2) / (sqrt((X3 - X0)^2 + (Y3 - L0)^2) * L2))
+      // Phi2 = cos^-1(((X3 - X0)^2 + (Y3 - L0)^2 - L3^2 + L2^2) / (sqrt((X3 - X0)^2 + (Y3 - L0)^2) * L2))
       double p2val =  ( hyp_2 + pow(l2len, 2) - pow(l3len, 2) ) / 
                         ( 2 * l2len * sqrt(hyp_2));
       phi2 = acos(p2val);
-      //Phi1 = cos^-1(((X3 - X0)^2 + (Y3 - L0)^2 + L1^2  - (X3 - X0)^2 - (Y3)^2) / (2sqrt((X3 - X0)^2 + (Y3 - L0)^2) * L1))
+      // Phi1 = cos^-1(((X3 - X0)^2 + (Y3 - L0)^2 + L1^2  - (X3 - X0)^2 - (Y3)^2) / (2sqrt((X3 - X0)^2 + (Y3 - L0)^2) * L1))
 
       double p1val = ( hyp_2 + pow(l1len, 2) - deltaX_2 - pow(newY, 2) /
                         ( 2 * l1len * sqrt(hyp_2)));
@@ -225,16 +227,14 @@ void RobotArm::translateBrush(Link* brush, int newX, int newY)
       double angle2 = theta2_deg;
       double angle3 = theta3_deg;
    }   
-   
+    
 
+	// DEBUGGING OUTPUTS
    /*
-   cout << "dist:    "<< hyp_2 << endl;
-   cout << "numer:   "<< numer << endl;
-   cout << "denom:   "<< denom << endl;
-   cout << "div:     "<< (double) numer / (double) denom << endl;
-   // */
-   
-   /*
+   cout << "      dist  : " << hyp_2 << endl;
+   cout << "      numer : " << numer << endl;
+   cout << "      denom : " << denom << endl;
+   cout << "      div   : " << (double) numer / (double) denom << endl;
    cout << "     theta2 : " << theta2 << endl;
    cout << "     theta3 : " << theta3 << endl;
    cout << "       phi1 : " << phi1 << endl;
@@ -261,27 +261,27 @@ void RobotArm::translateBrush(Link* brush, int newX, int newY)
    links[2]->joint.X = link1X;//newX;
 
    /*
-   links[3]->joint.X = l2X + l2len * ( cos(phi2)        + sin(phi2) );
-   links[3]->joint.Y = l2Y + l2len * ( -1.0*sin(phi2)   + cos(phi2) );
+   links[3]->joint.X = link2X + l2len * ( cos(phi2)        + sin(phi2) );
+   links[3]->joint.Y = link2Y + l2len * ( -1.0*sin(phi2)   + cos(phi2) );
    // */
 
-   links[3]->joint.X = l2X + l2len * sin(phi2);//theta3_deg);
+   links[3]->joint.X = link2X + l2len * sin(phi2);//theta3_deg);
    if (newY <= 280)//-25)
    {
-      links[3]->joint.Y = l2Y + l2len * -cos(phi2);//theta3_deg);
+      links[3]->joint.Y = link2Y + l2len * -cos(phi2);//theta3_deg);
    }
    /*
    else if (newY > 280-25 && newY < 280+25)
    {
-      links[3]->joint.Y = l2Y + l2len * cos(90-phi2);
+      links[3]->joint.Y = link2Y + l2len * cos(90-phi2);
    }
    // */
    else
    {
-      links[3]->joint.Y = l2Y + l2len * cos(phi2);//theta3_deg);
+      links[3]->joint.Y = link2Y + l2len * cos(phi2);//theta3_deg);
    }
 
-
+	// Set new brush location
    links[4]->joint.X = newX;
    links[4]->joint.Y = newY;
 
@@ -298,5 +298,3 @@ void RobotArm::translateBrush(Link* brush, int newX, int newY)
    // pray they work
    // prayer();
 }
-
-

@@ -31,6 +31,7 @@ endif()
 find_package(Qt5Widgets)
 find_package(Qt5Core)
 find_package(Qt5Gui)
+find_package(Qt5Network)
 find_package(Qt5OpenGL)
 set(CMAKE_AUTOMOC ON)
 #include(${QT_USE_FILE})
@@ -46,6 +47,7 @@ set(SOURCES
    link.cpp
    robotarm.cpp
    window.cpp
+	myQSpinBox.cpp
 )
 
 # List of header files used
@@ -64,6 +66,7 @@ set(HEADERS
 set(HEADERS_MOC
    canvaswidget.h
    window.h
+	myQSpinBox.h
 )
 
 # Resources (.qrc file(s), contains locations to icons, stylesheets, etc.)
@@ -76,7 +79,12 @@ qt5_add_resources(RESOURCES_ADDED ${RESOURCES} )
 set_source_files_properties(${RESOURCES_ADDED} PROPERTIES GENERATED ON)
 
 # Create the executable
-add_executable(paintbot ${SOURCES} ${HEADERS} ${MOC_SRC} ${RESOURCES_ADDED})
+add_executable(paintbot 
+   ${SOURCES} 
+   ${HEADERS} 
+   ${MOC_SRC} 
+   ${RESOURCES_ADDED}
+)
 
 # Link to the correct/necessary libraries
 target_link_libraries(paintbot
@@ -90,6 +98,7 @@ qt5_use_modules(paintbot
    Widgets
    Core
    Gui
+   Network
    OpenGL
 )
 
