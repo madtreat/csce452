@@ -56,6 +56,13 @@ server(NULL)
    QWidget* worldPanel = initWorldControls();
    QWidget* brushPanel = initBrushControls();
 
+   if (conn.type == SERVER)
+   {
+      jointPanel->setEnabled(false);
+      worldPanel->setEnabled(false);
+      brushPanel->setEnabled(false);
+   }
+
    controlLayout->addWidget(controlLabel, 0, 0, 1, 2);
    controlLayout->addWidget(brushPanel,   1, 0, 1, 2);
    controlLayout->addWidget(jointPanel,   2, 0, 1, 1);
@@ -594,6 +601,8 @@ void Window::keyPressEvent(QKeyEvent* event)
    qDebug() << "Key Pressed" << event->key();
    if (event->key() == Qt::Key_Space)
    {
+      qDebug() << "Toggling paint in canvas widget...";
+      paintButton->toggle();
    }
    // move right
 	if (event->key() == Qt::Key_D)
@@ -638,8 +647,8 @@ void Window::keyReleaseEvent(QKeyEvent* event)
    qDebug() << "Key Released" << event->key();
    if (event->key() == Qt::Key_Space)
    {
-      qDebug() << "Toggling paint in canvas widget...";
-      paintButton->toggle();
+      //qDebug() << "Toggling paint in canvas widget...";
+      //paintButton->toggle();
    }
    if (event->key() == Qt::Key_1)
    {
