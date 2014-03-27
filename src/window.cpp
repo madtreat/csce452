@@ -309,7 +309,12 @@ void Window::notifyClient()
 
       msg += numToJoint(i);
       msg += ":";
-      msg += QString::number(link->joint.rotation);
+      if (i != 4)
+         msg += QString::number(link->joint.rotation);
+      else
+      {
+         msg += QString::number(((int) paintButton->isChecked() << 8) | canvasWidget->getBrushSize());
+      }
       msg += ":";
       msg += QString::number(link->joint.X);
       msg += ":";
@@ -319,7 +324,7 @@ void Window::notifyClient()
 
    qDebug() << "Sending message to client:" << msg;
    if (conn.delay != 0)
-      usleep(conn.delay*1000*1000); // client-side delay for conn.delay seconds
+      usleep(conn.delay*1000*1000); // server-side delay for conn.delay seconds
    sendMessage(msg);
 }
 

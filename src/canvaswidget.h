@@ -20,6 +20,7 @@ public:
    
    QSize sizeHint() const;
    void printJointLocs() const;
+   int getBrushSize() const {return brushSize;}
 
 signals:
    void jointsChanged();
