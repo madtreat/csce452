@@ -56,12 +56,14 @@ server(NULL)
    QWidget* worldPanel = initWorldControls();
    QWidget* brushPanel = initBrushControls();
 
+   /*
    if (conn.type == SERVER)
    {
       jointPanel->setEnabled(false);
       worldPanel->setEnabled(false);
       brushPanel->setEnabled(false);
    }
+   // */
 
    controlLayout->addWidget(controlLabel, 0, 0, 1, 2);
    controlLayout->addWidget(brushPanel,   1, 0, 1, 2);
@@ -213,6 +215,8 @@ void Window::processMessageFromClient(QString msg)
          brushSpinX->setValue(newVal);
       else if (jointName == "BrushY")
          brushSpinY->setValue(newVal);
+      else if (jointName == "Painting")
+         paintButton->setChecked((bool) newVal);
    }
 
    notifyClient();
