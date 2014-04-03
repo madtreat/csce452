@@ -1,12 +1,14 @@
 Texas A&M University - CSCE 452
 ===============================
 
+##PaintBot Projects
 Project 1: Create a PaintBot program with 3 links, 2 revolute joints and a prismatic joint.
 
 Project 2: Using the PaintBot in Project 1, add world controls using Inverse Kinematics.
 
 Project 3: Convert Project 2 to a tele-operated (via a network) system, with optional delay.
 
+##Braitenberg Vehicle Projects
 Project 4: Create a Braitenberg Vehicle system.
 
 Project 5: Currently undefined.
@@ -34,8 +36,10 @@ execute the following steps from the root directory of the project:
 - $ cmake ..
 - $ make
 
-and to run the project (from the build directory):
-- $ ./src/paintbot
+and to run an executable (from the build directory):
+* $ ./paintbot/paintbot
+* # ^^ paintbot   vv braitenberg vehicles
+* $ ./vehicles/vehicles
 
 arguments:
 - -s [port]         Run as server on [port]
