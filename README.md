@@ -45,13 +45,17 @@ $ make
 
 and to run an executable (from the build directory):
 ```bash
-# to run the paintbot executable
+# to run the PaintBot executable
 $ ./paintbot/paintbot
-# arguments:
+# PaintBot arguments:
 #   -s [port]          - Run as server on [port]
 #   -c [host] [port]   - Run as client connecting to [host] on [port]
-#   -d [delay]         - Add delay in [delay] seconds.  If -s or -c does not exist, run as standard with no connections.  NOTE: -s and -c can not be used at the same time.
+#   -d [delay]         - Add delay in [delay] seconds.  
+#                        If -s or -c does not exist, run as standard with no connections.  
+#                        NOTE: -s and -c can not be used at the same time.
 # to run the braitenberg vehicles executable
 $ ./vehicles/vehicles
+# Braitenberg Vehicle Arguments:
+#   None defined currently
 ```
 
