@@ -2,10 +2,13 @@ Texas A&M University - CSCE 452
 ===============================
 
 Project 1: Create a PaintBot program with 3 links, 2 revolute joints and a prismatic joint.
+
 Project 2: Using the PaintBot in Project 1, add world controls using Inverse Kinematics.
+
 Project 3: Convert Project 2 to a tele-operated (via a network) system, with optional delay.
-----
+
 Project 4: Create a Braitenberg Vehicle system.
+
 Project 5: Currently undefined.
 
 ##Notes:
