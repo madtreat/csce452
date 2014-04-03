@@ -36,6 +36,10 @@ server(NULL)
       success = connectToServer();
       title += " Client";
    }
+   else if (conn.type == NOCONN)
+   {
+      success = true;
+   }
 
    if (!success)
    {
@@ -51,6 +55,15 @@ server(NULL)
    QWidget* jointPanel = initJointControls();
    QWidget* worldPanel = initWorldControls();
    QWidget* brushPanel = initBrushControls();
+
+   //*
+   if (conn.type == SERVER)
+   {
+      jointPanel->setEnabled(false);
+      worldPanel->setEnabled(false);
+      brushPanel->setEnabled(false);
+   }
+   // */
 
    controlLayout->addWidget(controlLabel, 0, 0, 1, 2);
    controlLayout->addWidget(brushPanel,   1, 0, 1, 2);
@@ -202,6 +215,8 @@ void Window::processMessageFromClient(QString msg)
          brushSpinX->setValue(newVal);
       else if (jointName == "BrushY")
          brushSpinY->setValue(newVal);
+      else if (jointName == "Painting")
+         paintButton->setChecked((bool) newVal);
    }
 
    notifyClient();
@@ -228,9 +243,9 @@ void Window::processMessageFromServer(QString msg)
       if (joint == "Brush")
       {
          int brushSize = newSpinVal & 0xff;
-         int painting  = newSpinVal >> 8;
+         int painting  = paintButton->isChecked();//newSpinVal >> 8;
          brushSizeSpin->setValue(brushSize);
-         paintButton->setChecked((bool) painting);
+         //paintButton->setChecked((bool) painting);
          togglePaintText((bool) painting);
       }
       else
@@ -294,7 +309,12 @@ void Window::notifyClient()
 
       msg += numToJoint(i);
       msg += ":";
-      msg += QString::number(link->joint.rotation);
+      if (i != 4)
+         msg += QString::number(link->joint.rotation);
+      else
+      {
+         msg += QString::number(((int) paintButton->isChecked() << 8) | canvasWidget->getBrushSize());
+      }
       msg += ":";
       msg += QString::number(link->joint.X);
       msg += ":";
@@ -304,7 +324,7 @@ void Window::notifyClient()
 
    qDebug() << "Sending message to client:" << msg;
    if (conn.delay != 0)
-      usleep(conn.delay*1000*1000); // client-side delay for conn.delay seconds
+      usleep(conn.delay*1000*1000); // server-side delay for conn.delay seconds
    sendMessage(msg);
 }
 
@@ -328,7 +348,6 @@ void Window::notifyClient()
  */
 void Window::notifyServer(QString name, int val)
 {
-   // TODO: add delay
    QString msg;
    msg += name;
    msg += ":";
@@ -590,6 +609,8 @@ void Window::keyPressEvent(QKeyEvent* event)
    qDebug() << "Key Pressed" << event->key();
    if (event->key() == Qt::Key_Space)
    {
+      qDebug() << "Toggling paint in canvas widget...";
+      paintButton->toggle();
    }
    // move right
 	if (event->key() == Qt::Key_D)
@@ -634,8 +655,8 @@ void Window::keyReleaseEvent(QKeyEvent* event)
    qDebug() << "Key Released" << event->key();
    if (event->key() == Qt::Key_Space)
    {
-      qDebug() << "Toggling paint in canvas widget...";
-      paintButton->toggle();
+      //qDebug() << "Toggling paint in canvas widget...";
+      //paintButton->toggle();
    }
    if (event->key() == Qt::Key_1)
    {
