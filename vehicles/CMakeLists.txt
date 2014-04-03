@@ -1,4 +1,4 @@
-project(paintbot)
+project(vehicles)
 
 # Open GL dependencies
 find_package(OpenGL REQUIRED)
@@ -79,7 +79,7 @@ qt5_add_resources(RESOURCES_ADDED ${RESOURCES} )
 set_source_files_properties(${RESOURCES_ADDED} PROPERTIES GENERATED ON)
 
 # Create the executable
-add_executable(paintbot 
+add_executable(vehicles 
    ${SOURCES} 
    ${HEADERS} 
    ${MOC_SRC} 
@@ -87,14 +87,14 @@ add_executable(paintbot
 )
 
 # Link to the correct/necessary libraries
-target_link_libraries(paintbot
+target_link_libraries(vehicles
    ${QT_LIBRARIES}
    ${OPENGL_LIBRARIES}
    ${GLUT_LIBRARY}
 )
 
 # Link proper Qt Modules to the executable
-qt5_use_modules(paintbot
+qt5_use_modules(vehicles
    Widgets
    Core
    Gui
