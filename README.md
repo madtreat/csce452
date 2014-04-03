@@ -17,14 +17,14 @@ Project 5: Currently undefined.
 ##Notes:
 This project requires OpenGL installed on this machine to be run.
 ```bash
-- # On Ubuntu
-- $ sudo apt-get install libgles2-mesa-dev
+# On Ubuntu
+$ sudo apt-get install libgles2-mesa-dev
 ```
 
 This project uses CMake as a build tool.  (Must be version 2.8.9 or higher)
 ```bash
-- # On Ubuntu
-- $ sudo apt-get install cmake
+# On Ubuntu
+$ sudo apt-get install cmake
 ```
 
 	
@@ -47,11 +47,11 @@ and to run an executable (from the build directory):
 ```bash
 # to run the paintbot executable
 $ ./paintbot/paintbot
+# arguments:
+#   -s [port]          - Run as server on [port]
+#   -c [host] [port]   - Run as client connecting to [host] on [port]
+#   -d [delay]         - Add delay in [delay] seconds.  If -s or -c does not exist, run as standard with no connections.  NOTE: -s and -c can not be used at the same time.
 # to run the braitenberg vehicles executable
 $ ./vehicles/vehicles
 ```
 
-arguments:
-- -s [port]          - Run as server on [port]
-- -c [host] [port]   - Run as client connecting to [host] on [port]
-- -d [delay]         - Add delay in [delay] seconds.  If -s or -c does not exist, run as standard with no connections.  NOTE: -s and -c can not be used at the same time.
