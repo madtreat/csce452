@@ -3,16 +3,13 @@ Texas A&M University - CSCE 452
 # Robotics and Spatial Intelligence
 
 ##PaintBot Projects
-Project 1: Create a PaintBot program with 3 links, 2 revolute joints and a prismatic joint.
-
-Project 2: Using the PaintBot in Project 1, add world controls using Inverse Kinematics.
-
-Project 3: Convert Project 2 to a tele-operated (via a network) system, with optional delay.
+1. Project 1: Create a PaintBot program with 3 links, 2 revolute joints and a prismatic joint.
+2. Project 2: Using the PaintBot in Project 1, add world controls using Inverse Kinematics.
+3. Project 3: Convert Project 2 to a tele-operated (via a network) system, with optional delay.
 
 ##Braitenberg Vehicle Projects
-Project 4: Create a Braitenberg Vehicle system.
-
-Project 5: Currently undefined.
+4. Project 4: Create a Braitenberg Vehicle system.
+5. Project 5: Currently undefined.
 
 ##Notes:
 This project requires OpenGL installed on this machine to be run.
@@ -54,6 +51,7 @@ $ ./paintbot/paintbot
 #                        If -s or -c does not exist, run as standard with no connections.  
 #                        NOTE: -s and -c can not be used at the same time.
 # to run the braitenberg vehicles executable
+
 $ ./vehicles/vehicles
 # Braitenberg Vehicle Arguments:
 #   None defined currently
