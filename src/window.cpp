@@ -56,7 +56,7 @@ server(NULL)
    QWidget* worldPanel = initWorldControls();
    QWidget* brushPanel = initBrushControls();
 
-   /*
+   //*
    if (conn.type == SERVER)
    {
       jointPanel->setEnabled(false);
@@ -243,9 +243,9 @@ void Window::processMessageFromServer(QString msg)
       if (joint == "Brush")
       {
          int brushSize = newSpinVal & 0xff;
-         int painting  = newSpinVal >> 8;
+         int painting  = paintButton->isChecked();//newSpinVal >> 8;
          brushSizeSpin->setValue(brushSize);
-         paintButton->setChecked((bool) painting);
+         //paintButton->setChecked((bool) painting);
          togglePaintText((bool) painting);
       }
       else
@@ -348,7 +348,6 @@ void Window::notifyClient()
  */
 void Window::notifyServer(QString name, int val)
 {
-   // TODO: add delay
    QString msg;
    msg += name;
    msg += ":";
