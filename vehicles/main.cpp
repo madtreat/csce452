@@ -34,17 +34,11 @@ int main(int argc, char* argv[])
 {
    QApplication app(argc, argv);
 
-   AppType    type = NOCONN;
-   QString address = "";
-   int        port = 0;
-   int       delay = 0;
-   bool     server = false; 
-   bool     client = false; 
-
    // parse args
    int c;
 
    // get command line args
+   /*
    while((c = getopt (argc, argv, "sch:p:d:")) != -1)
       switch(c) {
          case 's': // run as server using port 
@@ -93,14 +87,9 @@ int main(int argc, char* argv[])
       printUsage();
       return 1;
    }
+   // */
 
-   ConnectionInfo info;
-   info.type   = type;
-   info.host   = QHostAddress(address);
-   info.port   = (quint16) port;
-   info.delay  = delay;
-
-   Window w(info);
+   Window w;
 
 
    w.show();

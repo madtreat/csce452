@@ -2,25 +2,33 @@
 #ifndef CANVASWIDGET_H_
 #define CANVASWIDGET_H_
 
+#include "consts.h"
+#include "car.h"
 #include <QGLWidget>
 #include <QMatrix>
 #include <QVector>
 #include <QGLShaderProgram>
 
+
 class Canvas;
-class RobotArm;
 
 class CanvasWidget : public QGLWidget
 {
    Q_OBJECT
 
 public:
-   CanvasWidget(Canvas* _canvas, RobotArm* _arm, QWidget* _parent = 0);
+   CanvasWidget(Canvas* _canvas, QWidget* _parent = 0);
    ~CanvasWidget();
    
    QSize sizeHint() const;
-   void printJointLocs() const;
-   int getBrushSize() const {return brushSize;}
+   void printCarLocs() const;
+   void printLightLocs() const;
+
+   Cars     getCars() const {return cars;}
+   Lights   getLights() const {return lights;}
+
+   Car      getCar(int i) const {if (i >= cars.size()) return Car(); else return cars[i];}
+   Light    getLight(int i) const {if (i >= lights.size()) return Light(); else return lights[i];}
 
 signals:
    void jointsChanged();
@@ -28,31 +36,22 @@ signals:
 
 public slots:
    void animate();
-   void changeBrushSize(int);
-   void changeJoint1(int);
-   void changeJoint2(int);
-   void changeJoint3(int);
-   void changeBrushX(int);
-   void changeBrushY(int);
-   void togglePaint(bool);
+   void addNewCar(Car car);
+   void addNewLight(Light light);
+   void deleteCar(int car);
+   void deleteLight(int light);
+   void updateCarPos(int car, int newX, int newY, bool directMapping);
+   void updateLightPos(int light, int newX, int newY);
 
 protected:
    void paintEvent(QPaintEvent *event);
    void initializeGL();
    void resizeGL(int width, int height);
-   /*
-   void paintGL();
-   // */
 
 private:
-   Canvas* canvas;
-   RobotArm* robot;
-
-   // remember the old values for the joint configurations
-   int brushSize;
-   int joint1rot;
-   int joint2rot;
-   int joint3rot;
+   Canvas*  canvas;
+   Cars     cars;    // list of cars
+   Lights   lights;  // list of lights
 };
 
 #endif

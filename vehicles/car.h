@@ -2,19 +2,28 @@
 #ifndef CAR_H_
 #define CAR_H_
 
-struct Position {
-   int X;
-   int Y;
-   Position(int _x = 0; int _y = 0) : X(_x), Y(_y);
-};
+#include "consts.h"
+#include <vector>
+
+
+class Car;
+typedef std::vector<Car> Cars;
 
 class Car {
 public:
-   Car(Position _pos, bool _directMapping = 1);
+   Car(Position _pos = Position(), bool _directMapping = 1);
    ~Car();
 
+   void     setX(int _x) {pos.X = _x;}
+   void     setY(int _y) {pos.Y = _y;}
+   void     setPos(Position _pos) {pos = _pos;}
+   void     setDirect(bool _direct) {direct = _direct;}
+
+   int      getX() const {return pos.X;}
+   int      getY() const {return pos.Y;}
+
    void     calcSensorPos(int _sensor);
-   Position getSensorPos(int _sensor);
+   Position getSensorPos(int _sensor) const;
 
 private:
    int      length;  // pixels
@@ -26,8 +35,8 @@ private:
    int      THETA;   // angle defining sensor positions
 
    Position pos;
-   Position sensor1;
-   Position sensor2;
+   Sensor   sensor1;
+   Sensor   sensor2;
 
    // True:
    //   wheels1 <--> sensor1

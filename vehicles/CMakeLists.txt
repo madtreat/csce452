@@ -57,6 +57,7 @@ set(HEADERS
    base.h
    brush.h
    canvas.h
+   consts.h
    joint.h
    link.h
    robotarm.h
