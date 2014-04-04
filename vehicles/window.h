@@ -88,6 +88,10 @@ private:
    QWidget* createJointControl(int id);
    QWidget* createWorldControl(int id);
    QWidget* createBrushControl();
+
+   QWidget* initControls();
+   QWidget* createCarControls();
+   QWidget* createLightControls();
 };
 
 #endif

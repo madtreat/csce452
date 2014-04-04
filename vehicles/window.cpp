@@ -50,7 +50,7 @@ Window::Window()
    connect(timer, SIGNAL(timeout()), canvasWidget, SLOT(animate()));
    timer->start();
 
-   setWindowTitle("Braitenberg Vehicles");
+   setWindowTitle("Braitenberg Simulator");
 }
 
 Window::~Window()
@@ -583,5 +583,38 @@ QWidget* Window::createBrushControl()
    paintLayout->addWidget(bSpin, 0, 1);
 
    return paintWidget;
+}
+
+QWidget* Window::initControls()
+{
+   QWidget* controlPanel = new QWidget(this);
+   QWidget*    carWidget = createCarControls();
+   QWidget*  lightWidget = createLightWidget();
+   // TODO: fill in
+   return controlPanel;
+}
+
+QWidget* Window::createCarControls()
+{
+   QString           name = "car";
+   QWidget*     carWidget = new QWidget(this);
+   QGridLayout* carLayout = new QGridLayout(carWidget);
+
+   carWidget->setObjectName(name);
+   carWidget->setMinimumHeight(JOINT_HEIGHT);
+
+   return carWidget;
+}
+
+QWidget* Window::createLabelControls()
+{
+   QString           name = "label";
+   QWidget*   lightWidget = new QWidget(this);
+   QGridLayout*    layout = new QGridLayout(carWidget);
+
+   carWidget->setObjectName(name);
+   carWidget->setMinimumHeight(JOINT_HEIGHT);
+   
+   return lightWidget;
 }
 
