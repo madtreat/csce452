@@ -9,7 +9,7 @@ speed(5),
 sensorOffsetLength( (int) (length/2) + 3),
 sensorOffsetWidth(2),
 pos(_pos),
-direct(_direct)
+direct(_directMapping)
 {
    double numer = (double) (sensorOffsetWidth);
    double denom = (double) (sensorOffsetLength);
@@ -29,7 +29,7 @@ void Car::calcSensorPos()
    sensor2.Y = pos + (sensorOffsetWidth * cos(THETA)); // plus for coordinate frame
 }
 
-Position Car::getSensorPos(int _sensor)
+Position Car::getSensorPos(int _sensor) const
 {
    switch(_sensor)
    {

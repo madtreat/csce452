@@ -22,7 +22,7 @@ public:
    int      getX() const {return pos.X;}
    int      getY() const {return pos.Y;}
 
-   void     calcSensorPos(int _sensor);
+   void     calcSensorPos();
    Position getSensorPos(int _sensor) const;
 
 private:

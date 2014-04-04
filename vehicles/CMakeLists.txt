@@ -43,6 +43,7 @@ set(SOURCES
    brush.cpp
    canvas.cpp
    canvaswidget.cpp
+   car.cpp
    joint.cpp
    link.cpp
    robotarm.cpp
@@ -57,6 +58,7 @@ set(HEADERS
    base.h
    brush.h
    canvas.h
+   car.h
    consts.h
    joint.h
    link.h
