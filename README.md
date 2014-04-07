@@ -54,6 +54,7 @@ $ ./paintbot/paintbot
 
 $ ./vehicles/vehicles
 # Braitenberg Vehicle Arguments:
-#   None defined currently
+#   -c [num-cars]    - (OPTIONAL) Randomly spawn num-cars vehicles
+#   -l [num-lights]  - (OPTIONAL) Randomly spawn num-lights light sources
 ```
 

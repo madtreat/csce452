@@ -32,16 +32,12 @@ manager(_manager)
    controlLayout->addWidget(carPanel,     1, 0);
    controlLayout->addWidget(lightPanel,   2, 0);
 
-   connect( canvasWidget,  SIGNAL(jointsChanged()),
-            this,          SLOT  (updateBrushPos()));
-   connect( canvasWidget,  SIGNAL(brushPosChanged()),
-            this,          SLOT  (updateJointPos()));
-
-   //--------------------------------------------------------//
    // Add control panel to main grid layout
-   //--------------------------------------------------------//
    layout->addWidget(controlPanel, 0, 1);
 
+   // Update combo boxes with any cars spawned via arguments
+   updateCarBox();
+   updateLightBox();
 
    // Start animating
    QTimer* timer = new QTimer(this);
@@ -138,6 +134,26 @@ QWidget* Window::initControlPanel()
    QLabel* controlLabel = new QLabel(tr("Controls"));
    controlLabel->setAlignment(Qt::AlignHCenter);
    return controlLabel;
+}
+
+void Window::updateCarBox()
+{
+   carComboBox->clear();
+   for (int i = 0; i < manager->numCars(); i++)
+   {
+      QString name = "Car " + QString::number(i);
+      carComboBox->addItem(name);
+   }
+}
+
+void Window::updateLightBox()
+{
+   lightComboBox->clear();
+   for (int i = 0; i < manager->numLights(); i++)
+   {
+      QString name = "Light " + QString::number(i);
+      lightComboBox->addItem(name);
+   }
 }
 
 void Window::carSelected(int index)

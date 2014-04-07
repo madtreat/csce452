@@ -34,7 +34,7 @@ int main(int argc, char* argv[])
    int c = 0;
 
    // get command line args
-   while((c = getopt (argc, argv, "c:l:")) != -1)
+   while((c = getopt (argc, argv, "c:l:d")) != -1)
    switch(c)
    {
       case 'c': // number of cars

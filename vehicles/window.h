@@ -40,6 +40,8 @@ public:
 
 public slots:
 	void windowAnimate();
+   void updateCarBox();
+   void updateLightBox();
 	
    void carSelected(int index);
    void lightSelected(int index);

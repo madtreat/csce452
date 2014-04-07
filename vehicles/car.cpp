@@ -36,10 +36,12 @@ void Car::calcSensorPos()
    sensor2.X = pos.X - (dist * cos(-(-THETA+rot_rad)));
    sensor2.Y = pos.Y + (dist * sin(-(-THETA+rot_rad))); // plus for coordinate frame
 	
+#ifdef DEBUG
 	cout << "s(T) " << sin(THETA) << endl;
 	cout << "c(T) " << cos(THETA) << endl;
 	cout << "Car S1: (" << sensor1.X << ", " << sensor1.Y << ")" <<endl;
 	cout << "Car S2: (" << sensor2.X << ", " << sensor2.Y << ")" <<endl;
+#endif
 }
 
 Position Car::getSensorPos(int _sensor) const

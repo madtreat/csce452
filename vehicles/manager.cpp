@@ -21,9 +21,10 @@ Manager::~Manager()
 // Update positions of each car in list
 void Manager::timeStep()
 {
-	cout << "TIMESTEP\n";
+#ifdef DEBUG
 	printCarLocs();
 	printLightLocs();
+#endif
 	
 	int anglenum = 4;
 	// This is where the math happens!
@@ -32,18 +33,28 @@ void Manager::timeStep()
 		Car car = cars[i];
 		Position s1 = car.getSensorPos(1);
 		Position s2 = car.getSensorPos(2);
-		cout << "Current Car: " << i <<endl;
-		cout << "(" << cars[i].getX() << ", " << cars[i].getY() << ") " << cars[i].getR() << " degs " <<endl;
+
+#ifdef DEBUG
+		cout << "Current Car: " << i;
+      cout << " (x=" << cars[i].getX();
+      cout << ", y=" << cars[i].getY() << ", rot=";
+      cout << cars[i].getR() << " degs)" <<endl;
+#endif
+
 		int total = 0;
 		for (int j=0; j<lights.size(); j++)
 		{
 			Light light = lights[j];
-			cout << "Current Light: " << j <<endl;
 			int intense1 = 100/sqrt(pow(s1.X-light.X,2) + pow(s1.Y-light.Y,2));
 			int intense2 = 100/sqrt(pow(s2.X-light.X,2) + pow(s2.Y-light.Y,2));
-			cout << intense1 << " :: " << intense2 << endl;
+
 			int diff = intense2 - intense1;
 			total+=diff;
+
+#ifdef DEBUG
+			cout << "   Current Light: " << j << " - ";
+			cout << intense1 << "::" << intense2 << endl;
+#endif
 		}
 		cars[i].setR(car.getR() + (total*anglenum));
 		cars[i].setX(ceil(cars[i].getX() - 3*(double)cos(cars[i].getR_rad())));

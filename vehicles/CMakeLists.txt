@@ -39,39 +39,27 @@ set(CMAKE_AUTOMOC ON)
 # List of source files
 set(SOURCES
    main.cpp
-   base.cpp
-   brush.cpp
    canvas.cpp
    canvaswidget.cpp
    car.cpp
-   joint.cpp
-   link.cpp
 	manager.cpp
-   robotarm.cpp
    window.cpp
-	myQSpinBox.cpp
 )
 
 # List of header files used
 # NOTE:  this list EXCLUDES the header files that define Qt subclasses
 #        as they require some processing first.  They should be in HEADERS_MOC.
 set(HEADERS
-   base.h
-   brush.h
    canvas.h
    car.h
    consts.h
-   joint.h
-   link.h
 	manager.h
-   robotarm.h
 )
 
 # Necessary for Qt to compile
 set(HEADERS_MOC
    canvaswidget.h
    window.h
-	myQSpinBox.h
 )
 
 # Resources (.qrc file(s), contains locations to icons, stylesheets, etc.)
