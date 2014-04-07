@@ -40,6 +40,7 @@ void Canvas::init ( void )
 }
 
 //TODO: Possible: change wheels and sensors to scale with car size
+//TODO: update wheel positions
 void Canvas::drawCars()
 {
 	for (int i=0; i<manager->getCars().size(); i++)
@@ -49,6 +50,8 @@ void Canvas::drawCars()
 		int X = car.getX();
 		int Y = car.getY();
 		double R = car.getR_rad();
+		Position s1 = car.getSensorPos(1);
+		Position s2 = car.getSensorPos(2);
 		
 		// Change color based on if car is inverted
 		if (car.getDirect())
@@ -68,7 +71,7 @@ void Canvas::drawCars()
 			glVertex2f(X + ( CAR_LENGTH*cos(R) - -CAR_WIDTH*sin(R)), Y + ( CAR_LENGTH*sin(R) + -CAR_WIDTH*cos(R)) );
 		glEnd();
 		
-		// Draw wheels	
+		/*// Draw wheels	
 		glColor3f(0,0,0);
 		glBegin(GL_QUADS);
 			// Left Tire
@@ -82,20 +85,20 @@ void Canvas::drawCars()
 			glVertex2f((X+CAR_WIDTH) + ( 4*cos(R) -  2*sin(R)), (Y+(CAR_LENGTH/2)+2) + ( 4*sin(R) +  2*cos(R)) );
 			glVertex2f((X+CAR_WIDTH) + ( 4*cos(R) - -2*sin(R)), (Y+(CAR_LENGTH/2)+2) + ( 4*sin(R) + -2*cos(R)) );
 		glEnd();
-		
+		*/
 		// Draw sensors
-		glColor3f(0,0,0);
+		glColor3f(0,0,1);
 		glBegin(GL_QUADS);
 			// Left Sensor
-			glVertex2f((X-(CAR_WIDTH/2)) + (-2*cos(R) - -2*sin(R)), (Y-CAR_LENGTH) + (-2*sin(R) + -2*cos(R)) );
-			glVertex2f((X-(CAR_WIDTH/2)) + (-2*cos(R) -  2*sin(R)), (Y-CAR_LENGTH) + (-2*sin(R) +  2*cos(R)) );
-			glVertex2f((X-(CAR_WIDTH/2)) + ( 2*cos(R) -  2*sin(R)), (Y-CAR_LENGTH) + ( 2*sin(R) +  2*cos(R)) );
-			glVertex2f((X-(CAR_WIDTH/2)) + ( 2*cos(R) - -2*sin(R)), (Y-CAR_LENGTH) + ( 2*sin(R) + -2*cos(R)) );
+			glVertex2f(s1.X + (-2*cos(R) - -2*sin(R)), s1.Y + (-2*sin(R) + -2*cos(R)) );
+			glVertex2f(s1.X + (-2*cos(R) -  2*sin(R)), s1.Y + (-2*sin(R) +  2*cos(R)) );
+			glVertex2f(s1.X + ( 2*cos(R) -  2*sin(R)), s1.Y + ( 2*sin(R) +  2*cos(R)) );
+			glVertex2f(s1.X + ( 2*cos(R) - -2*sin(R)), s1.Y + ( 2*sin(R) + -2*cos(R)) );
 			// Right Sensor
-			glVertex2f((X+(CAR_WIDTH/2)) + (-2*cos(R) - -2*sin(R)), (Y-CAR_LENGTH) + (-2*sin(R) + -2*cos(R)) );
-			glVertex2f((X+(CAR_WIDTH/2)) + (-2*cos(R) -  2*sin(R)), (Y-CAR_LENGTH) + (-2*sin(R) +  2*cos(R)) );
-			glVertex2f((X+(CAR_WIDTH/2)) + ( 2*cos(R) -  2*sin(R)), (Y-CAR_LENGTH) + ( 2*sin(R) +  2*cos(R)) );
-			glVertex2f((X+(CAR_WIDTH/2)) + ( 2*cos(R) - -2*sin(R)), (Y-CAR_LENGTH) + ( 2*sin(R) + -2*cos(R)) );
+			glVertex2f(s2.X + (-2*cos(R) - -2*sin(R)), s2.Y + (-2*sin(R) + -2*cos(R)) );
+			glVertex2f(s2.X + (-2*cos(R) -  2*sin(R)), s2.Y + (-2*sin(R) +  2*cos(R)) );
+			glVertex2f(s2.X + ( 2*cos(R) -  2*sin(R)), s2.Y + ( 2*sin(R) +  2*cos(R)) );
+			glVertex2f(s2.X + ( 2*cos(R) - -2*sin(R)), s2.Y + ( 2*sin(R) + -2*cos(R)) );
 		glEnd();
 	}
 	glFlush();

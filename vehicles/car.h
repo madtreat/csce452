@@ -16,6 +16,7 @@ public:
 
    void     setX(int _x) {pos.X = _x;}
    void     setY(int _y) {pos.Y = _y;}
+	void		setR(int _r) {rotation = _r;}
    void     setPos(Position _pos) {pos = _pos;}
    void     setDirect(bool _direct) {direct = _direct;}
 
@@ -36,7 +37,7 @@ private:
 
    int      sensorOffsetLength; // 
    int      sensorOffsetWidth;
-   int      THETA;   // angle defining sensor positions
+   double      THETA;   // angle defining sensor positions
 
    Position pos;
    Sensor   sensor1;
