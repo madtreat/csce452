@@ -92,6 +92,8 @@ private:
    QWidget* initControls();
    QWidget* createCarControls();
    QWidget* createLightControls();
+	QWidget* createLabelControls();
+	QWidget* createLightWidget();
 };
 
 #endif

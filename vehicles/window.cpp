@@ -364,11 +364,17 @@ QWidget* Window::createLabelControls()
 {
    QString           name = "label";
    QWidget*   lightWidget = new QWidget(this);
-   QGridLayout*    layout = new QGridLayout(carWidget);
+   QGridLayout*    layout = new QGridLayout(lightWidget);
 
-   carWidget->setObjectName(name);
-   carWidget->setMinimumHeight(JOINT_HEIGHT);
+   lightWidget->setObjectName(name);
+   lightWidget->setMinimumHeight(JOINT_HEIGHT);
    
    return lightWidget;
+}
+
+QWidget* Window::createLightWidget()
+{
+	//TODO: Fill
+	return NULL;
 }
 

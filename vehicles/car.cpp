@@ -22,11 +22,11 @@ Car::~Car()
 
 void Car::calcSensorPos()
 {
-   sensor1.X = pos + (sensorOffsetLength * sin(THETA));
-   sensor1.Y = pos - (sensorOffsetWidth * cos(THETA)); // minus for coordinate frame
+   sensor1.X = pos.X + (sensorOffsetLength * sin(THETA));
+   sensor1.Y = pos.Y - (sensorOffsetWidth * cos(THETA)); // minus for coordinate frame
 
-   sensor2.X = pos + (sensorOffsetLength * sin(THETA));
-   sensor2.Y = pos + (sensorOffsetWidth * cos(THETA)); // plus for coordinate frame
+   sensor2.X = pos.X + (sensorOffsetLength * sin(THETA));
+   sensor2.Y = pos.Y + (sensorOffsetWidth * cos(THETA)); // plus for coordinate frame
 }
 
 Position Car::getSensorPos(int _sensor) const
