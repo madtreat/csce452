@@ -25,6 +25,7 @@ public:
    // sizes for the control panel widgets
    static const int CONTROL_WIDTH   = 132;
    static const int JOINT_HEIGHT    = 30;
+   static const int COMBO_WIDTH     = 60;
 
    // range for the brush
    static const int BRUSH_MIN       = 5;
@@ -45,6 +46,8 @@ public slots:
    void toggleWorldControlsVisible(bool);
    void updateBrushPos();
    void updateJointPos();
+   
+   void carSelected(int index);
 
 protected:
    void keyPressEvent(QKeyEvent* event);
@@ -59,29 +62,17 @@ private:
 
    QGridLayout*   layout;
    QWidget*       controlPanel;
-   QWidget*       jointControls;
-   QWidget*       worldControls;
 
    QGridLayout*   controlLayout;
-   QPushButton*   paintButton;
-   QPushButton*   jointButton;
-   QPushButton*   worldButton;
+   QPushButton*   createCarButton;
+   QPushButton*   deleteCarButton;
+   QPushButton*   createLightButton;
+   QPushButton*   deleteLightButton;
 
    // for number keys switching between joints and keeping all values up to date
    // private functions
    static int     jointToNum(QString name);
    static QString numToJoint(int     num);
-
-   myQSpinBox*      joint1Spin;
-   myQSpinBox*      joint2Spin;
-   myQSpinBox*      joint3Spin;
-   myQSpinBox*      brushSpinX;
-   myQSpinBox*      brushSpinY;
-   myQSpinBox*      brushSizeSpin;
-   
-   QWidget* initJointControls();
-   QWidget* initWorldControls();
-   QWidget* initBrushControls();
 
    QString  getControlStyle(QColor widget);
 
@@ -89,11 +80,8 @@ private:
    QWidget* createWorldControl(int id);
    QWidget* createBrushControl();
 
-   QWidget* initControls();
-   QWidget* createCarControls();
-   QWidget* createLightControls();
-	QWidget* createLabelControls();
-	QWidget* createLightWidget();
+   QWidget* initCarControls();
+   QWidget* initLightControls();
 };
 
 #endif

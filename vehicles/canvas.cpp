@@ -1,5 +1,6 @@
 
 #include "canvas.h"
+#include "consts.h"
 #include "joint.h"
 #include "link.h"
 #include "base.h"
