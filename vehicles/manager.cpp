@@ -21,8 +21,8 @@ Manager::~Manager()
 void Manager::timeStep()
 {
 	cout << "TIMESTEP\n";
-	//addNewCar(Car());
 	printCarLocs();
+	printLightLocs();
 	// This is where the math happens!
 	for (int i=0; i<cars.size(); i++)
 	{

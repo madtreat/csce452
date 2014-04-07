@@ -42,10 +42,10 @@ private:
    Sensor   sensor1;
    Sensor   sensor2;
 
-   // True:
+   // True:		(Direct)
    //   wheels1 <--> sensor1
    //   wheels2 <--> sensor2
-   // False:
+   // False:	(Inverse)
    //   wheels1 <--> sensor2
    //   wheels2 <--> sensor1
    bool     direct;
