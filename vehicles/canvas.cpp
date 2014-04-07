@@ -48,19 +48,83 @@ void Canvas::init ( void )
 
 void Canvas::drawCars()
 {
-	for (int i=0; i<manager->getCars().size(); i++)
-	{
-		Car car = manager->getCar(i);
+	const int car_length = 11;
+	const int car_width = 8;
+	//for (int i=0; i<manager->getCars().size(); i++)
+	//{
+		//Car car = manager->getCar(i);
+		Car car = Car(Position(100,100),true);
 		int X = car.getX();
 		int Y = car.getY();
-		int r = car.getR();
+		double R = car.getR_rad();
 		
-	}
+		//TODO: change color based on K (inverted or not)
+		//TODO: Possible: change wheels and sensors to scale with car size
+		
+		//Draw car body
+		glColor3f(1,0,0);
+		glBegin(GL_QUADS);
+			glVertex2f(X + (-car_length*cos(R) - -car_width*sin(R)), Y + (-car_length*sin(R) + -car_width*cos(R)) );
+			glVertex2f(X + (-car_length*cos(R) -  car_width*sin(R)), Y + (-car_length*sin(R) +  car_width*cos(R)) );
+			glVertex2f(X + ( car_length*cos(R) -  car_width*sin(R)), Y + ( car_length*sin(R) +  car_width*cos(R)) );
+			glVertex2f(X + ( car_length*cos(R) - -car_width*sin(R)), Y + ( car_length*sin(R) + -car_width*cos(R)) );
+		glEnd();
+		
+		//Draw wheels	
+		glColor3f(0,0,0);
+		glBegin(GL_QUADS);
+			//Left Tire
+			glVertex2f((X-car_width) + (-4*cos(R) - -2*sin(R)), ((Y+(car_length/2)+2) + (-4*sin(R) + -2*cos(R))) );
+			glVertex2f((X-car_width) + (-4*cos(R) -  2*sin(R)), ((Y+(car_length/2)+2) + (-4*sin(R) +  2*cos(R))) );
+			glVertex2f((X-car_width) + ( 4*cos(R) -  2*sin(R)), ((Y+(car_length/2)+2) + ( 4*sin(R) +  2*cos(R))) );
+			glVertex2f((X-car_width) + ( 4*cos(R) - -2*sin(R)), ((Y+(car_length/2)+2) + ( 4*sin(R) + -2*cos(R))) );
+			//Right Tire
+			glVertex2f((X+car_width) + (-4*cos(R) - -2*sin(R)), ((Y+(car_length/2)+2) + (-4*sin(R) + -2*cos(R))) );
+			glVertex2f((X+car_width) + (-4*cos(R) -  2*sin(R)), ((Y+(car_length/2)+2) + (-4*sin(R) +  2*cos(R))) );
+			glVertex2f((X+car_width) + ( 4*cos(R) -  2*sin(R)), ((Y+(car_length/2)+2) + ( 4*sin(R) +  2*cos(R))) );
+			glVertex2f((X+car_width) + ( 4*cos(R) - -2*sin(R)), ((Y+(car_length/2)+2) + ( 4*sin(R) + -2*cos(R))) );
+		glEnd();
+		
+		//Draw sensors
+		glColor3f(0,0,0);
+		glBegin(GL_QUADS);
+			//Left Sensor
+			glVertex2f((X-(car_width/2)) + (-2*cos(R) - -2*sin(R)), ((Y-car_length) + (-2*sin(R) + -2*cos(R))) );
+			glVertex2f((X-(car_width/2)) + (-2*cos(R) -  2*sin(R)), ((Y-car_length) + (-2*sin(R) +  2*cos(R))) );
+			glVertex2f((X-(car_width/2)) + ( 2*cos(R) -  2*sin(R)), ((Y-car_length) + ( 2*sin(R) +  2*cos(R))) );
+			glVertex2f((X-(car_width/2)) + ( 2*cos(R) - -2*sin(R)), ((Y-car_length) + ( 2*sin(R) + -2*cos(R))) );
+			//Right Sensor
+			glVertex2f((X+(car_width/2)) + (-2*cos(R) - -2*sin(R)), ((Y-car_length) + (-2*sin(R) + -2*cos(R))) );
+			glVertex2f((X+(car_width/2)) + (-2*cos(R) -  2*sin(R)), ((Y-car_length) + (-2*sin(R) +  2*cos(R))) );
+			glVertex2f((X+(car_width/2)) + ( 2*cos(R) -  2*sin(R)), ((Y-car_length) + ( 2*sin(R) +  2*cos(R))) );
+			glVertex2f((X+(car_width/2)) + ( 2*cos(R) - -2*sin(R)), ((Y-car_length) + ( 2*sin(R) + -2*cos(R))) );
+		glEnd();
+	//}
+	glFlush();
 }
 
 void Canvas::drawLights()
 {
-	Lights lights = manager->getLights();
+	const int light_radius = 5;
+	//for (int i=0; i<manager->getLights().size(); i++)
+	//{
+		//Light light = manager->getLight(i);
+		Light light = Light(50,50);
+		int X = light.X;
+		int Y = light.Y;
+		
+		glColor3f(1,1,0);
+		glBegin(GL_TRIANGLE_FAN);
+			glVertex2f(X,Y);
+			// create points around the mouse point
+			for(int j=0; j<=360; j++ )
+			{
+				// using the unit circle
+				glVertex2f(X + sin(j)*light_radius, Y + cos(j)*light_radius);
+			}
+		glEnd();
+	//}
+	glFlush();
 }
 
 /*
@@ -110,7 +174,7 @@ void Canvas::display ( void )
    glClear ( GL_COLOR_BUFFER_BIT );
 
    // set white canvas
-   glColor3f (.5,.5,.5);
+   glColor3f (.7,.7,.7);
    glBegin (GL_POLYGON);
    glVertex2f (10, 10);
    glVertex2f (10, HEIGHT-10);
@@ -127,7 +191,8 @@ void Canvas::display ( void )
    glVertex2f (WIDTH-10, 10);
    glEnd();
 
-   //drawRobot();
+   drawCars();
+	drawLights();
 
 }
 
