@@ -48,8 +48,6 @@ void Canvas::init ( void )
 
 void Canvas::drawCars()
 {
-	const int car_length = 11;
-	const int car_width = 8;
 	//for (int i=0; i<manager->getCars().size(); i++)
 	//{
 		//Car car = manager->getCar(i);
@@ -64,40 +62,40 @@ void Canvas::drawCars()
 		//Draw car body
 		glColor3f(1,0,0);
 		glBegin(GL_QUADS);
-			glVertex2f(X + (-car_length*cos(R) - -car_width*sin(R)), Y + (-car_length*sin(R) + -car_width*cos(R)) );
-			glVertex2f(X + (-car_length*cos(R) -  car_width*sin(R)), Y + (-car_length*sin(R) +  car_width*cos(R)) );
-			glVertex2f(X + ( car_length*cos(R) -  car_width*sin(R)), Y + ( car_length*sin(R) +  car_width*cos(R)) );
-			glVertex2f(X + ( car_length*cos(R) - -car_width*sin(R)), Y + ( car_length*sin(R) + -car_width*cos(R)) );
+			glVertex2f(X + (-CAR_LENGTH*cos(R) - -CAR_WIDTH*sin(R)), Y + (-CAR_LENGTH*sin(R) + -CAR_WIDTH*cos(R)) );
+			glVertex2f(X + (-CAR_LENGTH*cos(R) -  CAR_WIDTH*sin(R)), Y + (-CAR_LENGTH*sin(R) +  CAR_WIDTH*cos(R)) );
+			glVertex2f(X + ( CAR_LENGTH*cos(R) -  CAR_WIDTH*sin(R)), Y + ( CAR_LENGTH*sin(R) +  CAR_WIDTH*cos(R)) );
+			glVertex2f(X + ( CAR_LENGTH*cos(R) - -CAR_WIDTH*sin(R)), Y + ( CAR_LENGTH*sin(R) + -CAR_WIDTH*cos(R)) );
 		glEnd();
 		
 		//Draw wheels	
 		glColor3f(0,0,0);
 		glBegin(GL_QUADS);
 			//Left Tire
-			glVertex2f((X-car_width) + (-4*cos(R) - -2*sin(R)), ((Y+(car_length/2)+2) + (-4*sin(R) + -2*cos(R))) );
-			glVertex2f((X-car_width) + (-4*cos(R) -  2*sin(R)), ((Y+(car_length/2)+2) + (-4*sin(R) +  2*cos(R))) );
-			glVertex2f((X-car_width) + ( 4*cos(R) -  2*sin(R)), ((Y+(car_length/2)+2) + ( 4*sin(R) +  2*cos(R))) );
-			glVertex2f((X-car_width) + ( 4*cos(R) - -2*sin(R)), ((Y+(car_length/2)+2) + ( 4*sin(R) + -2*cos(R))) );
+			glVertex2f((X-CAR_WIDTH) + (-4*cos(R) - -2*sin(R)), ((Y+(CAR_LENGTH/2)+2) + (-4*sin(R) + -2*cos(R))) );
+			glVertex2f((X-CAR_WIDTH) + (-4*cos(R) -  2*sin(R)), ((Y+(CAR_LENGTH/2)+2) + (-4*sin(R) +  2*cos(R))) );
+			glVertex2f((X-CAR_WIDTH) + ( 4*cos(R) -  2*sin(R)), ((Y+(CAR_LENGTH/2)+2) + ( 4*sin(R) +  2*cos(R))) );
+			glVertex2f((X-CAR_WIDTH) + ( 4*cos(R) - -2*sin(R)), ((Y+(CAR_LENGTH/2)+2) + ( 4*sin(R) + -2*cos(R))) );
 			//Right Tire
-			glVertex2f((X+car_width) + (-4*cos(R) - -2*sin(R)), ((Y+(car_length/2)+2) + (-4*sin(R) + -2*cos(R))) );
-			glVertex2f((X+car_width) + (-4*cos(R) -  2*sin(R)), ((Y+(car_length/2)+2) + (-4*sin(R) +  2*cos(R))) );
-			glVertex2f((X+car_width) + ( 4*cos(R) -  2*sin(R)), ((Y+(car_length/2)+2) + ( 4*sin(R) +  2*cos(R))) );
-			glVertex2f((X+car_width) + ( 4*cos(R) - -2*sin(R)), ((Y+(car_length/2)+2) + ( 4*sin(R) + -2*cos(R))) );
+			glVertex2f((X+CAR_WIDTH) + (-4*cos(R) - -2*sin(R)), ((Y+(CAR_LENGTH/2)+2) + (-4*sin(R) + -2*cos(R))) );
+			glVertex2f((X+CAR_WIDTH) + (-4*cos(R) -  2*sin(R)), ((Y+(CAR_LENGTH/2)+2) + (-4*sin(R) +  2*cos(R))) );
+			glVertex2f((X+CAR_WIDTH) + ( 4*cos(R) -  2*sin(R)), ((Y+(CAR_LENGTH/2)+2) + ( 4*sin(R) +  2*cos(R))) );
+			glVertex2f((X+CAR_WIDTH) + ( 4*cos(R) - -2*sin(R)), ((Y+(CAR_LENGTH/2)+2) + ( 4*sin(R) + -2*cos(R))) );
 		glEnd();
 		
 		//Draw sensors
 		glColor3f(0,0,0);
 		glBegin(GL_QUADS);
 			//Left Sensor
-			glVertex2f((X-(car_width/2)) + (-2*cos(R) - -2*sin(R)), ((Y-car_length) + (-2*sin(R) + -2*cos(R))) );
-			glVertex2f((X-(car_width/2)) + (-2*cos(R) -  2*sin(R)), ((Y-car_length) + (-2*sin(R) +  2*cos(R))) );
-			glVertex2f((X-(car_width/2)) + ( 2*cos(R) -  2*sin(R)), ((Y-car_length) + ( 2*sin(R) +  2*cos(R))) );
-			glVertex2f((X-(car_width/2)) + ( 2*cos(R) - -2*sin(R)), ((Y-car_length) + ( 2*sin(R) + -2*cos(R))) );
+			glVertex2f((X-(CAR_WIDTH/2)) + (-2*cos(R) - -2*sin(R)), ((Y-CAR_LENGTH) + (-2*sin(R) + -2*cos(R))) );
+			glVertex2f((X-(CAR_WIDTH/2)) + (-2*cos(R) -  2*sin(R)), ((Y-CAR_LENGTH) + (-2*sin(R) +  2*cos(R))) );
+			glVertex2f((X-(CAR_WIDTH/2)) + ( 2*cos(R) -  2*sin(R)), ((Y-CAR_LENGTH) + ( 2*sin(R) +  2*cos(R))) );
+			glVertex2f((X-(CAR_WIDTH/2)) + ( 2*cos(R) - -2*sin(R)), ((Y-CAR_LENGTH) + ( 2*sin(R) + -2*cos(R))) );
 			//Right Sensor
-			glVertex2f((X+(car_width/2)) + (-2*cos(R) - -2*sin(R)), ((Y-car_length) + (-2*sin(R) + -2*cos(R))) );
-			glVertex2f((X+(car_width/2)) + (-2*cos(R) -  2*sin(R)), ((Y-car_length) + (-2*sin(R) +  2*cos(R))) );
-			glVertex2f((X+(car_width/2)) + ( 2*cos(R) -  2*sin(R)), ((Y-car_length) + ( 2*sin(R) +  2*cos(R))) );
-			glVertex2f((X+(car_width/2)) + ( 2*cos(R) - -2*sin(R)), ((Y-car_length) + ( 2*sin(R) + -2*cos(R))) );
+			glVertex2f((X+(CAR_WIDTH/2)) + (-2*cos(R) - -2*sin(R)), ((Y-CAR_LENGTH) + (-2*sin(R) + -2*cos(R))) );
+			glVertex2f((X+(CAR_WIDTH/2)) + (-2*cos(R) -  2*sin(R)), ((Y-CAR_LENGTH) + (-2*sin(R) +  2*cos(R))) );
+			glVertex2f((X+(CAR_WIDTH/2)) + ( 2*cos(R) -  2*sin(R)), ((Y-CAR_LENGTH) + ( 2*sin(R) +  2*cos(R))) );
+			glVertex2f((X+(CAR_WIDTH/2)) + ( 2*cos(R) - -2*sin(R)), ((Y-CAR_LENGTH) + ( 2*sin(R) + -2*cos(R))) );
 		glEnd();
 	//}
 	glFlush();
@@ -105,7 +103,6 @@ void Canvas::drawCars()
 
 void Canvas::drawLights()
 {
-	const int light_radius = 5;
 	//for (int i=0; i<manager->getLights().size(); i++)
 	//{
 		//Light light = manager->getLight(i);
@@ -120,54 +117,12 @@ void Canvas::drawLights()
 			for(int j=0; j<=360; j++ )
 			{
 				// using the unit circle
-				glVertex2f(X + sin(j)*light_radius, Y + cos(j)*light_radius);
+				glVertex2f(X + sin(j)*LIGHT_RADIUS, Y + cos(j)*LIGHT_RADIUS);
 			}
 		glEnd();
 	//}
 	glFlush();
 }
-
-/*
-// the paint brush draws circles on the canvas
-// radius is the paint's radius
-void Canvas::drawCircle(int x, int y, int radius)
-{
-   
-}
-
-void Canvas::drawLink(int linkNum, double r, double g, double b)
-{
-   
-}
-
-void Canvas::drawJoint(int linkNum, double r, double g, double b)
-{
-   
-}
-
-void Canvas::drawRobot()
-{
-   
-}
-
-void Canvas::paintCurrentLoc()
-{
-	vector<PaintSpot>::iterator it;
-   Brush* b = static_cast<Brush*>(robot->getLink(RobotArm::LENGTH-1));
-   glColor3f(1,0,0);
-
-   PaintSpot spot(b->joint.X, b->joint.Y, brushSize);
-   it = find(paintspots.begin(), paintspots.end(), spot);
-   if( it == paintspots.end()) 
-   {
-      paintspots.push_back(spot);
-   }
-}
-
-void Canvas::drawPaint()
-{
-}
-//*/
 
 void Canvas::display ( void )
 {

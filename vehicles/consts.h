@@ -4,8 +4,13 @@
 
 #include <vector>
 
-const int WIDTH  = 640;
-const int HEIGHT = 480;
+const double PI = 3.1415926;
+const int WIDTH  = 800;		//Window Size
+const int HEIGHT = 600;		//Window Size
+const int CAR_LENGTH = 11;
+const int CAR_WIDTH = 8;
+const int LIGHT_RADIUS = 5;
+
 
 struct Position {
    int X;
@@ -16,8 +21,6 @@ struct Position {
 typedef Position Sensor;
 typedef Position Light;
 typedef std::vector<Light> Lights;
-
-const double PI = 3.1415926;
 
 #endif
 

@@ -36,19 +36,6 @@ public:
 	void display();
 	void drawCars();
 	void drawLights();
-	
-	/*
-   void setPainting(bool enabled) {painting = enabled;}
-   void setBrushSize(int newSize) {brushSize = newSize;}
-
-   void drawCircle(int x, int y, int radius);
-   void drawLink  (int linkNum, double r, double g, double b);
-   void drawJoint (int linkNum, double r, double g, double b);
-   void drawRobot ();
-   void paintCurrentLoc();
-   
-   void drawPaint();
-	//*/
 
 private:
    Manager* manager;
