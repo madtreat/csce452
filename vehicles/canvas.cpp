@@ -1,15 +1,6 @@
 
 #include "canvas.h"
-<<<<<<< HEAD
-
-=======
 #include "consts.h"
-#include "joint.h"
-#include "link.h"
-#include "base.h"
-#include "brush.h"
-#include "robotarm.h"
->>>>>>> 53efdff0fefdf7a77df6889174610a28c2b17e31
 
 #ifdef __APPLE__
 #include <GLUT/glut.h>
