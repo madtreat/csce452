@@ -2,7 +2,6 @@
 #include "canvaswidget.h"
 #include "consts.h"
 #include "canvas.h"
-#include "robotarm.h"
 
 #include <iostream>
 #include <cmath>
