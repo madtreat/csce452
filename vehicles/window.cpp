@@ -115,7 +115,7 @@ QWidget* Window::initControlPanel()
    QSizePolicy policy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
    controlPanel  = new QWidget(this);
-   controlPanel->setMinimumWidth(2.5*COMBO_WIDTH);
+   controlPanel->setMinimumWidth(2.8*COMBO_WIDTH);
    controlPanel->setSizePolicy(policy);
    controlPanel->setStyleSheet(controlPanelStyle);
    //controlPanel->setObjectName("container");
