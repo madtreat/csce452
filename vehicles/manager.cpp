@@ -15,12 +15,23 @@ Manager::~Manager()
 {
 }
 
+// Update positions of each car in list
+void Manager::timeStep()
+{
+	for (int i=0; i<cars.size(); i++)
+	{
+		
+	}
+}
+
 void Manager::printCarLocs() const
 {
+	//TODO: Fill this
 }
 
 void Manager::printLightLocs() const
 {
+	//TODO: Fill this
 }
 
 void Manager::addNewCar(Car car)

@@ -45,7 +45,7 @@ Window::Window()
 
    // Start animating
    QTimer* timer = new QTimer(this);
-   connect(timer, SIGNAL(timeout()), canvasWidget, SLOT(animate()));
+   connect(timer, SIGNAL(timeout()), this, SLOT(windowAnimate()));
    timer->start();
 
    setWindowTitle("Braitenberg Simulator");
@@ -54,6 +54,12 @@ Window::Window()
 Window::~Window()
 {
    delete canvas;
+}
+
+void Window::windowAnimate()
+{
+	manager->timeStep();
+	canvasWidget->animate();
 }
 
 int Window::jointToNum(QString name)
