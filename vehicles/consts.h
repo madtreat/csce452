@@ -11,6 +11,10 @@ const int CAR_LENGTH = 11;
 const int CAR_WIDTH = 8;
 const int LIGHT_RADIUS = 5;
 
+const int BUFFER = 50; // 50 pixel buffer for randomly generated locations
+// meaning nothing can be randomly generated along the outer 50 pixels
+// of the canvas
+
 
 struct Position {
    int X;

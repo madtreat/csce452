@@ -30,7 +30,7 @@ public:
    static const int BRUSH_MIN       = 5;
    static const int BRUSH_MAX       = 40;
 
-   Window();
+   Window(Manager* _manager = 0);
    ~Window();
 
    void initStyles();

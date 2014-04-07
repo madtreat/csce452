@@ -15,8 +15,9 @@
 
 #include <unistd.h>
 
-Window::Window()
-: QWidget()
+Window::Window(Manager* _manager)
+: QWidget(),
+manager(_manager)
 {
    initStyles();
    initCanvas();
@@ -100,7 +101,8 @@ void Window::initStyles()
 //--------------------------------------------------------//
 void Window::initCanvas()
 {
-   manager      = new Manager();
+   if (!manager)
+      manager   = new Manager();
    canvas       = new Canvas(manager);
    canvasWidget = new CanvasWidget(canvas, this);
 }

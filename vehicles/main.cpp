@@ -2,13 +2,15 @@
    Basic main function
  */
 
-#include "robotarm.h"
 #include "window.h"
-#include "link.h"
-#include "stdio.h"
-#include "stdlib.h"
+#include "consts.h"
+#include "car.h"
+#include "manager.h"
+
 #include <QApplication>
 #include <QDebug>
+
+#include <cmath>
 #include <iostream>
 #include <unistd.h>
 
@@ -16,18 +18,10 @@ using namespace std;
 
 void printUsage()
 {
-   cout << "Usage: paintbot (-s | -c) (-h host) (-p port) (-d delay)" << endl;
+   cout << "Usage: vehicles (-c num_cars) (-l num_lights)" << endl;
    cout << "   Where" << endl; 
-   cout << "         -s    Run as a server" << endl;
-   cout << "         -c    Run as a client" << endl;
-   cout << "         -p    Use the port given" << endl;
-   cout << "                  REQUIRED FOR: server, client" << endl;
-   cout << "         -h    Use the host address given" << endl;
-   cout << "                  REQUIRED FOR: client" << endl;
-   cout << "         -d    Use the delay given" << endl;
-   cout << "                  OPTIONAL" << endl;
-   cout << "   Note that if no -s or -c argument is specified, this will run as" << endl;
-   cout << "   a basic (connectionless) standalone application" << endl;
+   cout << "         -c    Number of cars to create initially" << endl;
+   cout << "         -l    Number of lights to create initially" << endl;
 }
 
 int main(int argc, char* argv[])
@@ -35,66 +29,54 @@ int main(int argc, char* argv[])
    QApplication app(argc, argv);
 
    // parse args
-   int c;
+   int numCars = 0;
+   int numLights = 0;
+   int c = 0;
 
    // get command line args
-   /*
-   while((c = getopt (argc, argv, "sch:p:d:")) != -1)
-      switch(c) {
-         case 's': // run as server using port 
-            server = true; 
-            type = SERVER;
-            address = "127.0.0.1";
-            break;
-
-         case 'c': // run client using host n port 
-            client = true;
-            type = CLIENT;
-            break;
-
-         case 'd': // initialize delay
-            delay = atoi(optarg);
-            break;
-
-         case 'p': // port 
-            port = atoi(optarg);
-            break; 
-
-         case 'h': // set up the host 
-            address = optarg; 
-            break; 
-
-         default:
-            abort();
-      }
-
-   if (server && client)
+   while((c = getopt (argc, argv, "c:l:")) != -1)
+   switch(c)
    {
-      printUsage();
-      return 1;
+      case 'c': // number of cars
+         numCars = atoi(optarg);
+         break;
+
+      case 'l': // number of lights
+         numLights = atoi(optarg);
+         break; 
+
+      default:
+         printUsage();
+         exit(1);
    }
 
-   if(server && port == 0)
+   // create the manager to hold the new cars
+   Manager* manager = new Manager();
+
+   // create randomly placed cars
+   for (int i = 0; i < numCars; i++)
    {
-      cout << "Invalid server configuration" << endl << endl;
-      printUsage();
-      return 1;
+      int x = rand() % (WIDTH-BUFFER*2) + BUFFER;
+      int y = rand() % (HEIGHT-BUFFER*2) + BUFFER;
+      Position pos(x, y);
+      int dir = rand() % 2;
+      Car car(pos, (bool) dir);
+      manager->addNewCar(car);
    }
 
-   if(client && (port == 0 || address == "" ))
+   // create randomly placed lights
+   for (int i = 0; i < numLights; i++)
    {
-      cout << "Invalid client configuration" << endl << endl;
-      printUsage();
-      return 1;
+      int x = rand() % (WIDTH-BUFFER*2) + BUFFER;
+      int y = rand() % (HEIGHT-BUFFER*2) + BUFFER;
+      Light pos(x, y);
+      manager->addNewLight(pos);
    }
-   // */
 
-   Window w;
-
-
+   Window w(manager);
    w.show();
 
-   cout << "Starting PaintBot..." << endl;
+   cout << "Starting Braitenberg Vehicles..." << endl;
 
    return app.exec();
 }
