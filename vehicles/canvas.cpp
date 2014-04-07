@@ -46,6 +46,7 @@ void Canvas::init ( void )
    glMatrixMode(GL_MODELVIEW);
 }
 
+//TODO: Possible: change wheels and sensors to scale with car size
 void Canvas::drawCars()
 {
 	//for (int i=0; i<manager->getCars().size(); i++)
@@ -56,11 +57,17 @@ void Canvas::drawCars()
 		int Y = car.getY();
 		double R = car.getR_rad();
 		
-		//TODO: change color based on K (inverted or not)
-		//TODO: Possible: change wheels and sensors to scale with car size
+		// Change color based on if car is inverted
+		if (car.getDirect())
+		{
+			glColor3f(1,0,0);		// Red
+		}
+		else
+		{
+			glColor3f(0,0,1);		// Blue
+		}
 		
-		//Draw car body
-		glColor3f(1,0,0);
+		// Draw car body
 		glBegin(GL_QUADS);
 			glVertex2f(X + (-CAR_LENGTH*cos(R) - -CAR_WIDTH*sin(R)), Y + (-CAR_LENGTH*sin(R) + -CAR_WIDTH*cos(R)) );
 			glVertex2f(X + (-CAR_LENGTH*cos(R) -  CAR_WIDTH*sin(R)), Y + (-CAR_LENGTH*sin(R) +  CAR_WIDTH*cos(R)) );
@@ -68,34 +75,34 @@ void Canvas::drawCars()
 			glVertex2f(X + ( CAR_LENGTH*cos(R) - -CAR_WIDTH*sin(R)), Y + ( CAR_LENGTH*sin(R) + -CAR_WIDTH*cos(R)) );
 		glEnd();
 		
-		//Draw wheels	
+		// Draw wheels	
 		glColor3f(0,0,0);
 		glBegin(GL_QUADS);
-			//Left Tire
-			glVertex2f((X-CAR_WIDTH) + (-4*cos(R) - -2*sin(R)), ((Y+(CAR_LENGTH/2)+2) + (-4*sin(R) + -2*cos(R))) );
-			glVertex2f((X-CAR_WIDTH) + (-4*cos(R) -  2*sin(R)), ((Y+(CAR_LENGTH/2)+2) + (-4*sin(R) +  2*cos(R))) );
-			glVertex2f((X-CAR_WIDTH) + ( 4*cos(R) -  2*sin(R)), ((Y+(CAR_LENGTH/2)+2) + ( 4*sin(R) +  2*cos(R))) );
-			glVertex2f((X-CAR_WIDTH) + ( 4*cos(R) - -2*sin(R)), ((Y+(CAR_LENGTH/2)+2) + ( 4*sin(R) + -2*cos(R))) );
-			//Right Tire
-			glVertex2f((X+CAR_WIDTH) + (-4*cos(R) - -2*sin(R)), ((Y+(CAR_LENGTH/2)+2) + (-4*sin(R) + -2*cos(R))) );
-			glVertex2f((X+CAR_WIDTH) + (-4*cos(R) -  2*sin(R)), ((Y+(CAR_LENGTH/2)+2) + (-4*sin(R) +  2*cos(R))) );
-			glVertex2f((X+CAR_WIDTH) + ( 4*cos(R) -  2*sin(R)), ((Y+(CAR_LENGTH/2)+2) + ( 4*sin(R) +  2*cos(R))) );
-			glVertex2f((X+CAR_WIDTH) + ( 4*cos(R) - -2*sin(R)), ((Y+(CAR_LENGTH/2)+2) + ( 4*sin(R) + -2*cos(R))) );
+			// Left Tire
+			glVertex2f((X-CAR_WIDTH) + (-4*cos(R) - -2*sin(R)), (Y+(CAR_LENGTH/2)+2) + (-4*sin(R) + -2*cos(R)) );
+			glVertex2f((X-CAR_WIDTH) + (-4*cos(R) -  2*sin(R)), (Y+(CAR_LENGTH/2)+2) + (-4*sin(R) +  2*cos(R)) );
+			glVertex2f((X-CAR_WIDTH) + ( 4*cos(R) -  2*sin(R)), (Y+(CAR_LENGTH/2)+2) + ( 4*sin(R) +  2*cos(R)) );
+			glVertex2f((X-CAR_WIDTH) + ( 4*cos(R) - -2*sin(R)), (Y+(CAR_LENGTH/2)+2) + ( 4*sin(R) + -2*cos(R)) );
+			// Right Tire
+			glVertex2f((X+CAR_WIDTH) + (-4*cos(R) - -2*sin(R)), (Y+(CAR_LENGTH/2)+2) + (-4*sin(R) + -2*cos(R)) );
+			glVertex2f((X+CAR_WIDTH) + (-4*cos(R) -  2*sin(R)), (Y+(CAR_LENGTH/2)+2) + (-4*sin(R) +  2*cos(R)) );
+			glVertex2f((X+CAR_WIDTH) + ( 4*cos(R) -  2*sin(R)), (Y+(CAR_LENGTH/2)+2) + ( 4*sin(R) +  2*cos(R)) );
+			glVertex2f((X+CAR_WIDTH) + ( 4*cos(R) - -2*sin(R)), (Y+(CAR_LENGTH/2)+2) + ( 4*sin(R) + -2*cos(R)) );
 		glEnd();
 		
-		//Draw sensors
+		// Draw sensors
 		glColor3f(0,0,0);
 		glBegin(GL_QUADS);
-			//Left Sensor
-			glVertex2f((X-(CAR_WIDTH/2)) + (-2*cos(R) - -2*sin(R)), ((Y-CAR_LENGTH) + (-2*sin(R) + -2*cos(R))) );
-			glVertex2f((X-(CAR_WIDTH/2)) + (-2*cos(R) -  2*sin(R)), ((Y-CAR_LENGTH) + (-2*sin(R) +  2*cos(R))) );
-			glVertex2f((X-(CAR_WIDTH/2)) + ( 2*cos(R) -  2*sin(R)), ((Y-CAR_LENGTH) + ( 2*sin(R) +  2*cos(R))) );
-			glVertex2f((X-(CAR_WIDTH/2)) + ( 2*cos(R) - -2*sin(R)), ((Y-CAR_LENGTH) + ( 2*sin(R) + -2*cos(R))) );
-			//Right Sensor
-			glVertex2f((X+(CAR_WIDTH/2)) + (-2*cos(R) - -2*sin(R)), ((Y-CAR_LENGTH) + (-2*sin(R) + -2*cos(R))) );
-			glVertex2f((X+(CAR_WIDTH/2)) + (-2*cos(R) -  2*sin(R)), ((Y-CAR_LENGTH) + (-2*sin(R) +  2*cos(R))) );
-			glVertex2f((X+(CAR_WIDTH/2)) + ( 2*cos(R) -  2*sin(R)), ((Y-CAR_LENGTH) + ( 2*sin(R) +  2*cos(R))) );
-			glVertex2f((X+(CAR_WIDTH/2)) + ( 2*cos(R) - -2*sin(R)), ((Y-CAR_LENGTH) + ( 2*sin(R) + -2*cos(R))) );
+			// Left Sensor
+			glVertex2f((X-(CAR_WIDTH/2)) + (-2*cos(R) - -2*sin(R)), (Y-CAR_LENGTH) + (-2*sin(R) + -2*cos(R)) );
+			glVertex2f((X-(CAR_WIDTH/2)) + (-2*cos(R) -  2*sin(R)), (Y-CAR_LENGTH) + (-2*sin(R) +  2*cos(R)) );
+			glVertex2f((X-(CAR_WIDTH/2)) + ( 2*cos(R) -  2*sin(R)), (Y-CAR_LENGTH) + ( 2*sin(R) +  2*cos(R)) );
+			glVertex2f((X-(CAR_WIDTH/2)) + ( 2*cos(R) - -2*sin(R)), (Y-CAR_LENGTH) + ( 2*sin(R) + -2*cos(R)) );
+			// Right Sensor
+			glVertex2f((X+(CAR_WIDTH/2)) + (-2*cos(R) - -2*sin(R)), (Y-CAR_LENGTH) + (-2*sin(R) + -2*cos(R)) );
+			glVertex2f((X+(CAR_WIDTH/2)) + (-2*cos(R) -  2*sin(R)), (Y-CAR_LENGTH) + (-2*sin(R) +  2*cos(R)) );
+			glVertex2f((X+(CAR_WIDTH/2)) + ( 2*cos(R) -  2*sin(R)), (Y-CAR_LENGTH) + ( 2*sin(R) +  2*cos(R)) );
+			glVertex2f((X+(CAR_WIDTH/2)) + ( 2*cos(R) - -2*sin(R)), (Y-CAR_LENGTH) + ( 2*sin(R) + -2*cos(R)) );
 		glEnd();
 	//}
 	glFlush();
@@ -114,7 +121,7 @@ void Canvas::drawLights()
 		glBegin(GL_TRIANGLE_FAN);
 			glVertex2f(X,Y);
 			// create points around the mouse point
-			for(int j=0; j<=360; j++ )
+			for(int j=0; j<=360; j++)
 			{
 				// using the unit circle
 				glVertex2f(X + sin(j)*LIGHT_RADIUS, Y + cos(j)*LIGHT_RADIUS);
@@ -128,7 +135,7 @@ void Canvas::display ( void )
 {
    glClear ( GL_COLOR_BUFFER_BIT );
 
-   // set white canvas
+   // set greyish canvas
    glColor3f (.7,.7,.7);
    glBegin (GL_POLYGON);
    glVertex2f (10, 10);

@@ -12,6 +12,8 @@ public:
    Manager();
    ~Manager();
    
+	void timeStep();
+	
    void printCarLocs() const;
    void printLightLocs() const;
 
@@ -27,7 +29,7 @@ public:
    void deleteLight(int light);
    void updateCarPos(int car, int newX, int newY, bool directMapping);
    void updateLightPos(int light, int newX, int newY);
-
+	
 private:
    Cars     cars;    // list of cars
    Lights   lights;  // list of lights

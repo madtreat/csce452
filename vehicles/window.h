@@ -39,6 +39,8 @@ public:
 
 public slots:
    // other usefull helper functions/slots
+	void windowAnimate();
+	
    void togglePaintText(bool);
    void toggleJointControlsVisible(bool);
    void toggleWorldControlsVisible(bool);
