@@ -6,6 +6,7 @@ Car::Car(Position _pos, bool _directMapping)
 : length(16),
 width(9),
 speed(5),
+rotation(90),
 sensorOffsetLength( (int) (length/2) + 3),
 sensorOffsetWidth(2),
 pos(_pos),

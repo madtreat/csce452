@@ -14,5 +14,7 @@ typedef Position Sensor;
 typedef Position Light;
 typedef std::vector<Light> Lights;
 
+const double PI = 3.1415926;
+
 #endif
 

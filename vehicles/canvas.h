@@ -2,14 +2,12 @@
 #ifndef CANVAS_H_
 #define CANVAS_H_
 
-#include "joint.h"
-#include "link.h"
-#include "base.h"
-#include "brush.h"
+#include "manager.h"
 #include <vector>
 
 class RobotArm;
 
+/*
 struct PaintSpot
 {
    int X;
@@ -25,6 +23,7 @@ struct PaintSpot
       return false; 
    }
 };
+//*/
 
 class Canvas
 {
@@ -32,11 +31,15 @@ public:
    static const int WIDTH  = 640;
    static const int HEIGHT = 480;
 
-   Canvas();
+   Canvas(Manager* _man);
    ~Canvas();
 
    void init();
-
+	void display();
+	void drawCars();
+	void drawLights();
+	
+	/*
    void setPainting(bool enabled) {painting = enabled;}
    void setBrushSize(int newSize) {brushSize = newSize;}
 
@@ -45,14 +48,15 @@ public:
    void drawJoint (int linkNum, double r, double g, double b);
    void drawRobot ();
    void paintCurrentLoc();
-   void display();
+   
    void drawPaint();
+	//*/
 
 private:
-   RobotArm* robot;
-   bool painting;
-   int brushSize;
-   std::vector<PaintSpot> paintspots;
+   Manager* manager;
+   //bool painting;
+   //int brushSize;
+   //std::vector<PaintSpot> paintspots;
 };
 
 #endif

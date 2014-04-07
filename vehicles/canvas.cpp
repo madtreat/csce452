@@ -1,10 +1,6 @@
 
 #include "canvas.h"
-#include "joint.h"
-#include "link.h"
-#include "base.h"
-#include "brush.h"
-#include "robotarm.h"
+
 
 #ifdef __APPLE__
 #include <GLUT/glut.h>
@@ -26,14 +22,14 @@
 
 using namespace std;
 
-const double PI = 3.1415926;
-
-   Canvas::Canvas() 
+   Canvas::Canvas(Manager* _man) 
+:manager(_man)
 {
+	//TODO: Not sure if this is needed
 	/*
    int argc = 1;
    char* argv[argc];
-   argv[0] = "paintbot";
+   argv[0] = "Braitenberg Vehicles";
    //glutInit(&argc, argv);
 	// */
 }
@@ -50,6 +46,24 @@ void Canvas::init ( void )
    glMatrixMode(GL_MODELVIEW);
 }
 
+void Canvas::drawCars()
+{
+	for (int i=0; i<manager.getCars().size(); i++)
+	{
+		Car car = manager.getCar(i);
+		int X = car.getX();
+		int Y = car.getY();
+		int r = car.getR();
+		
+	}
+}
+
+void Canvas::drawLights()
+{
+	Lights lights = manager.getLights();
+}
+
+/*
 // the paint brush draws circles on the canvas
 // radius is the paint's radius
 void Canvas::drawCircle(int x, int y, int radius)
@@ -89,12 +103,14 @@ void Canvas::paintCurrentLoc()
 void Canvas::drawPaint()
 {
 }
+//*/
+
 void Canvas::display ( void )
 {
    glClear ( GL_COLOR_BUFFER_BIT );
 
    // set white canvas
-   glColor3f (1,1,1);
+   glColor3f (.5,.5,.5);
    glBegin (GL_POLYGON);
    glVertex2f (10, 10);
    glVertex2f (10, HEIGHT-10);

@@ -19,8 +19,10 @@ public:
    void     setPos(Position _pos) {pos = _pos;}
    void     setDirect(bool _direct) {direct = _direct;}
 
-   int      getX() const {return pos.X;}
-   int      getY() const {return pos.Y;}
+   int      getX()	  const {return pos.X;}
+   int      getY()	  const {return pos.Y;}
+	int		getR()	  const {return rotation;}
+	double	getR_rad() const {return (double)rotation * (PI/180.0);}		//Rotation in radians
 
    void     calcSensorPos();
    Position getSensorPos(int _sensor) const;
@@ -29,6 +31,7 @@ private:
    int      length;  // pixels
    int      width;   // pixels
    int      speed;   // pixels per second
+	int		rotation;// degrees (0 = right)
 
    int      sensorOffsetLength; // 
    int      sensorOffsetWidth;
