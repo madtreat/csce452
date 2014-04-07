@@ -22,6 +22,9 @@ public:
 
    Car      getCar(int i) const {if (i >= cars.size()) return Car(); else return cars[i];}
    Light    getLight(int i) const {if (i >= lights.size()) return Light(); else return lights[i];}
+
+   int  numCars() const {return cars.size();}
+   int  numLights() const {return lights.size();}
 	
 	void addNewCar(Car car);
    void addNewLight(Light light);
