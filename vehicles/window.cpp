@@ -12,7 +12,6 @@
 #include <QTimer>
 #include <QPushButton>
 #include <QFile>
-#include <QComboBox>
 
 #include <unistd.h>
 
@@ -59,7 +58,11 @@ Window::~Window()
 
 void Window::windowAnimate()
 {
+   // move each car based on positions of light sources
 	manager->timeStep();
+   // update the combo boxes
+   //updateComboBoxes();
+   // draw the new positions
 	canvasWidget->animate();
 }
 
@@ -135,83 +138,24 @@ QWidget* Window::initControlPanel()
    return controlLabel;
 }
 
-void Window::togglePaintText(bool enabled)
-{
-   /*
-   if (enabled)
-      paintButton->setText("Stop Painting");
-   else
-      paintButton->setText("Paint");
-   // */
-}
-
-void Window::toggleJointControlsVisible(bool enabled)
-{
-   //jointControls->setVisible(enabled);
-   /*
-   if (enabled)
-      jointButton->setText("Joint Mode");
-   else
-      jointButton->setText("Show Joint Mode");
-   // */
-}
-
-void Window::toggleWorldControlsVisible(bool enabled)
-{
-   //worldControls->setVisible(enabled);
-   /*
-   if (enabled)
-      worldButton->setText("World Mode");
-   else
-      worldButton->setText("Show World Mode");
-   // */
-}
-
-void Window::updateBrushPos()
-{
-   //if (!brushSpinX || !brushSpinY)
-   //   return;
-
-   // block all signals from being emitted from the canvasWidget while all values are updated
-   // to avoid infinite signal-update loops
-   canvasWidget->blockSignals(true);
-
-   // update the brush spin boxes' values
-   //brushSpinX->setValue(arm->getBrush()->joint.X);
-   //brushSpinY->setValue(arm->getBrush()->joint.Y);
-
-   // allow canvasWidget's signals to emit again
-   canvasWidget->blockSignals(false);
-}
-
-void Window::updateJointPos()
-{
-   //if (!joint1Spin || !joint2Spin || !joint3Spin)
-   //   return;
-
-   // block all signals from being emitted from the canvasWidget while all values are updated
-   // to avoid infinite signal-update loops
-   canvasWidget->blockSignals(true);
-
-   // update brush spin boxes' values
-   //joint1Spin->setValue(arm->getLink(1)->joint.rotation);
-   //joint2Spin->setValue(arm->getLink(2)->joint.rotation);
-   //joint3Spin->setValue(arm->getLink(3)->joint.rotation);
-
-   // allow canvasWidget's signals to emit again
-   canvasWidget->blockSignals(false);
-}
-
 void Window::carSelected(int index)
 {
-   // update X and Y
-   // enable/disable delete button (disable if top/empty selected)
-   // change text of create/modify button (modify = apply?)
-   // read K (direct or inverted light/wheel mapping)
+   // TODO: DONE: update X and Y
+   // TODO: enable/disable delete button (disable if top/empty selected)
+   // TODO: change text of create/modify button (modify = apply?)
+   Car car = manager->getCar(index);
+
+   carSpinX->setValue(car.getX());
+   carSpinY->setValue(car.getY());
+   directBox->setChecked(car.getDirect());
 }
 
 void Window::lightSelected(int index)
 {
+   Car car = manager->getCar(index);
+
+   lightSpinX->setValue(car.getX());
+   lightSpinY->setValue(car.getY());
 }
 
 void Window::setCheckBoxText(int state)
@@ -234,6 +178,9 @@ void Window::createCarClicked()
 
    Car car(Position(x, y), direct);
    manager->addNewCar(car);
+
+   QString name = "Car " + QString::number(manager->numCars());
+   carComboBox->addItem(name);
 }
 
 void Window::deleteCarClicked()
@@ -247,6 +194,9 @@ void Window::createLightClicked()
    
    Light light(x, y);
    manager->addNewLight(light);
+
+   QString name = "Light " + QString::number(manager->numLights());
+   lightComboBox->addItem(name);
 }
 
 void Window::deleteLightClicked()
@@ -331,11 +281,11 @@ QWidget* Window::initCarControls()
    carLabel->setAlignment(Qt::AlignHCenter);
 
    // combo box containing list of cars
-   QComboBox* combo = new QComboBox(this);
-   combo->setObjectName(name);
-   combo->setEditable(false);
-   combo->setMinimumWidth(COMBO_WIDTH);
-   connect(combo, SIGNAL(currentIndexChanged(int)), this, SLOT(carSelected(int)));
+   carComboBox = new QComboBox(this);
+   carComboBox->setObjectName(name);
+   carComboBox->setEditable(false);
+   carComboBox->setMinimumWidth(COMBO_WIDTH);
+   connect(carComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(carSelected(int)));
 
    // spin box for X pos
    QLabel* xlabel = new QLabel(" X =", this);
@@ -374,7 +324,7 @@ QWidget* Window::initCarControls()
    connect(deleteCarButton, SIGNAL(clicked()), this, SLOT(deleteCarClicked()));
 
    carLayout->addWidget(carLabel,   0, 0, 1, 2);
-   carLayout->addWidget(combo,      1, 0, 1, 2);
+   carLayout->addWidget(carComboBox,1, 0, 1, 2);
    carLayout->addWidget(xlabel,     2, 0);
    carLayout->addWidget(carSpinX,   2, 1);
    carLayout->addWidget(ylabel,     3, 0);
@@ -400,11 +350,11 @@ QWidget* Window::initLightControls()
    lightLabel->setAlignment(Qt::AlignHCenter);
 
    // combo box containing list of lights
-   QComboBox* combo = new QComboBox(this);
-   combo->setObjectName(name);
-   combo->setEditable(false);
-   combo->setMinimumWidth(COMBO_WIDTH);
-   connect(combo, SIGNAL(currentIndexChanged(int)), this, SLOT(lightSelected(int)));
+   lightComboBox = new QComboBox(this);
+   lightComboBox->setObjectName(name);
+   lightComboBox->setEditable(false);
+   lightComboBox->setMinimumWidth(COMBO_WIDTH);
+   connect(lightComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(lightSelected(int)));
 
    // spin box for X pos
    QLabel* xlabel = new QLabel(" X =", this);
@@ -437,7 +387,7 @@ QWidget* Window::initLightControls()
    connect(deleteLightButton, SIGNAL(clicked()), this, SLOT(deleteLightClicked()));
 
    lightLayout->addWidget(lightLabel,  0, 0, 1, 2);
-   lightLayout->addWidget(combo,       1, 0, 1, 2);
+   lightLayout->addWidget(lightComboBox,1, 0, 1, 2);
    lightLayout->addWidget(xlabel,      2, 0);
    lightLayout->addWidget(lightSpinX,  2, 1);
    lightLayout->addWidget(ylabel,      3, 0);

@@ -9,6 +9,7 @@
 #include <QPushButton>
 #include <QKeyEvent>
 #include <QCheckBox>
+#include <QComboBox>
 
 #include "myQSpinBox.h"
 
@@ -38,15 +39,8 @@ public:
    QWidget* initControlPanel();
 
 public slots:
-   // other usefull helper functions/slots
 	void windowAnimate();
 	
-   void togglePaintText(bool);
-   void toggleJointControlsVisible(bool);
-   void toggleWorldControlsVisible(bool);
-   void updateBrushPos();
-   void updateJointPos();
-   
    void carSelected(int index);
    void lightSelected(int index);
    void setCheckBoxText(int);
@@ -77,6 +71,9 @@ private:
    QSpinBox*      carSpinY;
    QSpinBox*      lightSpinX;
    QSpinBox*      lightSpinY;
+
+   QComboBox*     carComboBox;
+   QComboBox*     lightComboBox;
 
    QPushButton*   createCarButton;
    QPushButton*   deleteCarButton;
