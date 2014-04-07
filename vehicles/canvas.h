@@ -32,7 +32,7 @@ public:
    static const int WIDTH  = 640;
    static const int HEIGHT = 480;
 
-   Canvas(RobotArm* _arm);
+   Canvas();
    ~Canvas();
 
    void init();

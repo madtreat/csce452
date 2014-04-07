@@ -46,6 +46,7 @@ set(SOURCES
    car.cpp
    joint.cpp
    link.cpp
+	manager.cpp
    robotarm.cpp
    window.cpp
 	myQSpinBox.cpp
@@ -62,6 +63,7 @@ set(HEADERS
    consts.h
    joint.h
    link.h
+	manager.h
    robotarm.h
 )
 

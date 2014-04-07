@@ -26,6 +26,8 @@ QSize CanvasWidget::sizeHint() const
    return QSize(640, 480);
 }
 
+//TODO: Delete. cause moved to manager
+/*
 void CanvasWidget::printCarLocs() const
 {
 	cout << endl;
@@ -78,6 +80,7 @@ void CanvasWidget::updateLightPos(int lightID, int newX, int newY)
    light.X = newX;
    light.Y = newY;
 }
+//*/
 
 void CanvasWidget::animate()
 {

@@ -21,7 +21,10 @@ public:
    ~CanvasWidget();
    
    QSize sizeHint() const;
-   void printCarLocs() const;
+   
+	//TODO: Delete. cause moved to manager
+	/*
+	void printCarLocs() const;
    void printLightLocs() const;
 
    Cars     getCars() const {return cars;}
@@ -29,6 +32,7 @@ public:
 
    Car      getCar(int i) const {if (i >= cars.size()) return Car(); else return cars[i];}
    Light    getLight(int i) const {if (i >= lights.size()) return Light(); else return lights[i];}
+	//*/
 
 signals:
    void jointsChanged();
@@ -36,12 +40,16 @@ signals:
 
 public slots:
    void animate();
-   void addNewCar(Car car);
+   
+	//TODO: Delete. cause moved to manager
+	/*
+	void addNewCar(Car car);
    void addNewLight(Light light);
    void deleteCar(int car);
    void deleteLight(int light);
    void updateCarPos(int car, int newX, int newY, bool directMapping);
    void updateLightPos(int light, int newX, int newY);
+	//*/
 
 protected:
    void paintEvent(QPaintEvent *event);
@@ -50,8 +58,12 @@ protected:
 
 private:
    Canvas*  canvas;
+	
+	//TODO: Delete. cause moved to manager
+	/*
    Cars     cars;    // list of cars
    Lights   lights;  // list of lights
+	*/
 };
 
 #endif
