@@ -16,6 +16,7 @@
 
 class Canvas;
 class CanvasWidget;
+class Manager;
 
 class Window : public QWidget
 {
@@ -56,6 +57,7 @@ protected:
 private:
    Canvas*        canvas;
    CanvasWidget*  canvasWidget;
+	Manager*			manager;
 
    // Qt CSS-like style sheet
    QString        controlPanelStyle;

@@ -48,9 +48,9 @@ void Canvas::init ( void )
 
 void Canvas::drawCars()
 {
-	for (int i=0; i<manager.getCars().size(); i++)
+	for (int i=0; i<manager->getCars().size(); i++)
 	{
-		Car car = manager.getCar(i);
+		Car car = manager->getCar(i);
 		int X = car.getX();
 		int Y = car.getY();
 		int r = car.getR();
@@ -60,7 +60,7 @@ void Canvas::drawCars()
 
 void Canvas::drawLights()
 {
-	Lights lights = manager.getLights();
+	Lights lights = manager->getLights();
 }
 
 /*

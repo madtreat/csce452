@@ -3,6 +3,7 @@
 #include "consts.h"
 #include "canvas.h"
 #include "canvaswidget.h"
+#include "manager.h"
 
 #include <QLabel>
 #include <QDebug>
@@ -88,11 +89,9 @@ void Window::initStyles()
 //--------------------------------------------------------//
 void Window::initCanvas()
 {
-	//TODO: Fill this
-   // Create RobotArm here so we can call canvas::drawLinks
-   //arm          = new RobotArm();
-   //canvas       = new Canvas(arm);
-   //canvasWidget = new CanvasWidget(canvas, arm, this);
+   manager      = new Manager();
+   canvas       = new Canvas(manager);
+   canvasWidget = new CanvasWidget(canvas, this);
 }
 
 void Window::initLayout()
