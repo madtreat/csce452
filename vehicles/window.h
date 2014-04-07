@@ -8,9 +8,7 @@
 #include <QGridLayout>
 #include <QPushButton>
 #include <QKeyEvent>
-#include <QSpinBox>
-#include <QtNetwork/QTcpSocket>
-#include <QtNetwork/QTcpServer>
+#include <QCheckBox>
 
 #include "myQSpinBox.h"
 
@@ -49,6 +47,7 @@ public slots:
    
    void carSelected(int index);
    void lightSelected(int index);
+   void setCheckBoxText(int);
 
    void createCarClicked();
    void deleteCarClicked();
@@ -71,6 +70,7 @@ private:
    QWidget*       controlPanel;
 
    QGridLayout*   controlLayout;
+   QCheckBox*     directBox;
    QPushButton*   createCarButton;
    QPushButton*   deleteCarButton;
    QPushButton*   createLightButton;

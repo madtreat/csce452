@@ -26,44 +26,51 @@ QLabel {
    font:             bold 14px;
    background-color: white;
    color:            green;
-   padding:          0 5 0 5;
+   /*padding:          0 5 0 5;*/
 }
 
-QComboBox {
+QComboBox,
+QPushButton,
+QComboBox#car,
+QPushButton#car, 
+QComboBox#light,
+QPushButton#light {
+   background-color: gray;
+}
+
+QLabel#car, 
+QLabel#light {
    background-color: black;
 }
 
-QComboBox#car {
+QLabel#car {
    color:            red;
 }
 
-QComboBox#light {
+QLabel#light {
    color:            yellow;
 }
 
+QComboBox#car, 
+QPushButton#car {
+   color:            black;
+   background-color: red;
+}
+
+QComboBox#light, 
+QPushButton#light {
+   color:            black;
+   background-color: yellow;
+}
+
 QPushButton {
-   background-color: black;
    color:            red;
-   padding:          0 5 0 5;
+   /*padding:          0 5 0 5;*/
    border-style:     outset;
    border-width:     2px;
    border-radius:    10px;
    border-color:     gray;
    font:             bold 14px;
-}
-
-QPushButton#car {
-   color:            black;
-}
-
-QPushButton#light {
-   color:            black;
-}
-
-QPushButton:checked {
-   background-color: rgb(150, 150, 150);
-   color:            black;
-   border-style:     inset;
 }
 
 QSpinBox {

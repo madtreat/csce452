@@ -207,6 +207,18 @@ void Window::lightSelected(int index)
 {
 }
 
+void Window::setCheckBoxText(int state)
+{
+   if (state == Qt::Checked)
+   {
+      directBox->setText("Direct Mapping");
+   }
+   else
+   {
+      directBox->setText("Indirect Mapping");
+   }
+}
+
 void Window::createCarClicked()
 {
 }
@@ -296,6 +308,10 @@ QWidget* Window::initCarControls()
    carWidget->setObjectName(name);
    carWidget->setMinimumHeight(JOINT_HEIGHT);
 
+   // car control label
+   QLabel* carLabel = new QLabel("Car Controls", this);
+   carLabel->setAlignment(Qt::AlignHCenter);
+
    // combo box containing list of cars
    QComboBox* combo = new QComboBox(this);
    combo->setObjectName(name);
@@ -303,14 +319,27 @@ QWidget* Window::initCarControls()
    combo->setMinimumWidth(COMBO_WIDTH);
    connect(combo, SIGNAL(currentIndexChanged(int)), this, SLOT(carSelected(int)));
 
-   // textedit for X and Y
+   // spin box for X pos
+   QLabel* xlabel = new QLabel(" X =", this);
+   xlabel->setObjectName(name);
+
    QSpinBox* xpos = new QSpinBox(this);
    xpos->setObjectName(name);
    xpos->setValue(WIDTH/2);
 
+   // spin box for Y pos
+   QLabel* ylabel = new QLabel(" Y =", this);
+   ylabel->setObjectName(name);
+
    QSpinBox* ypos = new QSpinBox(this);
    ypos->setObjectName(name);
    ypos->setValue(HEIGHT/2);
+
+   // INVERSE or DIRECT mapping
+   directBox = new QCheckBox("Direct Mapping", this);
+   directBox->setObjectName(name);
+   connect(directBox, SIGNAL(stateChanged(int)), this, SLOT(setCheckBoxText(int)));
+   directBox->setChecked(true);
 
    // create button (modify button)
    createCarButton = new QPushButton("Create", this);
@@ -322,11 +351,15 @@ QWidget* Window::initCarControls()
    deleteCarButton->setObjectName(name);
    connect(deleteCarButton, SIGNAL(clicked()), this, SLOT(deleteCarClicked()));
 
-   carLayout->addWidget(combo, 0, 0, 1, 2);
-   carLayout->addWidget(xpos, 1, 0);
-   carLayout->addWidget(ypos, 1, 1);
-   carLayout->addWidget(createCarButton, 2, 0, 1, 2);
-   carLayout->addWidget(deleteCarButton, 3, 0, 1, 2);
+   carLayout->addWidget(carLabel,0, 0, 1, 2);
+   carLayout->addWidget(combo,   1, 0, 1, 2);
+   carLayout->addWidget(xlabel,  2, 0);
+   carLayout->addWidget(xpos,    2, 1);
+   carLayout->addWidget(ylabel,  3, 0);
+   carLayout->addWidget(ypos,    3, 1);
+   carLayout->addWidget(directBox, 4, 0, 1, 2);
+   carLayout->addWidget(createCarButton, 5, 0, 1, 2);
+   carLayout->addWidget(deleteCarButton, 6, 0, 1, 2);
 
    return carWidget;
 }
@@ -340,6 +373,10 @@ QWidget* Window::initLightControls()
    lightWidget->setObjectName(name);
    lightWidget->setMinimumHeight(JOINT_HEIGHT);
 
+   // light control label
+   QLabel* lightLabel = new QLabel("Light Controls", this);
+   lightLabel->setAlignment(Qt::AlignHCenter);
+
    // combo box containing list of lights
    QComboBox* combo = new QComboBox(this);
    combo->setObjectName(name);
@@ -347,10 +384,17 @@ QWidget* Window::initLightControls()
    combo->setMinimumWidth(COMBO_WIDTH);
    connect(combo, SIGNAL(currentIndexChanged(int)), this, SLOT(lightSelected(int)));
 
-   // textedit for X and Y
+   // spin box for X pos
+   QLabel* xlabel = new QLabel(" X =", this);
+   xlabel->setObjectName(name);
+
    QSpinBox* xpos = new QSpinBox(this);
    xpos->setObjectName(name);
    xpos->setValue(WIDTH/2);
+
+   // spin box for Y pos
+   QLabel* ylabel = new QLabel(" Y =", this);
+   ylabel->setObjectName(name);
 
    QSpinBox* ypos = new QSpinBox(this);
    ypos->setObjectName(name);
@@ -366,11 +410,14 @@ QWidget* Window::initLightControls()
    deleteLightButton->setObjectName(name);
    connect(deleteLightButton, SIGNAL(clicked()), this, SLOT(deleteLightClicked()));
 
-   lightLayout->addWidget(combo, 0, 0, 1, 2);
-   lightLayout->addWidget(xpos, 1, 0);
-   lightLayout->addWidget(ypos, 1, 1);
-   lightLayout->addWidget(createLightButton, 2, 0, 1, 2);
-   lightLayout->addWidget(deleteLightButton, 3, 0, 1, 2); 
+   lightLayout->addWidget(lightLabel, 0, 0, 1, 2);
+   lightLayout->addWidget(combo,    1, 0, 1, 2);
+   lightLayout->addWidget(xlabel,   2, 0);
+   lightLayout->addWidget(xpos,     2, 1);
+   lightLayout->addWidget(ylabel,   3, 0);
+   lightLayout->addWidget(ypos,     3, 1);
+   lightLayout->addWidget(createLightButton, 4, 0, 1, 2);
+   lightLayout->addWidget(deleteLightButton, 5, 0, 1, 2); 
 
    return lightWidget;
 }
