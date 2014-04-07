@@ -45,6 +45,7 @@ Window::Window()
 
    // Start animating
    QTimer* timer = new QTimer(this);
+	timer->setInterval(1000);
    connect(timer, SIGNAL(timeout()), this, SLOT(windowAnimate()));
    timer->start();
 

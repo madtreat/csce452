@@ -25,13 +25,6 @@ using namespace std;
    Canvas::Canvas(Manager* _man) 
 :manager(_man)
 {
-	//TODO: Not sure if this is needed
-	/*
-   int argc = 1;
-   char* argv[argc];
-   argv[0] = "Braitenberg Vehicles";
-   //glutInit(&argc, argv);
-	// */
 }
 
 Canvas::~Canvas()
@@ -49,10 +42,10 @@ void Canvas::init ( void )
 //TODO: Possible: change wheels and sensors to scale with car size
 void Canvas::drawCars()
 {
-	//for (int i=0; i<manager->getCars().size(); i++)
-	//{
-		//Car car = manager->getCar(i);
-		Car car = Car(Position(100,100),true);
+	for (int i=0; i<manager->getCars().size(); i++)
+	{
+		Car car = manager->getCar(i);
+		//Car car = Car(Position(100,100),true);
 		int X = car.getX();
 		int Y = car.getY();
 		double R = car.getR_rad();
@@ -104,16 +97,16 @@ void Canvas::drawCars()
 			glVertex2f((X+(CAR_WIDTH/2)) + ( 2*cos(R) -  2*sin(R)), (Y-CAR_LENGTH) + ( 2*sin(R) +  2*cos(R)) );
 			glVertex2f((X+(CAR_WIDTH/2)) + ( 2*cos(R) - -2*sin(R)), (Y-CAR_LENGTH) + ( 2*sin(R) + -2*cos(R)) );
 		glEnd();
-	//}
+	}
 	glFlush();
 }
 
 void Canvas::drawLights()
 {
-	//for (int i=0; i<manager->getLights().size(); i++)
-	//{
-		//Light light = manager->getLight(i);
-		Light light = Light(50,50);
+	for (int i=0; i<manager->getLights().size(); i++)
+	{
+		Light light = manager->getLight(i);
+		//Light light = Light(50,50);
 		int X = light.X;
 		int Y = light.Y;
 		
@@ -127,7 +120,7 @@ void Canvas::drawLights()
 				glVertex2f(X + sin(j)*LIGHT_RADIUS, Y + cos(j)*LIGHT_RADIUS);
 			}
 		glEnd();
-	//}
+	}
 	glFlush();
 }
 

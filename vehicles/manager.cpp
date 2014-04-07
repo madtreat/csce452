@@ -9,6 +9,8 @@ using namespace std;
 
 Manager::Manager()
 {
+	cars = Cars();
+	lights = Lights();
 }
 
 Manager::~Manager()
@@ -18,6 +20,10 @@ Manager::~Manager()
 // Update positions of each car in list
 void Manager::timeStep()
 {
+	cout << "TIMESTEP\n";
+	printCarLocs();
+	printLightLocs();
+	// This is where the math happens!
 	for (int i=0; i<cars.size(); i++)
 	{
 		
@@ -26,12 +32,24 @@ void Manager::timeStep()
 
 void Manager::printCarLocs() const
 {
-	//TODO: Fill this
+	cout << "Cars:\n";
+	for (int i=0; i<cars.size(); i++)
+	{
+		cout << "\t" << i << ": (" << cars[i].getX() << ", " << cars[i].getY() << ") " << cars[i].getR() << " degs ";
+		if (cars[i].getDirect())
+			cout << "[Direct]" << endl;
+		else
+			cout << "[Inverse]" << endl;
+	}
 }
 
 void Manager::printLightLocs() const
 {
-	//TODO: Fill this
+	cout << "Lights:\n";
+	for (int i=0; i<lights.size(); i++)
+	{
+		cout << "\t" << i << ": (" << lights[i].getX() << ", " << lights[i].getY() << ")" << endl;
+	}
 }
 
 void Manager::addNewCar(Car car)
