@@ -342,7 +342,9 @@ QWidget* Window::initCarControls()
 
    carSpinX = new QSpinBox(this);
    carSpinX->setObjectName(name);
+   carSpinX->setRange(0, WIDTH);
    carSpinX->setValue(WIDTH/2);
+   carSpinX->setWrapping(true); // looping is enabled
 
    // spin box for Y pos
    QLabel* ylabel = new QLabel(" Y =", this);
@@ -350,7 +352,9 @@ QWidget* Window::initCarControls()
 
    carSpinY = new QSpinBox(this);
    carSpinY->setObjectName(name);
+   carSpinY->setRange(0, HEIGHT);
    carSpinY->setValue(HEIGHT/2);
+   carSpinY->setWrapping(true); // looping is enabled
 
    // INVERSE or DIRECT mapping
    directBox = new QCheckBox("Direct Mapping", this);
@@ -407,7 +411,9 @@ QWidget* Window::initLightControls()
 
    lightSpinX = new QSpinBox(this);
    lightSpinX->setObjectName(name);
+   lightSpinX->setRange(0, WIDTH);
    lightSpinX->setValue(WIDTH/2);
+   lightSpinX->setWrapping(true); // looping is enabled
 
    // spin box for Y pos
    QLabel* ylabel = new QLabel(" Y =", this);
@@ -415,7 +421,9 @@ QWidget* Window::initLightControls()
 
    lightSpinY = new QSpinBox(this);
    lightSpinY->setObjectName(name);
+   lightSpinY->setRange(0, HEIGHT);
    lightSpinY->setValue(HEIGHT/2);
+   lightSpinY->setWrapping(true); // looping is enabled
 
    // create button (modify button)
    createLightButton = new QPushButton("Create", this);
