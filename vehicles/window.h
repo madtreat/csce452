@@ -73,6 +73,11 @@ private:
 
    QGridLayout*   controlLayout;
    QCheckBox*     directBox;
+   QSpinBox*      carSpinX;
+   QSpinBox*      carSpinY;
+   QSpinBox*      lightSpinX;
+   QSpinBox*      lightSpinY;
+
    QPushButton*   createCarButton;
    QPushButton*   deleteCarButton;
    QPushButton*   createLightButton;

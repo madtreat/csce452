@@ -227,6 +227,12 @@ void Window::setCheckBoxText(int state)
 
 void Window::createCarClicked()
 {
+   int x = carSpinX->value();
+   int y = carSpinY->value();
+   bool direct = directBox->isChecked();
+
+   Car car(Position(x, y), direct);
+   manager->addNewCar(car);
 }
 
 void Window::deleteCarClicked()
@@ -235,6 +241,11 @@ void Window::deleteCarClicked()
 
 void Window::createLightClicked()
 {
+   int x = lightSpinX->value();
+   int y = lightSpinY->value();
+   
+   Light light(x, y);
+   manager->addNewLight(light);
 }
 
 void Window::deleteLightClicked()
@@ -329,17 +340,17 @@ QWidget* Window::initCarControls()
    QLabel* xlabel = new QLabel(" X =", this);
    xlabel->setObjectName(name);
 
-   QSpinBox* xpos = new QSpinBox(this);
-   xpos->setObjectName(name);
-   xpos->setValue(WIDTH/2);
+   carSpinX = new QSpinBox(this);
+   carSpinX->setObjectName(name);
+   carSpinX->setValue(WIDTH/2);
 
    // spin box for Y pos
    QLabel* ylabel = new QLabel(" Y =", this);
    ylabel->setObjectName(name);
 
-   QSpinBox* ypos = new QSpinBox(this);
-   ypos->setObjectName(name);
-   ypos->setValue(HEIGHT/2);
+   carSpinY = new QSpinBox(this);
+   carSpinY->setObjectName(name);
+   carSpinY->setValue(HEIGHT/2);
 
    // INVERSE or DIRECT mapping
    directBox = new QCheckBox("Direct Mapping", this);
@@ -357,13 +368,13 @@ QWidget* Window::initCarControls()
    deleteCarButton->setObjectName(name);
    connect(deleteCarButton, SIGNAL(clicked()), this, SLOT(deleteCarClicked()));
 
-   carLayout->addWidget(carLabel,0, 0, 1, 2);
-   carLayout->addWidget(combo,   1, 0, 1, 2);
-   carLayout->addWidget(xlabel,  2, 0);
-   carLayout->addWidget(xpos,    2, 1);
-   carLayout->addWidget(ylabel,  3, 0);
-   carLayout->addWidget(ypos,    3, 1);
-   carLayout->addWidget(directBox, 4, 0, 1, 2);
+   carLayout->addWidget(carLabel,   0, 0, 1, 2);
+   carLayout->addWidget(combo,      1, 0, 1, 2);
+   carLayout->addWidget(xlabel,     2, 0);
+   carLayout->addWidget(carSpinX,   2, 1);
+   carLayout->addWidget(ylabel,     3, 0);
+   carLayout->addWidget(carSpinY,   3, 1);
+   carLayout->addWidget(directBox,  4, 0, 1, 2);
    carLayout->addWidget(createCarButton, 5, 0, 1, 2);
    carLayout->addWidget(deleteCarButton, 6, 0, 1, 2);
 
@@ -394,17 +405,17 @@ QWidget* Window::initLightControls()
    QLabel* xlabel = new QLabel(" X =", this);
    xlabel->setObjectName(name);
 
-   QSpinBox* xpos = new QSpinBox(this);
-   xpos->setObjectName(name);
-   xpos->setValue(WIDTH/2);
+   lightSpinX = new QSpinBox(this);
+   lightSpinX->setObjectName(name);
+   lightSpinX->setValue(WIDTH/2);
 
    // spin box for Y pos
    QLabel* ylabel = new QLabel(" Y =", this);
    ylabel->setObjectName(name);
 
-   QSpinBox* ypos = new QSpinBox(this);
-   ypos->setObjectName(name);
-   ypos->setValue(HEIGHT/2);
+   lightSpinY = new QSpinBox(this);
+   lightSpinY->setObjectName(name);
+   lightSpinY->setValue(HEIGHT/2);
 
    // create button (modify button)
    createLightButton = new QPushButton("Create", this);
@@ -416,12 +427,12 @@ QWidget* Window::initLightControls()
    deleteLightButton->setObjectName(name);
    connect(deleteLightButton, SIGNAL(clicked()), this, SLOT(deleteLightClicked()));
 
-   lightLayout->addWidget(lightLabel, 0, 0, 1, 2);
-   lightLayout->addWidget(combo,    1, 0, 1, 2);
-   lightLayout->addWidget(xlabel,   2, 0);
-   lightLayout->addWidget(xpos,     2, 1);
-   lightLayout->addWidget(ylabel,   3, 0);
-   lightLayout->addWidget(ypos,     3, 1);
+   lightLayout->addWidget(lightLabel,  0, 0, 1, 2);
+   lightLayout->addWidget(combo,       1, 0, 1, 2);
+   lightLayout->addWidget(xlabel,      2, 0);
+   lightLayout->addWidget(lightSpinX,  2, 1);
+   lightLayout->addWidget(ylabel,      3, 0);
+   lightLayout->addWidget(lightSpinY,  3, 1);
    lightLayout->addWidget(createLightButton, 4, 0, 1, 2);
    lightLayout->addWidget(deleteLightButton, 5, 0, 1, 2); 
 
