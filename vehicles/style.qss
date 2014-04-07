@@ -10,23 +10,11 @@ QWidget#container {
    border-style:     none;
 }
 
-QWidget#joint1 {
+QWidget#car {
    background-color: red;
 }
 
-QWidget#joint2 {
-   background-color: green;
-}
-
-QWidget#joint3 {
-   background-color: blue;
-}
-
-QWidget#joint4 {
-   background-color: yellow;
-}
-
-QWidget#brush {
+QWidget#light {
    background-color: yellow;
 }
 
@@ -75,37 +63,19 @@ QSpinBox::down-button {
    subcontrol-position: left;
 }
 
-QSpinBox#joint1::up-arrow {
+QSpinBox#car::up-arrow {
    border-image:     url(:/icons/arrow-right-red);
 }
 
-QSpinBox#joint2::up-arrow {
-   border-image:     url(:/icons/arrow-right-green);
-}
-
-QSpinBox#joint3::up-arrow {
-   border-image:     url(:/icons/arrow-right-blue);
-}
-
-QSpinBox#joint4::up-arrow, 
-QSpinBox#brush::up-arrow {
+QSpinBox#light::up-arrow {
    border-image:     url(:/icons/arrow-right-yellow);
 }
 
-QSpinBox#joint1::down-arrow {
+QSpinBox#car::down-arrow {
    border-image:     url(:/icons/arrow-left-red);
 }
 
-QSpinBox#joint2::down-arrow {
-   border-image:     url(:/icons/arrow-left-green);
-}
-
-QSpinBox#joint3::down-arrow {
-   border-image:     url(:/icons/arrow-left-blue);
-}
-
-QSpinBox#joint4::down-arrow, 
-QSpinBox#brush::down-arrow {
+QSpinBox#light::down-arrow {
    border-image:     url(:/icons/arrow-left-yellow);
 }
 

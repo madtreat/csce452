@@ -1,5 +1,6 @@
 
 #include "canvaswidget.h"
+#include "consts.h"
 #include "canvas.h"
 #include "robotarm.h"
 
@@ -13,7 +14,7 @@ CanvasWidget::CanvasWidget(Canvas* _canvas, QWidget* _parent)
 : QGLWidget(QGLFormat(QGL::SampleBuffers), _parent),
 canvas(_canvas)
 {
-   setFixedSize(Canvas::WIDTH, Canvas::HEIGHT);
+   setFixedSize(WIDTH, HEIGHT);
    setAutoFillBackground(false);
 }
 

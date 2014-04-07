@@ -28,8 +28,6 @@ struct PaintSpot
 class Canvas
 {
 public:
-   static const int WIDTH  = 640;
-   static const int HEIGHT = 480;
 
    Canvas(Manager* _man);
    ~Canvas();

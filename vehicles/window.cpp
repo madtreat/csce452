@@ -1,19 +1,18 @@
 
 #include "window.h"
+#include "consts.h"
 #include "canvas.h"
 #include "canvaswidget.h"
 
 #include <QLabel>
 #include <QDebug>
 #include <QGridLayout>
-#include <QVBoxLayout>
 #include <QSpinBox>
 #include <QTimer>
 #include <QPushButton>
 #include <QFile>
-#include <QApplication>
-#include <QGroupBox>
-#include <QSpacerItem>
+#include <QComboBox>
+
 #include <unistd.h>
 
 Window::Window()
@@ -22,16 +21,14 @@ Window::Window()
    initStyles();
    initCanvas();
    initLayout();
+
    QWidget* controlLabel = initControlPanel();
+   QWidget*     carPanel = initCarControls();
+   QWidget*   lightPanel = initLightControls();
 
-   QWidget* jointPanel = initJointControls();
-   QWidget* worldPanel = initWorldControls();
-   QWidget* brushPanel = initBrushControls();
-
-   controlLayout->addWidget(controlLabel, 0, 0, 1, 2);
-   controlLayout->addWidget(brushPanel,   1, 0, 1, 2);
-   controlLayout->addWidget(jointPanel,   2, 0, 1, 1);
-   controlLayout->addWidget(worldPanel,   2, 1, 1, 1);
+   controlLayout->addWidget(controlLabel, 0, 0);
+   controlLayout->addWidget(carPanel,     1, 0);
+   controlLayout->addWidget(lightPanel,   2, 0);
 
    connect( canvasWidget,  SIGNAL(jointsChanged()),
             this,          SLOT  (updateBrushPos()));
@@ -130,35 +127,19 @@ QWidget* Window::initControlPanel()
    return controlLabel;
 }
 
-QWidget* Window::initJointControls()
-{
-	//TODO: Fill
-   return NULL;
-}
-
-QWidget* Window::initWorldControls()
-{
-	//TODO: Fill
-   return NULL;
-}
-
-QWidget* Window::initBrushControls()
-{
-   //TODO: Fill
-	return NULL;
-}
-
 void Window::togglePaintText(bool enabled)
 {
+   /*
    if (enabled)
       paintButton->setText("Stop Painting");
    else
       paintButton->setText("Paint");
+   // */
 }
 
 void Window::toggleJointControlsVisible(bool enabled)
 {
-   jointControls->setVisible(enabled);
+   //jointControls->setVisible(enabled);
    /*
    if (enabled)
       jointButton->setText("Joint Mode");
@@ -169,7 +150,7 @@ void Window::toggleJointControlsVisible(bool enabled)
 
 void Window::toggleWorldControlsVisible(bool enabled)
 {
-   worldControls->setVisible(enabled);
+   //worldControls->setVisible(enabled);
    /*
    if (enabled)
       worldButton->setText("World Mode");
@@ -180,8 +161,8 @@ void Window::toggleWorldControlsVisible(bool enabled)
 
 void Window::updateBrushPos()
 {
-   if (!brushSpinX || !brushSpinY)
-      return;
+   //if (!brushSpinX || !brushSpinY)
+   //   return;
 
    // block all signals from being emitted from the canvasWidget while all values are updated
    // to avoid infinite signal-update loops
@@ -197,8 +178,8 @@ void Window::updateBrushPos()
 
 void Window::updateJointPos()
 {
-   if (!joint1Spin || !joint2Spin || !joint3Spin)
-      return;
+   //if (!joint1Spin || !joint2Spin || !joint3Spin)
+   //   return;
 
    // block all signals from being emitted from the canvasWidget while all values are updated
    // to avoid infinite signal-update loops
@@ -213,13 +194,21 @@ void Window::updateJointPos()
    canvasWidget->blockSignals(false);
 }
 
+void Window::carSelected(int index)
+{
+   // update X and Y
+   // enable/disable delete button (disable if top/empty selected)
+   // change text of create/modify button (modify = apply?)
+   // read K (direct or inverted light/wheel mapping)
+}
+
 void Window::keyPressEvent(QKeyEvent* event)
 {
    qDebug() << "Key Pressed" << event->key();
    if (event->key() == Qt::Key_Space)
    {
       qDebug() << "Toggling paint in canvas widget...";
-      paintButton->toggle();
+      //paintButton->toggle();
    }
    // move right
 	if (event->key() == Qt::Key_D)
@@ -277,78 +266,7 @@ void Window::keyReleaseEvent(QKeyEvent* event)
    }
 }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - -//
-// Joint Controls: widget { gridlayout { label, spinbox } }
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - -//
-QWidget* Window::createJointControl(int id)
-{
-   //TODO: Fill
-	return NULL;
-}
-
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - -//
-// World Controls: widget { gridlayout { label, spinbox, spinbox } }
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - -//
-QWidget* Window::createWorldControl(int id)
-{
-   //TODO: Fill
-	return NULL;
-}
-
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - -//
-// Add the brush activator button to the control panel
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - -//
-QWidget* Window::createBrushControl()
-{
-   QString name = "brush";
-
-   QWidget*     paintWidget = new QWidget(this);
-   QGridLayout* paintLayout = new QGridLayout(paintWidget);
-
-   paintWidget->setObjectName(name);
-   paintWidget->setMinimumHeight(JOINT_HEIGHT);
-   paintLayout->setContentsMargins(5, 5, 5, 5);
-
-   paintButton = new QPushButton("Paint", paintWidget);
-   paintButton->setCheckable(true);
-
-   myQSpinBox* bSpin = new myQSpinBox(paintWidget);
-   bSpin->setObjectName(name);
-   bSpin->setMinimumHeight(JOINT_HEIGHT);
-   bSpin->setRange(BRUSH_MIN, BRUSH_MAX);
-   bSpin->setPrefix("Size=");
-   // do not allow the brush size to wrap
-   bSpin->setWrapping(false);
-
-   // connect the brush spin box to the canvas widget
-   connect( bSpin,         SIGNAL(valueChanged(int)),
-            canvasWidget,  SLOT  (changeBrushSize(int)));
-
-   // connect the button to the canvas widget
-   connect( paintButton,  SIGNAL (toggled(bool)),
-            canvasWidget, SLOT   (togglePaint(bool)));
-   // connect the button to change the text
-   connect( paintButton,  SIGNAL (toggled(bool)),
-            this,         SLOT   (togglePaintText(bool)));
-
-   brushSizeSpin = bSpin;
-
-   paintLayout->addWidget(paintButton, 0, 0);
-   paintLayout->addWidget(bSpin, 0, 1);
-
-   return paintWidget;
-}
-
-QWidget* Window::initControls()
-{
-   QWidget* controlPanel = new QWidget(this);
-   QWidget*    carWidget = createCarControls();
-   QWidget*  lightWidget = createLightWidget();
-   // TODO: fill in
-   return controlPanel;
-}
-
-QWidget* Window::createCarControls()
+QWidget* Window::initCarControls()
 {
    QString           name = "car";
    QWidget*     carWidget = new QWidget(this);
@@ -357,12 +275,41 @@ QWidget* Window::createCarControls()
    carWidget->setObjectName(name);
    carWidget->setMinimumHeight(JOINT_HEIGHT);
 
+   // combo box containing list of cars
+   QComboBox* combo = new QComboBox(this);
+   combo->setEditable(false);
+   //combo.setWidth(COMBO_WIDTH);
+   connect(combo, SIGNAL(currentIndexChanged(int)), this, SLOT(carSelected(int)));
+
+   // textedit for X and Y
+   QSpinBox* xpos = new QSpinBox(this);
+   xpos->setObjectName(name);
+   xpos->setValue(WIDTH/2);
+
+   QSpinBox* ypos = new QSpinBox(this);
+   ypos->setObjectName(name);
+   ypos->setValue(HEIGHT/2);
+
+   // create button (modify button)
+   createCarButton = new QPushButton("Create", this);
+   connect(createCarButton, SIGNAL(clicked()), this, SLOT(createCarClicked()));
+
+   // delete button
+   deleteCarButton = new QPushButton("Delete", this);
+   connect(deleteCarButton, SIGNAL(clicked()), this, SLOT(deleteCarClicked()));
+
+   carLayout->addWidget(combo, 0, 0, 1, 2);
+   carLayout->addWidget(xpos, 1, 0);
+   carLayout->addWidget(ypos, 1, 1);
+   carLayout->addWidget(createCarButton, 2, 0, 1, 2);
+   carLayout->addWidget(deleteCarButton, 3, 0, 1, 2);
+
    return carWidget;
 }
 
-QWidget* Window::createLabelControls()
+QWidget* Window::initLightControls()
 {
-   QString           name = "label";
+   QString           name = "lights";
    QWidget*   lightWidget = new QWidget(this);
    QGridLayout*    layout = new QGridLayout(lightWidget);
 
@@ -370,11 +317,5 @@ QWidget* Window::createLabelControls()
    lightWidget->setMinimumHeight(JOINT_HEIGHT);
    
    return lightWidget;
-}
-
-QWidget* Window::createLightWidget()
-{
-	//TODO: Fill
-	return NULL;
 }
 
