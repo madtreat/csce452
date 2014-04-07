@@ -6,6 +6,10 @@ QWidget {
    border-color:     gray;
 }
 
+#main-window {
+   background-color: black;
+}
+
 QWidget#container {
    border-style:     none;
 }
@@ -25,6 +29,18 @@ QLabel {
    padding:          0 5 0 5;
 }
 
+QComboBox {
+   background-color: black;
+}
+
+QComboBox#car {
+   color:            red;
+}
+
+QComboBox#light {
+   color:            yellow;
+}
+
 QPushButton {
    background-color: black;
    color:            red;
@@ -34,6 +50,14 @@ QPushButton {
    border-radius:    10px;
    border-color:     gray;
    font:             bold 14px;
+}
+
+QPushButton#car {
+   color:            black;
+}
+
+QPushButton#light {
+   color:            black;
 }
 
 QPushButton:checked {

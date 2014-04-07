@@ -23,6 +23,7 @@ Window::Window()
    initCanvas();
    initLayout();
 
+   setObjectName("main-window");
    QWidget* controlLabel = initControlPanel();
    QWidget*     carPanel = initCarControls();
    QWidget*   lightPanel = initLightControls();
@@ -114,9 +115,10 @@ QWidget* Window::initControlPanel()
    QSizePolicy policy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
    controlPanel  = new QWidget(this);
-   controlPanel->setMinimumWidth(2*CONTROL_WIDTH+24);
+   controlPanel->setMinimumWidth(2.5*COMBO_WIDTH);
    controlPanel->setSizePolicy(policy);
    controlPanel->setStyleSheet(controlPanelStyle);
+   //controlPanel->setObjectName("container");
 
    controlLayout = new QGridLayout(controlPanel);
 
@@ -201,6 +203,26 @@ void Window::carSelected(int index)
    // read K (direct or inverted light/wheel mapping)
 }
 
+void Window::lightSelected(int index)
+{
+}
+
+void Window::createCarClicked()
+{
+}
+
+void Window::deleteCarClicked()
+{
+}
+
+void Window::createLightClicked()
+{
+}
+
+void Window::deleteLightClicked()
+{
+}
+
 void Window::keyPressEvent(QKeyEvent* event)
 {
    qDebug() << "Key Pressed" << event->key();
@@ -276,8 +298,9 @@ QWidget* Window::initCarControls()
 
    // combo box containing list of cars
    QComboBox* combo = new QComboBox(this);
+   combo->setObjectName(name);
    combo->setEditable(false);
-   //combo.setWidth(COMBO_WIDTH);
+   combo->setMinimumWidth(COMBO_WIDTH);
    connect(combo, SIGNAL(currentIndexChanged(int)), this, SLOT(carSelected(int)));
 
    // textedit for X and Y
@@ -291,10 +314,12 @@ QWidget* Window::initCarControls()
 
    // create button (modify button)
    createCarButton = new QPushButton("Create", this);
+   createCarButton->setObjectName(name);
    connect(createCarButton, SIGNAL(clicked()), this, SLOT(createCarClicked()));
 
    // delete button
    deleteCarButton = new QPushButton("Delete", this);
+   deleteCarButton->setObjectName(name);
    connect(deleteCarButton, SIGNAL(clicked()), this, SLOT(deleteCarClicked()));
 
    carLayout->addWidget(combo, 0, 0, 1, 2);
@@ -308,13 +333,45 @@ QWidget* Window::initCarControls()
 
 QWidget* Window::initLightControls()
 {
-   QString           name = "lights";
-   QWidget*   lightWidget = new QWidget(this);
-   QGridLayout*    layout = new QGridLayout(lightWidget);
+   QString           name   = "light";
+   QWidget*   lightWidget   = new QWidget(this);
+   QGridLayout* lightLayout = new QGridLayout(lightWidget);
 
    lightWidget->setObjectName(name);
    lightWidget->setMinimumHeight(JOINT_HEIGHT);
-   
+
+   // combo box containing list of lights
+   QComboBox* combo = new QComboBox(this);
+   combo->setObjectName(name);
+   combo->setEditable(false);
+   combo->setMinimumWidth(COMBO_WIDTH);
+   connect(combo, SIGNAL(currentIndexChanged(int)), this, SLOT(lightSelected(int)));
+
+   // textedit for X and Y
+   QSpinBox* xpos = new QSpinBox(this);
+   xpos->setObjectName(name);
+   xpos->setValue(WIDTH/2);
+
+   QSpinBox* ypos = new QSpinBox(this);
+   ypos->setObjectName(name);
+   ypos->setValue(HEIGHT/2);
+
+   // create button (modify button)
+   createLightButton = new QPushButton("Create", this);
+   createLightButton->setObjectName(name);
+   connect(createLightButton, SIGNAL(clicked()), this, SLOT(createLightClicked()));
+
+   // delete button
+   deleteLightButton = new QPushButton("Delete", this);
+   deleteLightButton->setObjectName(name);
+   connect(deleteLightButton, SIGNAL(clicked()), this, SLOT(deleteLightClicked()));
+
+   lightLayout->addWidget(combo, 0, 0, 1, 2);
+   lightLayout->addWidget(xpos, 1, 0);
+   lightLayout->addWidget(ypos, 1, 1);
+   lightLayout->addWidget(createLightButton, 2, 0, 1, 2);
+   lightLayout->addWidget(deleteLightButton, 3, 0, 1, 2); 
+
    return lightWidget;
 }
 

@@ -24,9 +24,8 @@ class Window : public QWidget
 
 public:
    // sizes for the control panel widgets
-   static const int CONTROL_WIDTH   = 132;
    static const int JOINT_HEIGHT    = 30;
-   static const int COMBO_WIDTH     = 60;
+   static const int COMBO_WIDTH     = 80;
 
    // range for the brush
    static const int BRUSH_MIN       = 5;
@@ -49,6 +48,12 @@ public slots:
    void updateJointPos();
    
    void carSelected(int index);
+   void lightSelected(int index);
+
+   void createCarClicked();
+   void deleteCarClicked();
+   void createLightClicked();
+   void deleteLightClicked();
 
 protected:
    void keyPressEvent(QKeyEvent* event);
