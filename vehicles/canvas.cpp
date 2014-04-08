@@ -87,7 +87,7 @@ void Canvas::drawCars()
 		glEnd();
 		*/
 		// Draw sensors
-		glColor3f(0,0,1);
+		glColor3f(0,0,0);
 		glBegin(GL_QUADS);
 			// Left Sensor
 			glVertex2f(s1.X + (-2*cos(R) - -2*sin(R)), s1.Y + (-2*sin(R) + -2*cos(R)) );
