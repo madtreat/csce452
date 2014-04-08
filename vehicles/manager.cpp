@@ -47,6 +47,10 @@ void Manager::timeStep()
 			Light light = lights[j];
 			int intense1 = 100/sqrt(pow(s1.X-light.X,2) + pow(s1.Y-light.Y,2));
 			int intense2 = 100/sqrt(pow(s2.X-light.X,2) + pow(s2.Y-light.Y,2));
+			if (intense1 > 100)
+				intense1 = 100;
+			if (intense2 > 100)
+				intense2 = 100;
 
 			int diff = intense2 - intense1;
 			total+=diff;
@@ -56,7 +60,15 @@ void Manager::timeStep()
 			cout << intense1 << "::" << intense2 << endl;
 #endif
 		}
-		cars[i].setR(car.getR() + (total*anglenum));
+		if (cars[i].getDirect())
+		{
+			cars[i].setR(car.getR() + (total*anglenum));
+		}
+		else
+		{
+			cars[i].setR(car.getR() - (total*anglenum));
+		}
+		
 		cars[i].setX(ceil(cars[i].getX() - 3*(double)cos(cars[i].getR_rad())));
 		cars[i].setY(ceil(cars[i].getY() - 3*sin(cars[i].getR_rad())));
 		if (cars[i].getX() > WIDTH)
