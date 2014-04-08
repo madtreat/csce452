@@ -339,6 +339,7 @@ QWidget* Window::initCarControls()
    // delete button
    deleteCarButton = new QPushButton("Delete", this);
    deleteCarButton->setObjectName(name);
+   deleteCarButton->setEnabled(false);
    connect(deleteCarButton, SIGNAL(clicked()), this, SLOT(deleteCarClicked()));
 
    carLayout->addWidget(carLabel,   0, 0, 1, 2);
@@ -402,6 +403,7 @@ QWidget* Window::initLightControls()
    // delete button
    deleteLightButton = new QPushButton("Delete", this);
    deleteLightButton->setObjectName(name);
+   deleteLightButton->setEnabled(false);
    connect(deleteLightButton, SIGNAL(clicked()), this, SLOT(deleteLightClicked()));
 
    lightLayout->addWidget(lightLabel,  0, 0, 1, 2);
