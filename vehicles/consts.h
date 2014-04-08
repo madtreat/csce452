@@ -2,6 +2,8 @@
 #ifndef CONSTS_H_
 #define CONSTS_H_
 
+#define DEBUG
+
 #include <vector>
 
 const double PI = 3.1415926;
