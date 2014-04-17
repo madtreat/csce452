@@ -126,7 +126,20 @@ void Canvas::drawLights()
 	}
 	glFlush();
 }
+void Canvas::drawBox(int boxNum)
+{
+   
+}
 
+void Canvas::drawRobot()
+{
+   
+}
+
+void Canvas::drawDest()
+{
+
+}
 void Canvas::display ( void )
 {
    glClear ( GL_COLOR_BUFFER_BIT );

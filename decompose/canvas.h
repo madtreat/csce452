@@ -36,6 +36,9 @@ public:
 	void display();
 	void drawCars();
 	void drawLights();
+   void drawBox(int boxNum);
+   void drawRobot();
+   void drawDest(); 
 
 private:
    Manager* manager;
