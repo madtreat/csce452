@@ -91,22 +91,27 @@ void Window::keyPressEvent(QKeyEvent* event)
 	if (event->key() == Qt::Key_1)
    {
       // select box 1 for repositioning
+      selection == 1;
    }
 	if (event->key() == Qt::Key_2)
    {
       // select box 2 for repositioning
+      selection == 2;
    }
 	if (event->key() == Qt::Key_3)
    {
       // select box 3 for repositioning
+      selection == 3;
    }
    if (event->key() == Qt::Key_R)
    {
       // select robot marker for repositioning
+      selection == 0;
    }
 	if (event->key() == Qt::Key_D)
    {
       // select destination marker for repositioning
+      selection == 4;
    }
 }
 

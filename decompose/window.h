@@ -42,10 +42,10 @@ private:
 
    // What is currently selected to place
    // 0 = robot
+   // 4 = destination
    // 1 = box 1
    // 2 = box 2
    // 3 = box 3
-   // 4 = destination
    int            selection;
 
    // The window's layout

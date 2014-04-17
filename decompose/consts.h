@@ -30,6 +30,7 @@ struct Position {
 };
 
 typedef Position Robot;
+typedef Position Destination;
 
 
 #endif
