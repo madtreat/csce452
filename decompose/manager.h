@@ -13,6 +13,7 @@ public:
    ~Manager();
    
 	void timeStep();
+   void generatePath();
 	
    void printCarLocs() const;
    void printLightLocs() const;

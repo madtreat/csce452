@@ -17,7 +17,8 @@
 
 Window::Window(Manager* _manager)
 : QWidget(),
-manager(_manager)
+manager(_manager),
+selection(0)
 {
    initStyles();
    initCanvas();
@@ -85,24 +86,34 @@ void Window::keyPressEvent(QKeyEvent* event)
    qDebug() << "Key Pressed" << event->key();
    if (event->key() == Qt::Key_Space)
    {
+      // generate path
+   }
+	if (event->key() == Qt::Key_1)
+   {
+      // select box 1 for repositioning
+   }
+	if (event->key() == Qt::Key_2)
+   {
+      // select box 2 for repositioning
+   }
+	if (event->key() == Qt::Key_3)
+   {
+      // select box 3 for repositioning
+   }
+   if (event->key() == Qt::Key_R)
+   {
+      // select robot marker for repositioning
    }
 	if (event->key() == Qt::Key_D)
    {
-   }
-	if (event->key() == Qt::Key_A)
-   {
-   }
-	if (event->key() == Qt::Key_W)
-   {
-   }
-	if (event->key() == Qt::Key_S)
-   {
+      // select destination marker for repositioning
    }
 }
 
 void Window::keyReleaseEvent(QKeyEvent* event)
 {
    qDebug() << "Key Released" << event->key();
+   /*
    if (event->key() == Qt::Key_Space)
    {
    }
@@ -118,5 +129,6 @@ void Window::keyReleaseEvent(QKeyEvent* event)
    if (event->key() == Qt::Key_4)
    {
    }
+   // */
 }
 

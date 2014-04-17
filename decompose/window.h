@@ -40,13 +40,20 @@ private:
    CanvasWidget*  canvasWidget;
 	Manager*			manager;
 
-   // Qt CSS-like style sheet
-   QString        controlPanelStyle;
+   // What is currently selected to place
+   // 0 = robot
+   // 1 = box 1
+   // 2 = box 2
+   // 3 = box 3
+   // 4 = destination
+   int            selection;
 
    // The window's layout
    QGridLayout*   layout;
 
-   QString  getControlStyle(QColor widget);
+   // Qt CSS-like style sheet
+   QString        controlPanelStyle;
+   QString        getControlStyle(QColor widget);
 };
 
 #endif

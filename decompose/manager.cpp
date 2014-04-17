@@ -91,6 +91,11 @@ void Manager::timeStep()
 	}
 }
 
+void Manager::generatePath()
+{
+   // find a path from robot to destination, avoiding obstacles
+}
+
 void Manager::printCarLocs() const
 {
 	cout << "Cars:\n";
