@@ -10,8 +10,7 @@
 #include <QKeyEvent>
 #include <QCheckBox>
 #include <QComboBox>
-
-#include "myQSpinBox.h"
+#include <QSpinBox>
 
 class Canvas;
 class CanvasWidget;

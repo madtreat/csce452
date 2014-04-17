@@ -3,7 +3,7 @@
 #define CANVASWIDGET_H_
 
 #include "consts.h"
-#include "car.h"
+#include "robot.h"
 #include <QGLWidget>
 #include <QMatrix>
 #include <QVector>
