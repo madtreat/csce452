@@ -29,9 +29,7 @@ struct Position {
    int	getY() const {return Y;}
 };
 
-typedef Position Sensor;
-typedef Position Light;
-typedef std::vector<Light> Lights;
+typedef Position Robot;
 
 
 #endif

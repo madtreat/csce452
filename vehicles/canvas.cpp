@@ -85,7 +85,7 @@ void Canvas::drawCars()
 			glVertex2f((X+CAR_WIDTH) + ( 4*cos(R) -  2*sin(R)), (Y+(CAR_LENGTH/2)+2) + ( 4*sin(R) +  2*cos(R)) );
 			glVertex2f((X+CAR_WIDTH) + ( 4*cos(R) - -2*sin(R)), (Y+(CAR_LENGTH/2)+2) + ( 4*sin(R) + -2*cos(R)) );
 		glEnd();
-		*/
+		//*/
 		// Draw sensors
 		glColor3f(0,0,0);
 		glBegin(GL_QUADS);

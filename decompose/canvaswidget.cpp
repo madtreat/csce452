@@ -26,62 +26,6 @@ QSize CanvasWidget::sizeHint() const
    return QSize(640, 480);
 }
 
-//TODO: Delete. cause moved to manager
-/*
-void CanvasWidget::printCarLocs() const
-{
-	cout << endl;
-   for (int i = 0; i < cars.size(); i++)
-   {
-      cout << "Car " << i << " (" << cars[i].getX() << ", " << cars[i].getY() << ")" << endl;
-   }
-}
-
-void CanvasWidget::printLightLocs() const
-{
-	cout << endl;
-   for (int i = 0; i < lights.size(); i++)
-   {
-      cout << "Car " << i << " (" << lights[i].X << ", " << lights[i].Y << ")" << endl;
-   }
-}
-
-void CanvasWidget::addNewCar(Car car)
-{
-   cars.push_back(car);
-}
-
-void CanvasWidget::addNewLight(Light light)
-{
-   lights.push_back(light);
-}
-
-void CanvasWidget::deleteCar(int car)
-{
-   cars.erase(cars.begin() + car - 1);
-}
-
-void CanvasWidget::deleteLight(int light)
-{
-   lights.erase(lights.begin() + light - 1);
-}
-
-void CanvasWidget::updateCarPos(int carID, int newX, int newY, bool directMapping)
-{
-   Car car = cars[carID];
-   car.setX(newX);
-   car.setY(newY);
-   car.setDirect(directMapping);
-}
-
-void CanvasWidget::updateLightPos(int lightID, int newX, int newY)
-{
-   Light light = lights[lightID];
-   light.X = newX;
-   light.Y = newY;
-}
-//*/
-
 void CanvasWidget::animate()
 {
    repaint();

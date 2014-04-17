@@ -3,7 +3,6 @@
 #define MANAGER_H_
 
 #include "consts.h"
-#include "robot.h"
 
 class Manager
 {

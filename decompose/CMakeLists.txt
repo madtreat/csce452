@@ -40,7 +40,6 @@ set(SOURCES
    main.cpp
    canvas.cpp
    canvaswidget.cpp
-   robot.cpp
 	manager.cpp
    window.cpp
 )
@@ -50,7 +49,6 @@ set(SOURCES
 #        as they require some processing first.  They should be in HEADERS_MOC.
 set(HEADERS
    canvas.h
-   robot.h
    consts.h
 	manager.h
 )
