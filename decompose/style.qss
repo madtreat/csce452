@@ -1,0 +1,122 @@
+QWidget {
+   background-color: black;
+   border-style:     outset;
+   border-width:     2px;
+   border-radius:    10px;
+   border-color:     gray;
+}
+
+#main-window {
+   background-color: black;
+}
+
+QWidget#container {
+   border-style:     none;
+}
+
+QWidget#car {
+   background-color: red;
+}
+
+QWidget#light {
+   background-color: yellow;
+}
+
+QComboBox,
+QPushButton,
+QComboBox#car,
+QPushButton#car, 
+QComboBox#light,
+QPushButton#light {
+   background-color: gray;
+}
+
+QComboBox QAbstractItemView#car,
+QComboBox#car {
+   background-color: red;
+   color:            black;
+}
+
+QComboBox QAbstractItemView#light,
+QComboBox#light {
+   background-color: yellow;
+   color:            black;
+}
+
+QLabel {
+   font:             bold 14px;
+   background-color: white;
+   color:            green;
+   /*padding:          0 5 0 5;*/
+}
+
+QLabel#car, 
+QLabel#light {
+   background-color: black;
+}
+
+QLabel#car {
+   color:            red;
+}
+
+QLabel#light {
+   color:            yellow;
+}
+
+QPushButton#car {
+   color:            black;
+   background-color: red;
+}
+
+QPushButton#light {
+   color:            black;
+   background-color: yellow;
+}
+
+QPushButton {
+   color:            red;
+   /*padding:          0 5 0 5;*/
+   border-style:     outset;
+   border-width:     2px;
+   border-radius:    10px;
+   border-color:     gray;
+   font:             bold 14px;
+}
+
+QSpinBox {
+   background-color: white;
+   color:            black;
+   font:             14px;
+}
+
+QSpinBox::up-button, QSpinBox::down-button {
+   subcontrol-origin:   border;
+   border-width:     4;
+   width:            24px;
+   height:           24px;
+}
+
+QSpinBox::up-button {
+   subcontrol-position: right;
+}
+
+QSpinBox::down-button {
+   subcontrol-position: left;
+}
+
+QSpinBox#car::up-arrow {
+   border-image:     url(:/icons/arrow-right-red);
+}
+
+QSpinBox#light::up-arrow {
+   border-image:     url(:/icons/arrow-right-yellow);
+}
+
+QSpinBox#car::down-arrow {
+   border-image:     url(:/icons/arrow-left-red);
+}
+
+QSpinBox#light::down-arrow {
+   border-image:     url(:/icons/arrow-left-yellow);
+}
+

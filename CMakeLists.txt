@@ -8,4 +8,5 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 add_subdirectory(paintbot)
 add_subdirectory(vehicles)
+add_subdirectory(decompose)
 
