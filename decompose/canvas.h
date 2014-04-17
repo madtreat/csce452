@@ -14,6 +14,9 @@ public:
 
    void init();
 	void display();
+   void drawBox(int boxNum);
+   void drawRobot();
+   void drawDest(); 
 
 private:
    Manager* manager;
