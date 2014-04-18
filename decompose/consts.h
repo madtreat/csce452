@@ -12,6 +12,8 @@ const int HEIGHT = 500;		//Window Size
 const int BOX1_SIZE = 200; 
 const int BOX2_SIZE = 150;
 const int BOX3_SIZE = 100;
+const int ROBOT_RADIUS = 5;
+const int DEST_RADIUS = 5; 
 
 struct Position {
    int X;
@@ -24,7 +26,7 @@ struct Position {
 
 typedef Position Robot;
 typedef Position Destination;
-
+typedef Position Box; 
 
 #endif
 
