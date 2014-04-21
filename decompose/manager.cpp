@@ -48,10 +48,10 @@ Cells Manager::decompose()
    // decompose the area into cells based on the box locations
    for (int i = 0; i < NUM_BOXES; i++)
    {
-      xcoords.push_back( boxes[i].pos.X - (boxes[i].size/2) );
-      xcoords.push_back( boxes[i].pos.X + (boxes[i].size/2) );
-      ycoords.push_back( boxes[i].pos.Y - (boxes[i].size/2) );
-      ycoords.push_back( boxes[i].pos.Y + (boxes[i].size/2) );
+      xcoords.push_back( boxes[i].pos.X - (boxes[i].size) );
+      xcoords.push_back( boxes[i].pos.X + (boxes[i].size) );
+      ycoords.push_back( boxes[i].pos.Y - (boxes[i].size) );
+      ycoords.push_back( boxes[i].pos.Y + (boxes[i].size) );
    }
    xcoords.push_back(WIDTH);
    ycoords.push_back(HEIGHT);
@@ -102,10 +102,10 @@ int Manager::isCollision(Position pos)
 	int Y = pos.Y;
 	for (int i=0; i<NUM_BOXES; i++)
 	{
-		if ( ( X < boxes[i].pos.X+(boxes[i].size/2) ) &&
-			  ( X > boxes[i].pos.X-(boxes[i].size/2) ) &&
-			  ( Y < boxes[i].pos.Y+(boxes[i].size/2) ) &&
-			  ( Y > boxes[i].pos.Y-(boxes[i].size/2) ) )
+		if ( ( X < boxes[i].pos.X+(boxes[i].size) ) &&
+			  ( X > boxes[i].pos.X-(boxes[i].size) ) &&
+			  ( Y < boxes[i].pos.Y+(boxes[i].size) ) &&
+			  ( Y > boxes[i].pos.Y-(boxes[i].size) ) )
 			return i;
 	}
 	
