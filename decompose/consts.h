@@ -40,8 +40,8 @@ typedef Position Robot;
 typedef Position Destination;
 typedef Position Box;
 
-typedef vector<Cell> Cells;
-typedef vector<Position> 
+typedef std::vector<Cell> Cells;
+typedef std::vector<Position> 
 
 #endif
 
