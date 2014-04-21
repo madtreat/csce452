@@ -17,6 +17,7 @@ public:
 
 	
    // DEPRECATED: use setBox(int) instead
+	void setBox (Box _box, Position _pos);
 	void setBox1 (Position pos)	{boxes[0] = pos;}
 	void setBox2 (Position pos) 	{boxes[1] = pos;}
 	void setBox3 (Position pos)	{boxes[2] = pos;}
@@ -25,6 +26,7 @@ public:
 	void setDest (Position pos)	{dest = pos;}
 	
    // DEPRECATED: use getBox(int) instead
+	Box 			getBox(Box _box);
 	Box 			getBox1()	const {return boxes[0];}
 	Box 			getBox2()	const {return boxes[1];}
 	Box 			getBox3()	const {return boxes[2];}

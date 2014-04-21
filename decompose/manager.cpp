@@ -44,3 +44,8 @@ Cells Manager::decompose()
    return cells;
 }
 
+void Manager::setBox(int boxNum, Position pos)
+{
+	boxes[boxNum] = pos;
+}
+
