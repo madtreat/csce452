@@ -35,6 +35,7 @@ public slots:
 protected:
    void keyPressEvent(QKeyEvent* event);
    void keyReleaseEvent(QKeyEvent* event);
+	void mouseReleaseEvent(QMouseEvent* e);
 
 private:
    Canvas*        canvas;

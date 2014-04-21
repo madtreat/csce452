@@ -3,7 +3,6 @@
 #include "consts.h"
 #include "canvas.h"
 
-#include <iostream>
 #include <cmath>
 
 using namespace std;
