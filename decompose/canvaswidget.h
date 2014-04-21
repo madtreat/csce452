@@ -3,6 +3,7 @@
 #define CANVASWIDGET_H_
 
 #include "consts.h"
+
 #include <QGLWidget>
 #include <QMatrix>
 #include <QVector>

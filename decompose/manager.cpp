@@ -1,9 +1,10 @@
 
 #include "manager.h"
 
-#include <iostream>
 #include <algorithm>
 #include <cmath>
+#include <iostream>
+#include <vector>
 
 using namespace std;
 

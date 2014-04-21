@@ -15,6 +15,7 @@
 
 #include <unistd.h>
 
+
 Window::Window(Manager* _manager)
 : QWidget(),
 manager(_manager),
@@ -91,7 +92,7 @@ void Window::initLayout()
 
 void Window::keyPressEvent(QKeyEvent* event)
 {
-   qDebug() << "Key Pressed" << event->key();
+   //qDebug() << "Key Pressed" << event->key();
    QString titleSuffix = " - ";
 
    if (event->key() == Qt::Key_Space)
@@ -106,31 +107,31 @@ void Window::keyPressEvent(QKeyEvent* event)
 	if (event->key() == Qt::Key_1)
    {
       // select box 1 for repositioning
-      selection == 1;
-      titleSuffix += "Box 1";
+      selection = 2;
+      titleSuffix += "Box 0";
    }
 	if (event->key() == Qt::Key_2)
    {
       // select box 2 for repositioning
-      selection == 2;
-      titleSuffix += "Box 2";
+      selection = 3;
+      titleSuffix += "Box 1";
    }
 	if (event->key() == Qt::Key_3)
    {
       // select box 3 for repositioning
-      selection == 3;
-      titleSuffix += "Box 3";
+      selection = 4;
+      titleSuffix += "Box 2";
    }
    if (event->key() == Qt::Key_R)
    {
       // select robot marker for repositioning
-      selection == 0;
+      selection = 0;
       titleSuffix += "Marker";
    }
 	if (event->key() == Qt::Key_D)
    {
       // select destination marker for repositioning
-      selection == 4;
+      selection = 1;
       titleSuffix += "Dest";
    }
 
@@ -148,23 +149,40 @@ void Window::keyPressEvent(QKeyEvent* event)
 
 void Window::keyReleaseEvent(QKeyEvent* event)
 {
-   qDebug() << "Key Released" << event->key();
-   /*
-   if (event->key() == Qt::Key_Space)
-   {
-   }
-   if (event->key() == Qt::Key_1)
-   {
-   }
-   if (event->key() == Qt::Key_2)
-   {
-   }
-   if (event->key() == Qt::Key_3)
-   {
-   }
-   if (event->key() == Qt::Key_4)
-   {
-   }
-   // */
+   //qDebug() << "Key Released" << event->key();
+
+}
+
+void Window::mouseReleaseEvent(QMouseEvent* e)
+{
+	//qDebug() << "Mouse Released" << event->pos();
+	switch (selection)
+	{
+		case 0:		//Robot
+		{
+			manager->setRobot(Position(e->x(),e->y()));
+			break;
+		}
+		case 1:		//Destination
+		{
+			manager->setDest(Position(e->x(),e->y()));
+			break;
+		}
+		case 2:		//Box 0
+		{
+			manager->setBox(0, Position(e->x(),e->y()));
+			break;
+		}
+		case 3:		//Box 1
+		{
+			manager->setBox(1, Position(e->x(),e->y()));
+			break;
+		}
+		case 4:		//Box 2
+		{
+			manager->setBox(2, Position(e->x(),e->y()));
+			break;
+		}
+	}
 }
 

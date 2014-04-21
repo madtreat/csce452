@@ -12,6 +12,7 @@
 #include <QComboBox>
 #include <QSpinBox>
 
+
 class Canvas;
 class CanvasWidget;
 class Manager;
@@ -35,6 +36,7 @@ public slots:
 protected:
    void keyPressEvent(QKeyEvent* event);
    void keyReleaseEvent(QKeyEvent* event);
+	void mouseReleaseEvent(QMouseEvent* e);
 
 private:
    Canvas*        canvas;
