@@ -34,13 +34,17 @@ int main(int argc, char* argv[])
    Manager* manager = new Manager();
 	
    // Create randomly placed obstacles
+	Position pos;
 	for (int i=0; i<NUM_BOXES; i++)
-	{
-		int x = rand() % (WIDTH-BUFFER*2) + BUFFER;
-		int y = rand() % (HEIGHT-BUFFER*2) + BUFFER;
-		Position pos(x,y);
+	{	
+		do {
+			int x = rand() % (WIDTH-BUFFER*2) + BUFFER;
+			int y = rand() % (HEIGHT-BUFFER*2) + BUFFER;
+			pos = Position(x,y);
+		}
+		while (manager->isCollision(pos) != -1);
 		manager->setBox(i, pos);
-		cout << "Box " << i << ": (" << x << ", " << y << ")\n";
+		cout << "Box " << i << ": (" << manager->getBox(i).pos.X << ", " << manager->getBox(i).pos.Y << ")\n";
 	}
 	
 	// Set box sizes
@@ -49,26 +53,22 @@ int main(int argc, char* argv[])
 	manager->setBoxSize(2, BOX2_SIZE);
 	
 	// Robot
-	Position posR;
-	do
-	{
+	do {
 		int x = rand() % (WIDTH-BUFFER*2) + BUFFER;
 		int y = rand() % (HEIGHT-BUFFER*2) + BUFFER;
-		posR = Position(x,y);
+		pos = Position(x,y);
 	}
-	while (manager->isCollision(posR) != -1);
-	manager->setRobot(posR);
+	while (manager->isCollision(pos) != -1);
+	manager->setRobot(pos);
 	
 	// Destination
-	Position posD;
-	do
-	{
+	do {
 		int x = rand() % (WIDTH-BUFFER*2) + BUFFER;
 		int y = rand() % (HEIGHT-BUFFER*2) + BUFFER;
-		posD = Position(x,y);
+		pos = Position(x,y);
 	}
-	while (manager->isCollision(posD) != -1);
-	manager->setDest(posD);
+	while (manager->isCollision(pos) != -1);
+	manager->setDest(pos);
 	
 	
    Window w(manager);
