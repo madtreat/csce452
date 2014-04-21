@@ -9,7 +9,6 @@ using namespace std;
 
 Manager::Manager()
 {
-	
 }
 
 Manager::~Manager()
@@ -26,3 +25,4 @@ void Manager::generatePath()
 {
    // find a path from robot to destination, avoiding obstacles
 }
+

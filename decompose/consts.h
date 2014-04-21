@@ -15,6 +15,10 @@ const int BOX3_SIZE = 100;
 const int ROBOT_RADIUS = 5;
 const int DEST_RADIUS = 5; 
 
+const int BUFFER = 50; // 50 pixel buffer for randomly generated locations
+// meaning nothing can be randomly generated along the outer 50 pixels
+// of the canvas
+
 struct Position {
    int X;
    int Y;

@@ -47,6 +47,10 @@ void Canvas::drawBox(int boxNum)
 
    if(boxNum == 1)
    {
+		box = manager->getBox1();
+		X = box.X;
+		Y = box.Y;
+		
       glColor3f(1,.5,0);
       glBegin(GL_QUADS);
          glVertex2f(X-(BOX1_SIZE/2),Y-(BOX1_SIZE/2));
@@ -57,6 +61,10 @@ void Canvas::drawBox(int boxNum)
    }
    else if(boxNum == 2)
    {
+		box = manager->getBox2();
+		X = box.X;
+		Y = box.Y;
+	
       glColor3f(0,1,0);
             glBegin(GL_QUADS);
          glVertex2f(X-(BOX2_SIZE/2),Y-(BOX2_SIZE/2));
@@ -67,6 +75,10 @@ void Canvas::drawBox(int boxNum)
    }
    else if(boxNum == 3)
    {
+		box = manager->getBox3();
+		X = box.X;
+		Y = box.Y;
+		
       glColor3f(0,0,1);
          glBegin(GL_QUADS);
          glVertex2f(X-(BOX3_SIZE/2),Y-(BOX3_SIZE/2));
@@ -82,8 +94,7 @@ void Canvas::drawBox(int boxNum)
 
 void Canvas::drawRobot()
 {
-   Robot robot;
-   
+   Robot robot = manager->getRobot();
    int X = robot.X; 
    int Y = robot.Y;
 
@@ -103,8 +114,7 @@ void Canvas::drawRobot()
 
 void Canvas::drawDest()
 {
-   Destination Dest;
-   
+   Destination Dest = manager->getDest();
    int X = Dest.X; 
    int Y = Dest.Y; 
 
@@ -145,10 +155,10 @@ void Canvas::display ( void )
    glVertex2f (WIDTH-10, 10);
    glEnd();
 
-//drawBox(1);
-//drawBox(2);
-//drawBox(3);
-//drawRobot();
-//drawDest();
+	drawBox(1);
+	drawBox(2);
+	drawBox(3);
+	//drawRobot();
+	//drawDest();
 }
 

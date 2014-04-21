@@ -29,14 +29,34 @@ int main(int argc, char* argv[])
 
    // create the manager
    Manager* manager = new Manager();
-
-   // create randomly placed obstacles
 	
+   // create randomly placed obstacles
+
+	//Box 1
+	int x = rand() % (WIDTH-BUFFER*2) + BUFFER;
+	int y = rand() % (HEIGHT-BUFFER*2) + BUFFER;
+	Position pos1(x,y);
+	manager->setBox1(pos1);
+	cout << "Box1: (" << x << ", " << y << ")\n";
+	
+	//Box 2
+	x = rand() % (WIDTH-BUFFER*2) + BUFFER;
+	y = rand() % (HEIGHT-BUFFER*2) + BUFFER;
+	Position pos2(x,y);
+	manager->setBox2(pos2);
+	cout << "Box2: (" << x << ", " << y << ")\n";
+	
+	//Box 3
+	x = rand() % (WIDTH-BUFFER*2) + BUFFER;
+	y = rand() % (HEIGHT-BUFFER*2) + BUFFER;
+	Position pos3(x,y);
+	manager->setBox3(pos3);
+	cout << "Box3: (" << x << ", " << y << ")\n";
 	
    Window w(manager);
    w.show();
 
-   cout << "Starting Braitenberg Vehicles..." << endl;
+   cout << "Starting Robot Motion Planner..." << endl;
 
    return app.exec();
 }
