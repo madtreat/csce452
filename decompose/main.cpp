@@ -12,6 +12,7 @@
 #include <cmath>
 #include <iostream>
 #include <unistd.h>
+#include <time.h>
 
 using namespace std;
 
@@ -26,6 +27,8 @@ void printUsage()
 int main(int argc, char* argv[])
 {
    QApplication app(argc, argv);
+	
+	srand(time(NULL));
 
    // create the manager
    Manager* manager = new Manager();
