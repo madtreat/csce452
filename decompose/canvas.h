@@ -17,6 +17,7 @@ public:
    void drawRobot();
    void drawDest(); 
    void drawCellNode(int row, int col);
+	void drawCellBorders(int row, int col);
 	void drawCells();
    
 private:
