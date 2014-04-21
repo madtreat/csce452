@@ -2,7 +2,7 @@
 #ifndef CANVAS_H_
 #define CANVAS_H_
 
-#include "manager.h"
+class Manager;
 
 class Canvas
 {

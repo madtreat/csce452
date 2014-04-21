@@ -1,6 +1,7 @@
 
 #include "canvas.h"
 #include "consts.h"
+#include "manager.h"
 
 #ifdef __APPLE__
 #include <GLUT/glut.h>
@@ -19,6 +20,7 @@
 #include <algorithm>
 
 using namespace std;
+
 
    Canvas::Canvas(Manager* _man) 
 :manager(_man)

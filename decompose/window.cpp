@@ -15,6 +15,7 @@
 
 #include <unistd.h>
 
+
 Window::Window(Manager* _manager)
 : QWidget(),
 manager(_manager),
@@ -91,7 +92,7 @@ void Window::initLayout()
 
 void Window::keyPressEvent(QKeyEvent* event)
 {
-   qDebug() << "Key Pressed" << event->key();
+   //qDebug() << "Key Pressed" << event->key();
    QString titleSuffix = " - ";
 
    if (event->key() == Qt::Key_Space)
@@ -148,29 +149,13 @@ void Window::keyPressEvent(QKeyEvent* event)
 
 void Window::keyReleaseEvent(QKeyEvent* event)
 {
-   qDebug() << "Key Released" << event->key();
-   /*
-   if (event->key() == Qt::Key_Space)
-   {
-   }
-   if (event->key() == Qt::Key_1)
-   {
-   }
-   if (event->key() == Qt::Key_2)
-   {
-   }
-   if (event->key() == Qt::Key_3)
-   {
-   }
-   if (event->key() == Qt::Key_4)
-   {
-   }
-   // */
+   //qDebug() << "Key Released" << event->key();
+
 }
 
 void Window::mouseReleaseEvent(QMouseEvent* e)
 {
-	std::cout << "SEL: " << selection << std::endl;
+	//qDebug() << "Mouse Released" << event->pos();
 	switch (selection)
 	{
 		case 0:		//Robot

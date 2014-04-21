@@ -4,6 +4,7 @@
 
 #include "consts.h"
 
+
 class Manager
 {
 

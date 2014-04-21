@@ -12,6 +12,7 @@
 #include <QComboBox>
 #include <QSpinBox>
 
+
 class Canvas;
 class CanvasWidget;
 class Manager;
