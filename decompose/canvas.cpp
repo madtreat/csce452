@@ -43,7 +43,7 @@ void Canvas::drawBox(int boxNum)
 {
    int X = manager->getBox(boxNum).pos.X;
    int Y = manager->getBox(boxNum).pos.Y;
-	int boxSize = manager->getBox(boxNum).size;
+	int boxRadius = manager->getBox(boxNum).size;
 
    if(boxNum == 0)
    {	
@@ -59,10 +59,10 @@ void Canvas::drawBox(int boxNum)
    }
 	
 	glBegin(GL_QUADS);
-		glVertex2f(X+(boxSize/2),Y-(boxSize/2));
-		glVertex2f(X-(boxSize/2),Y-(boxSize/2));
-		glVertex2f(X-(boxSize/2),Y+(boxSize/2));
-		glVertex2f(X+(boxSize/2),Y+(boxSize/2));
+		glVertex2f(X+(boxRadius),Y-(boxRadius));
+		glVertex2f(X-(boxRadius),Y-(boxRadius));
+		glVertex2f(X-(boxRadius),Y+(boxRadius));
+		glVertex2f(X+(boxRadius),Y+(boxRadius));
 	glEnd();
 
    glFlush();
