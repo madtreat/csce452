@@ -49,6 +49,7 @@ Cells Manager::decompose()
    // decompose the area into cells based on the box locations
    for (int i = 0; i < NUM_BOXES; i++)
    {
+      cout << "box[" << i << "] = (" << boxes[i].pos.X << "," << boxes[i].pos.Y << ")" << endl;
       xcoords.push_back( boxes[i].pos.X - (boxes[i].size) );
       xcoords.push_back( boxes[i].pos.X + (boxes[i].size) );
       ycoords.push_back( boxes[i].pos.Y - (boxes[i].size) );
@@ -73,7 +74,7 @@ Cells Manager::decompose()
       for (int j = 1; j < ycoords.size(); j++)
       {
          int nodeX = ( xcoords[i] - xcoords[i-1] ) / 2;
-         int nodeY = ( ycoords[i] - ycoords[i-1] ) / 2;
+         int nodeY = ( ycoords[j] - ycoords[j-1] ) / 2;
          Position nodePos(nodeX, nodeY);
          
          // if this node position is within a box, skip to the next vertical cell
@@ -81,10 +82,10 @@ Cells Manager::decompose()
             break;
 
          Cell cell;
-         cell.TL = Position(xcoords[i-1], ycoords[i-1]);
-         cell.TR = Position(xcoords[i],   ycoords[i-1]);
-         cell.BL = Position(xcoords[i-1], ycoords[i]);
-         cell.BR = Position(xcoords[i],   ycoords[i]);
+         cell.TL = Position(xcoords[i-1], ycoords[j-1]);
+         cell.TR = Position(xcoords[i],   ycoords[j-1]);
+         cell.BL = Position(xcoords[i-1], ycoords[j]);
+         cell.BR = Position(xcoords[i],   ycoords[j]);
          
          cell.node = (Node) nodePos;
          cells.push_back(cell);
