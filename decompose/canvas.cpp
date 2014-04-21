@@ -18,6 +18,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <algorithm>
+#include <iostream>
 
 using namespace std;
 
@@ -122,6 +123,16 @@ void Canvas::drawCellNode(int cellNum)
    glFlush();   
 }
 
+void Canvas::drawCells()
+{
+	cout << "length: " << manager->getCellsLength() << endl;
+	for (int i=0; i< manager->getCellsLength(); i++)
+	{
+		cout << "i:" << i << endl;
+		drawCellNode(i);
+	}
+}
+
 void Canvas::display ( void )
 {
    glClear ( GL_COLOR_BUFFER_BIT );
@@ -150,5 +161,6 @@ void Canvas::display ( void )
 	drawBox(2);
 	drawRobot();
 	drawDest();
+	drawCells();
 }
 

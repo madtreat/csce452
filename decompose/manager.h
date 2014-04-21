@@ -28,11 +28,13 @@ public:
 	Robot 		getRobot()	const {return robot;}
 	Destination getDest()	const {return dest;}
    Cell        getCell(int cellNum); 
+	int			getCellsLength()	const	{return cells.size();}
+	
 private:
    Boxes       boxes;	//typedef'd to std::vector<Box>
 	Robot 		robot;
 	Destination dest;
-   Cells       cells;
+   Cells       cells;	//typedef'd to std::vector<Cell>
 };
 
 #endif

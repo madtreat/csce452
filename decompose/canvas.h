@@ -17,6 +17,7 @@ public:
    void drawRobot();
    void drawDest(); 
    void drawCellNode(int cellNum);
+	void drawCells();
    
 private:
    Manager* manager;
