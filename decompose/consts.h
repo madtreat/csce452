@@ -28,9 +28,20 @@ struct Position {
    int	getY() const {return Y;}
 };
 
+struct Cell {
+   Position node; // node position in this cell (center? random?)
+   Position TL; // Top Left
+   Position TR; // Top Right
+   Position BL; // Bottom Left
+   Position BR; // Bottom Right
+};
+
 typedef Position Robot;
 typedef Position Destination;
-typedef Position Box; 
+typedef Position Box;
+
+typedef vector<Cell> Cells;
+typedef vector<Position> 
 
 #endif
 

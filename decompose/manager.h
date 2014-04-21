@@ -13,6 +13,8 @@ public:
    
 	void timeStep();
    void generatePath();
+   Cells decompose();
+
 	
 	void setBox1 (Position pos)	{box1 = pos;}
 	void setBox2 (Position pos) 	{box2 = pos;}
