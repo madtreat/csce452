@@ -21,8 +21,23 @@ void Manager::timeStep()
 	
 }
 
+// Find a path from robot to destination, avoiding obstacles
 void Manager::generatePath()
 {
-   // find a path from robot to destination, avoiding obstacles
+   // Step 1: decompose free space into cells
+   Cells cells = decompose();
+
+
+   // Step 2: generate connectivity graph
+
+
+   // Step 3: find a path from robot to destination
+
+
+   // Complete!
+}
+
+Cells Manager::decompose()
+{
 }
 
