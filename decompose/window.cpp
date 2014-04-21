@@ -32,7 +32,7 @@ selection(0)
    connect(timer, SIGNAL(timeout()), this, SLOT(windowAnimate()));
    timer->start();
 
-   windowTitle = "Braitenberg Simulator";
+   windowTitle = "Cell Decomposition";
    setWindowTitle(windowTitle);
 }
 
