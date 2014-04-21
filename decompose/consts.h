@@ -2,8 +2,8 @@
 #ifndef CONSTS_H_
 #define CONSTS_H_
 
-
 #include <vector>
+
 
 const double PI = 3.1415926;
 const int WIDTH  = 500;		//Window Size

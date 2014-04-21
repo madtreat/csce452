@@ -2,19 +2,20 @@
    Basic main function
  */
 
-#include "window.h"
 #include "consts.h"
+#include "window.h"
 #include "manager.h"
 
 #include <QApplication>
 #include <QDebug>
 
 #include <cmath>
-#include <iostream>
 #include <unistd.h>
 #include <time.h>
+#include <iostream>
 
 using namespace std;
+
 
 void printUsage()
 {

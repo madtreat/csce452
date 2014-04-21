@@ -1,6 +1,7 @@
 
 #include "canvas.h"
 #include "consts.h"
+#include "manager.h"
 
 #ifdef __APPLE__
 #include <GLUT/glut.h>
@@ -16,11 +17,10 @@
 #include <math.h>
 #include <stdio.h>
 #include <string.h>
-#include <iostream>
-#include <vector>
 #include <algorithm>
 
 using namespace std;
+
 
    Canvas::Canvas(Manager* _man) 
 :manager(_man)
@@ -102,6 +102,24 @@ void Canvas::drawDest()
    glEnd();
 	
    glFlush(); 
+}
+
+void Canvas::drawCellNode(int cellNum)
+{  
+
+   int X = manager->getCell(cellNum).node.X;
+   int Y = manager->getCell(cellNum).node.Y;
+   glColor3f(0,0,0);
+   glBegin(GL_TRIANGLE_FAN);
+      glVertex2f(X,Y);
+
+      for(int i=0; i<=360; i++)
+      {
+         glVertex2f(X +sin(i)*5, Y + cos(i)*5);
+      }
+   glEnd();
+   
+   glFlush();   
 }
 
 void Canvas::display ( void )

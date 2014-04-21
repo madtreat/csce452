@@ -1,9 +1,10 @@
 
 #include "manager.h"
 
-#include <iostream>
 #include <algorithm>
 #include <cmath>
+#include <iostream>
+#include <vector>
 
 using namespace std;
 
@@ -208,4 +209,9 @@ void Manager::setBoxSize(int boxNum, int size)
 Box Manager::getBox(int boxNum)
 {
 	return boxes[boxNum];
+}
+
+Cell Manager::getCell(int cellNum)
+{
+   return cells[cellNum];
 }

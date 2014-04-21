@@ -4,6 +4,7 @@
 
 #include "consts.h"
 
+
 class Manager
 {
 
@@ -23,17 +24,17 @@ public:
 	void setBoxSize(int boxNum, int size);
 	void setRobot(Position pos)	{robot= pos;}
 	void setDest(Position pos)	{dest = pos;}
-	
+
 	// GET Functions
    Box         getBox(int boxNum);
 	Robot 		getRobot()	const {return robot;}
 	Destination getDest()	const {return dest;}
-	
+   Cell        getCell(int cellNum); 
 private:
    Boxes       boxes;	//typedef'd to std::vector<Box>
 	Robot 		robot;
 	Destination dest;
+   Cells       cells;
 };
 
 #endif
-

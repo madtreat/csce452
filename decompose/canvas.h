@@ -2,8 +2,7 @@
 #ifndef CANVAS_H_
 #define CANVAS_H_
 
-#include "manager.h"
-#include <vector>
+class Manager;
 
 class Canvas
 {
@@ -17,7 +16,8 @@ public:
    void drawBox(int boxNum);
    void drawRobot();
    void drawDest(); 
-
+   void drawCellNode(int cellNum);
+   
 private:
    Manager* manager;
 	
