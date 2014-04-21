@@ -24,14 +24,15 @@ struct Position {
    int X;
    int Y;
    Position(int _x = -1, int _y = -1) : X(_x), Y(_y) {};
-	
-	int	getX() const {return X;}
-   int	getY() const {return Y;}
+};
+
+struct Box {
+   Position pos;
+   int      size;
 };
 
 typedef Position Robot;
 typedef Position Destination;
-typedef Position Box;
 typedef Position Node;
 
 // an edge is a line between two positions

@@ -39,8 +39,15 @@ void Manager::generatePath()
 
 Cells Manager::decompose()
 {
+   vector<int> edgeCoords;
+   // decompose the area into cells based on the box locations
+   for (int i = 0; i < NUM_BOXES; i++)
+   {
+      edgeCoords.push_back(boxes[i].pos.X - (boxes[i].size/2) );
+   }
+
    Cells cells;
-   //
+
    return cells;
 }
 
