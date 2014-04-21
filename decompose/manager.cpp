@@ -39,5 +39,8 @@ void Manager::generatePath()
 
 Cells Manager::decompose()
 {
+   Cells cells;
+   //
+   return cells;
 }
 

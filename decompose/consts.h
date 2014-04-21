@@ -9,6 +9,7 @@ const double PI = 3.1415926;
 const int WIDTH  = 500;		//Window Size
 const int HEIGHT = 500;		//Window Size
 
+const int NUM_BOXES = 3;
 const int BOX1_SIZE = 200; 
 const int BOX2_SIZE = 150;
 const int BOX3_SIZE = 100;
@@ -28,20 +29,28 @@ struct Position {
    int	getY() const {return Y;}
 };
 
+typedef Position Robot;
+typedef Position Destination;
+typedef Position Box;
+typedef Position Node;
+
+// an edge is a line between two positions
+struct Edge {
+   Node n1;
+   Node n2;
+};
+
 struct Cell {
-   Position node; // node position in this cell (center? random?)
+   Node     node; // node position in this cell (center? random?)
    Position TL; // Top Left
    Position TR; // Top Right
    Position BL; // Bottom Left
    Position BR; // Bottom Right
 };
 
-typedef Position Robot;
-typedef Position Destination;
-typedef Position Box;
-
+typedef std::vector<Box>  Boxes;
 typedef std::vector<Cell> Cells;
-typedef std::vector<Position> 
+typedef std::vector<Node> Nodes;
 
 #endif
 
