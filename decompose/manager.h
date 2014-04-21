@@ -14,6 +14,8 @@ public:
 	void timeStep();
    void generatePath();
    Cells decompose();
+   Graph connectCells(Cells cells) const;
+   Path  dijkstra(Graph g);
 	int isCollision(Position pos);
 
 	// SET Functions

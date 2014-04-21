@@ -32,12 +32,11 @@ void Manager::generatePath()
    // Step 1: decompose free space into cells
    Cells cells = decompose();
 
-
    // Step 2: generate connectivity graph
-
+   Graph graph = connectCells(cells);
 
    // Step 3: find a path from robot to destination
-
+   Path path = dijkstra(graph);
 
    // Complete!
 }
@@ -74,29 +73,108 @@ Cells Manager::decompose()
 
    for (int i = 1; i < xcoords.size(); i++)
    {
+      CRow row;
       for (int j = 1; j < ycoords.size(); j++)
       {
          int nodeX = xcoords[i-1] + ( xcoords[i] - xcoords[i-1] ) / 2;
          int nodeY = ycoords[i-1] + ( ycoords[j] - ycoords[j-1] ) / 2;
-         Position nodePos(nodeX, nodeY);
+         Position pos(nodeX, nodeY);
          
-         // if this node position is within a box, skip to the next vertical cell
-         if (isCollision(nodePos) != -1)
-            break;
-
          Cell cell;
          cell.TL = Position(xcoords[i-1], ycoords[j-1]);
          cell.TR = Position(xcoords[i],   ycoords[j-1]);
          cell.BL = Position(xcoords[i-1], ycoords[j]);
          cell.BR = Position(xcoords[i],   ycoords[j]);
          
-         cell.node = (Node) nodePos;
-         cells.push_back(cell);
+         cell.pos = pos;
+
+         // if this cell position is within a box, make it an invalid cell (but keep it...
+         // useful for graph construction)
+         if (isCollision(pos) != -1)
+            cell.isValid = false;
+         else
+            cell.isValid = true;
+
+         row.push_back(cell);
          cout << "Cell made with node = (" << nodeX << ", " << nodeY << ")" << endl;
       }
+      cells.push_back(row);
    }
 
    return cells;
+}
+
+// generate a connectivity graph based on the vector of cells given
+Graph Manager::connectCells(Cells cells) const
+{
+   Graph g;
+
+   // loop through rows
+   for (int i = 0; i < cells.size(); i++)
+   {
+      // loop through columns in this row
+      for (int j = 0; j < cells[i].size(); j++)
+      {
+         // Only add an edge to a node if BOTH this cell and its neighbor are valid
+         Node node;
+         node.cell    = cells[i][j];
+         node.visited = false;
+
+         Edges edges;
+
+         // right neighbor
+         if ( ( j+1 < cells.size() ) && 
+              cells[i][j].isValid && 
+              cells[i][j+1].isValid )
+         {
+            Edge edge;
+            edge.dest = cells[i][j+1];
+            edges.push_back(edge);
+         }
+
+         // bottom neighbor
+         if ( ( i+1 < cells.size() ) && 
+              cells[i][j].isValid && 
+              cells[i+1][j].isValid )
+         {
+            Edge edge;
+            edge.dest = cells[i+1][j];
+            edges.push_back(edge);
+         }
+
+         // left neighbor
+         if ( ( j-1 >= 0 ) && 
+              cells[i][j].isValid && 
+              cells[i][j-1].isValid )
+         {
+            Edge edge;
+            edge.dest = cells[i][j-1];
+            edges.push_back(edge);
+         }
+
+         // top neighbor
+         if ( ( i-1 >= 0 ) && 
+              cells[i][j].isValid && 
+              cells[i-1][j].isValid )
+         {
+            Edge edge;
+            edge.dest = cells[i-1][j];
+            edges.push_back(edge);
+         }
+
+         node.edges = edges;
+         g.push_back(node);
+      }
+   }
+
+   return g;
+}
+
+Path Manager::dijkstra(Graph g)
+{
+   Path path;
+
+   return path;
 }
 
 // Return index of box that collides
