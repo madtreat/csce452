@@ -10,6 +10,7 @@ using namespace std;
 
 Manager::Manager()
 {
+	boxes.reserve(NUM_BOXES);
 }
 
 Manager::~Manager()
