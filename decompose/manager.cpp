@@ -10,7 +10,10 @@ using namespace std;
 
 Manager::Manager()
 {
-	boxes.reserve(NUM_BOXES);
+	for (int i=0; i<NUM_BOXES; i++)
+	{
+		boxes.push_back(Box());
+	}
 }
 
 Manager::~Manager()
@@ -103,10 +106,10 @@ int Manager::isCollision(Position pos)
 	int Y = pos.Y;
 	for (int i=0; i<NUM_BOXES; i++)
 	{
-		if ( ( X < boxes[i].pos.X+(boxes[i].size) ) &&
-			  ( X > boxes[i].pos.X-(boxes[i].size) ) &&
-			  ( Y < boxes[i].pos.Y+(boxes[i].size) ) &&
-			  ( Y > boxes[i].pos.Y-(boxes[i].size) ) )
+		if ( ( X < boxes[i].pos.X + (boxes[i].size) ) &&
+			  ( X > boxes[i].pos.X - (boxes[i].size) ) &&
+			  ( Y < boxes[i].pos.Y + (boxes[i].size) ) &&
+			  ( Y > boxes[i].pos.Y - (boxes[i].size) ) )
 			return i;
 	}
 	

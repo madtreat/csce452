@@ -29,6 +29,7 @@ struct Position {
 struct Box {
    Position pos;
    int      size;
+	Box(Position _pos = Position(), int _size = 0) : pos(_pos), size(_size) {};
 };
 
 typedef Position Robot;
