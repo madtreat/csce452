@@ -14,28 +14,21 @@ public:
 	void timeStep();
    void generatePath();
    Cells decompose();
+	int isCollision(Position pos);
 
-	
-   // DEPRECATED: use setBox(int) instead
-	void setBox (Box _box, Position _pos);
-	void setBox1 (Position pos)	{boxes[0] = pos;}
-	void setBox2 (Position pos) 	{boxes[1] = pos;}
-	void setBox3 (Position pos)	{boxes[2] = pos;}
-   void setBox  (int i, Position pos) {boxes[i] = pos;}
+	// SET Functions
+	void setBox(int boxNum, Position pos);
+	void setBoxSize(int boxNum, int size);
 	void setRobot(Position pos)	{robot= pos;}
-	void setDest (Position pos)	{dest = pos;}
+	void setDest(Position pos)	{dest = pos;}
 	
-   // DEPRECATED: use getBox(int) instead
-	Box 			getBox(Box _box);
-	Box 			getBox1()	const {return boxes[0];}
-	Box 			getBox2()	const {return boxes[1];}
-	Box 			getBox3()	const {return boxes[2];}
-   Box         getBox(int i) const {return boxes[i];}
+	// GET Functions
+   Box         getBox(int boxNum);
 	Robot 		getRobot()	const {return robot;}
 	Destination getDest()	const {return dest;}
 	
 private:
-   Boxes       boxes;
+   Boxes       boxes;	//typedef'd to std::vector<Box>
 	Robot 		robot;
 	Destination dest;
 };

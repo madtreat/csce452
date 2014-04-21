@@ -51,8 +51,35 @@ Cells Manager::decompose()
    return cells;
 }
 
-void Manager::setBox(int boxNum, Position pos)
-{
-	boxes[boxNum] = pos;
+// Return index of box that collides
+// Return -1 on no collision
+int Manager::isCollision(Position pos)
+{	
+	int X = pos.X;
+	int Y = pos.Y;
+	for (int i=0; i<NUM_BOXES; i++)
+	{
+		if ( ( X < boxes[i].pos.X+(boxes[i].size/2) ) &&
+			  ( X > boxes[i].pos.X-(boxes[i].size/2) ) &&
+			  ( Y < boxes[i].pos.Y+(boxes[i].size/2) ) &&
+			  ( Y > boxes[i].pos.Y-(boxes[i].size/2) ) )
+			return i;
+	}
+	
+	return -1;
 }
 
+void Manager::setBox(int boxNum, Position pos)
+{
+	boxes[boxNum].pos = pos;
+}
+
+void Manager::setBoxSize(int boxNum, int size)
+{
+	boxes[boxNum].size = size;
+}
+
+Box Manager::getBox(int boxNum)
+{
+	return boxes[boxNum];
+}

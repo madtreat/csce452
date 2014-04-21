@@ -31,73 +31,42 @@ int main(int argc, char* argv[])
    Manager* manager = new Manager();
 	
    // Create randomly placed obstacles
-
-	// Box 1
-	int x = rand() % (WIDTH-BUFFER*2) + BUFFER;
-	int y = rand() % (HEIGHT-BUFFER*2) + BUFFER;
-	Position pos1(x,y);
-	manager->setBox1(pos1);
-	cout << "Box1: (" << x << ", " << y << ")\n";
+	for (int i=0; i<NUM_BOXES; i++)
+	{
+		int x = rand() % (WIDTH-BUFFER*2) + BUFFER;
+		int y = rand() % (HEIGHT-BUFFER*2) + BUFFER;
+		Position pos(x,y);
+		manager->setBox(i, pos);
+		cout << "Box " << i << ": (" << x << ", " << y << ")\n";
+	}
 	
-	// Box 2
-	x = rand() % (WIDTH-BUFFER*2) + BUFFER;
-	y = rand() % (HEIGHT-BUFFER*2) + BUFFER;
-	Position pos2(x,y);
-	manager->setBox2(pos2);
-	cout << "Box2: (" << x << ", " << y << ")\n";
-	
-	// Box 3
-	x = rand() % (WIDTH-BUFFER*2) + BUFFER;
-	y = rand() % (HEIGHT-BUFFER*2) + BUFFER;
-	Position pos3(x,y);
-	manager->setBox3(pos3);
-	cout << "Box3: (" << x << ", " << y << ")\n";
+	// Set box sizes
+	manager->setBoxSize(0, BOX0_SIZE);
+	manager->setBoxSize(1, BOX1_SIZE);
+	manager->setBoxSize(2, BOX2_SIZE);
 	
 	// Robot
-	bool collision = true;
-	while (collision)
+	Position posR;
+	do
 	{
-		collision = false;
-		x = rand() % (WIDTH-BUFFER*2) + BUFFER;
-		y = rand() % (HEIGHT-BUFFER*2) + BUFFER;
-		// Box 1
-		if (	 x < manager->getBox1().X+(BOX1_SIZE/2) && x > manager->getBox1().X-(BOX1_SIZE/2))
-			if (y < manager->getBox1().Y+(BOX1_SIZE/2) && y > manager->getBox1().Y-(BOX1_SIZE/2))
-				collision = true;
-		// Box 2
-		if (	 x < manager->getBox2().X+(BOX2_SIZE/2) && x > manager->getBox2().X-(BOX2_SIZE/2))
-			if (y < manager->getBox2().Y+(BOX2_SIZE/2) && y > manager->getBox2().Y-(BOX2_SIZE/2))
-				collision = true;
-		// Box 3
-		if (	 x < manager->getBox3().X+(BOX3_SIZE/2) && x > manager->getBox3().X-(BOX3_SIZE/2))
-			if (y < manager->getBox3().Y+(BOX3_SIZE/2) && y > manager->getBox3().Y-(BOX3_SIZE/2))
-				collision = true;
+		int x = rand() % (WIDTH-BUFFER*2) + BUFFER;
+		int y = rand() % (HEIGHT-BUFFER*2) + BUFFER;
+		posR = Position(x,y);
 	}
-	Position posR(x,y);
+	while (manager->isCollision(posR) != -1);
 	manager->setRobot(posR);
 	
 	// Destination
-	collision = true;
-	while (collision)
+	Position posD;
+	do
 	{
-		collision = false;
-		x = rand() % (WIDTH-BUFFER*2) + BUFFER;
-		y = rand() % (HEIGHT-BUFFER*2) + BUFFER;
-		// Box 1
-		if (	 x < manager->getBox1().X+(BOX1_SIZE/2) && x > manager->getBox1().X-(BOX1_SIZE/2))
-			if (y < manager->getBox1().Y+(BOX1_SIZE/2) && y > manager->getBox1().Y-(BOX1_SIZE/2))
-				collision = true;
-		// Box 2
-		if (	 x < manager->getBox2().X+(BOX2_SIZE/2) && x > manager->getBox2().X-(BOX2_SIZE/2))
-			if (y < manager->getBox2().Y+(BOX2_SIZE/2) && y > manager->getBox2().Y-(BOX2_SIZE/2))
-				collision = true;
-		// Box 3
-		if (	 x < manager->getBox3().X+(BOX3_SIZE/2) && x > manager->getBox3().X-(BOX3_SIZE/2))
-			if (y < manager->getBox3().Y+(BOX3_SIZE/2) && y > manager->getBox3().Y-(BOX3_SIZE/2))
-				collision = true;
+		int x = rand() % (WIDTH-BUFFER*2) + BUFFER;
+		int y = rand() % (HEIGHT-BUFFER*2) + BUFFER;
+		posD = Position(x,y);
 	}
-	Position posD(x,y);
+	while (manager->isCollision(posD) != -1);
 	manager->setDest(posD);
+	
 	
    Window w(manager);
    w.show();

@@ -10,9 +10,9 @@ const int WIDTH  = 500;		//Window Size
 const int HEIGHT = 500;		//Window Size
 
 const int NUM_BOXES = 3;
-const int BOX1_SIZE = 200; 
-const int BOX2_SIZE = 150;
-const int BOX3_SIZE = 100;
+const int BOX0_SIZE = 200; 
+const int BOX1_SIZE = 150;
+const int BOX2_SIZE = 100;
 const int ROBOT_RADIUS = 5;
 const int DEST_RADIUS = 5; 
 
