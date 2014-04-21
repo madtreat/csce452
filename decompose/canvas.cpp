@@ -105,12 +105,12 @@ void Canvas::drawDest()
    glFlush(); 
 }
 
-void Canvas::drawCellNode(int cellNum)
+void Canvas::drawCellNode(int row, int col)
 {  
 
-   int X = manager->getCell(cellNum).node.X;
-   int Y = manager->getCell(cellNum).node.Y;
-   glColor3f(0,0,0);
+   int X = manager->getCell(row, col).pos.X;
+   int Y = manager->getCell(row, col).pos.Y;
+   glColor3f(1,1,0);
    glBegin(GL_TRIANGLE_FAN);
       glVertex2f(X,Y);
 
@@ -125,11 +125,12 @@ void Canvas::drawCellNode(int cellNum)
 
 void Canvas::drawCells()
 {
-	cout << "length: " << manager->getCellsLength() << endl;
-	for (int i=0; i< manager->getCellsLength(); i++)
+	for (int i=0; i<manager->getCellRows(); i++)
 	{
-		cout << "i:" << i << endl;
-		drawCellNode(i);
+		for (int j=0; j<manager->getCellCols(); j++)
+		{
+			drawCellNode(i,j);
+		}		
 	}
 }
 

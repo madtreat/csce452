@@ -14,8 +14,8 @@ public:
    
 	void timeStep();
    void generatePath();
-   Cells decompose();
-   Graph connectCells(Cells cells) const;
+   void decompose();
+   Graph connectCells() const;
    Path  dijkstra(Graph g);
 	int isCollision(Position pos);
 
@@ -29,8 +29,9 @@ public:
    Box         getBox(int boxNum);
 	Robot 		getRobot()	const {return robot;}
 	Destination getDest()	const {return dest;}
-   Cell        getCell(int cellNum); 
-	int			getCellsLength()	const	{return cells.size();}
+   Cell        getCell(int row, int col); 
+	int			getCellRows()	const	{return cells.size();}
+	int			getCellCols()	const	{return cells[0].size();}
 	
 private:
    Boxes       boxes;	//typedef'd to std::vector<Box>

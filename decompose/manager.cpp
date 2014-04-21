@@ -31,10 +31,10 @@ void Manager::timeStep()
 void Manager::generatePath()
 {
    // Step 1: decompose free space into cells
-   Cells cells = decompose();
+   decompose();
 
    // Step 2: generate connectivity graph
-   Graph graph = connectCells(cells);
+   Graph graph = connectCells();
 
    // Step 3: find a path from robot to destination
    Path path = dijkstra(graph);
@@ -42,7 +42,7 @@ void Manager::generatePath()
    // Complete!
 }
 
-Cells Manager::decompose()
+void Manager::decompose()
 {
    vector<int> xcoords;
    vector<int> ycoords;
@@ -70,15 +70,13 @@ Cells Manager::decompose()
    ycoords.erase( unique(ycoords.begin(), ycoords.end()), ycoords.end() );
 
    // create cells based on edge coordinates
-   Cells cells;
-
    for (int i = 1; i < xcoords.size(); i++)
    {
       CRow row;
       for (int j = 1; j < ycoords.size(); j++)
       {
          int nodeX = xcoords[i-1] + ( xcoords[i] - xcoords[i-1] ) / 2;
-         int nodeY = ycoords[i-1] + ( ycoords[j] - ycoords[j-1] ) / 2;
+         int nodeY = ycoords[j-1] + ( ycoords[j] - ycoords[j-1] ) / 2;
          Position pos(nodeX, nodeY);
          
          Cell cell;
@@ -101,12 +99,10 @@ Cells Manager::decompose()
       }
       cells.push_back(row);
    }
-
-   return cells;
 }
 
 // generate a connectivity graph based on the vector of cells given
-Graph Manager::connectCells(Cells cells) const
+Graph Manager::connectCells() const
 {
    Graph g;
 
@@ -211,7 +207,7 @@ Box Manager::getBox(int boxNum)
 	return boxes[boxNum];
 }
 
-Cell Manager::getCell(int cellNum)
+Cell Manager::getCell(int row, int col)
 {
-   return cells[cellNum];
+   return cells[row][col];
 }
