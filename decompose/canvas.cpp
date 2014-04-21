@@ -41,53 +41,41 @@ void Canvas::init ( void )
 
 void Canvas::drawBox(int boxNum)
 {
-   Box box; 
-   int X = box.X;
-   int Y = box.Y;
+   int X = 0;
+   int Y = 0;
+	int boxSize = 0;
 
    if(boxNum == 1)
    {
-		box = manager->getBox1();
-		X = box.X;
-		Y = box.Y;
+		X = manager->getBox1().X;
+		Y = manager->getBox1().Y;
+		boxSize = BOX1_SIZE;
 		
-      glColor3f(1,.5,0);
-      glBegin(GL_QUADS);
-         glVertex2f(X-(BOX1_SIZE/2),Y-(BOX1_SIZE/2));
-         glVertex2f(X+(BOX1_SIZE/2),Y-(BOX1_SIZE/2));
-         glVertex2f(X+(BOX1_SIZE/2),Y+(BOX1_SIZE/2));
-         glVertex2f(X-(BOX1_SIZE/2),Y+(BOX1_SIZE/2));
-      glEnd();
+      glColor3f(1,0,0);
    }
    else if(boxNum == 2)
    {
-		box = manager->getBox2();
-		X = box.X;
-		Y = box.Y;
-	
+		X = manager->getBox2().X;
+		Y = manager->getBox2().Y;
+		boxSize = BOX2_SIZE;
+		
       glColor3f(0,1,0);
-            glBegin(GL_QUADS);
-         glVertex2f(X-(BOX2_SIZE/2),Y-(BOX2_SIZE/2));
-         glVertex2f(X+(BOX2_SIZE/2),Y-(BOX2_SIZE/2));
-         glVertex2f(X+(BOX2_SIZE/2),Y+(BOX2_SIZE/2));
-         glVertex2f(X-(BOX2_SIZE/2),Y+(BOX2_SIZE/2));
-      glEnd();  
    }
    else if(boxNum == 3)
    {
-		box = manager->getBox3();
-		X = box.X;
-		Y = box.Y;
+		X = manager->getBox3().X;
+		Y = manager->getBox3().Y;
+		boxSize = BOX3_SIZE;
 		
       glColor3f(0,0,1);
-         glBegin(GL_QUADS);
-         glVertex2f(X-(BOX3_SIZE/2),Y-(BOX3_SIZE/2));
-         glVertex2f(X+(BOX3_SIZE/2),Y-(BOX3_SIZE/2));
-         glVertex2f(X+(BOX3_SIZE/2),Y+(BOX3_SIZE/2));
-         glVertex2f(X-(BOX3_SIZE/2),Y+(BOX3_SIZE/2));
-      glEnd(); 
- 
    }
+	
+	glBegin(GL_QUADS);
+		glVertex2f(X-(boxSize/2),Y-(boxSize/2));
+		glVertex2f(X+(boxSize/2),Y-(boxSize/2));
+		glVertex2f(X+(boxSize/2),Y+(boxSize/2));
+		glVertex2f(X-(boxSize/2),Y+(boxSize/2));
+	glEnd();
 
    glFlush();
 }
@@ -95,7 +83,7 @@ void Canvas::drawBox(int boxNum)
 void Canvas::drawRobot()
 {
    Robot robot = manager->getRobot();
-   int X = robot.X; 
+   int X = robot.X;
    int Y = robot.Y;
 
    glColor3f(1,1,0);
@@ -115,8 +103,8 @@ void Canvas::drawRobot()
 void Canvas::drawDest()
 {
    Destination Dest = manager->getDest();
-   int X = Dest.X; 
-   int Y = Dest.Y; 
+   int X = Dest.X;
+   int Y = Dest.Y;
 
    glColor3f(1,0,0);
    glBegin(GL_TRIANGLE_FAN);
@@ -160,5 +148,7 @@ void Canvas::display ( void )
 	drawBox(3);
 	//drawRobot();
 	//drawDest();
+	
+	glFlush();
 }
 
