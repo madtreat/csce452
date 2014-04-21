@@ -93,6 +93,7 @@ void Window::keyPressEvent(QKeyEvent* event)
 {
    qDebug() << "Key Pressed" << event->key();
    QString titleSuffix = " - ";
+
    if (event->key() == Qt::Key_Space)
    {
       // generate path - slightly different logic for title than normal
@@ -132,6 +133,8 @@ void Window::keyPressEvent(QKeyEvent* event)
       selection == 4;
       titleSuffix += "Dest";
    }
+
+   // update title
    if (titleSuffix == " - ")
    {
       // do nothing - no change
