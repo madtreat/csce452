@@ -30,6 +30,7 @@ public:
 
 public slots:
 	void windowAnimate();
+   void pathCalculated();
 
 protected:
    void keyPressEvent(QKeyEvent* event);
@@ -50,6 +51,9 @@ private:
 
    // The window's layout
    QGridLayout*   layout;
+
+   // The window's title
+   QString        windowTitle;
 
    // Qt CSS-like style sheet
    QString        controlPanelStyle;
