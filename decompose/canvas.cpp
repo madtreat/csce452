@@ -71,10 +71,10 @@ void Canvas::drawBox(int boxNum)
    }
 	
 	glBegin(GL_QUADS);
-		glVertex2f(X-(boxSize/2),Y-(boxSize/2));
 		glVertex2f(X+(boxSize/2),Y-(boxSize/2));
-		glVertex2f(X+(boxSize/2),Y+(boxSize/2));
+		glVertex2f(X-(boxSize/2),Y-(boxSize/2));
 		glVertex2f(X-(boxSize/2),Y+(boxSize/2));
+		glVertex2f(X+(boxSize/2),Y+(boxSize/2));
 	glEnd();
 
    glFlush();
@@ -86,7 +86,7 @@ void Canvas::drawRobot()
    int X = robot.X;
    int Y = robot.Y;
 
-   glColor3f(1,1,0);
+   glColor3f(0,0,0);
    glBegin(GL_TRIANGLE_FAN);
       glVertex2f(X,Y);
 
@@ -106,7 +106,7 @@ void Canvas::drawDest()
    int X = Dest.X;
    int Y = Dest.Y;
 
-   glColor3f(1,0,0);
+   glColor3f(.8,0,.8);
    glBegin(GL_TRIANGLE_FAN);
       glVertex2f(X,Y);
 
@@ -146,9 +146,7 @@ void Canvas::display ( void )
 	drawBox(1);
 	drawBox(2);
 	drawBox(3);
-	//drawRobot();
-	//drawDest();
-	
-	glFlush();
+	drawRobot();
+	drawDest();
 }
 
