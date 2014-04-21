@@ -104,6 +104,24 @@ void Canvas::drawDest()
    glFlush(); 
 }
 
+void Canvas::drawCellNode(int cellNum)
+{  
+
+   int X = manager->getCell(cellNum).node.X;
+   int Y = manager->getCell(cellNum).node.Y;
+   glColor3f(0,0,0);
+   glBegin(GL_TRIANGLE_FAN);
+      glVertex2f(X,Y);
+
+      for(int i=0; i<=360; i++)
+      {
+         glVertex2f(X +sin(i)*5, Y + cos(i)*5);
+      }
+   glEnd();
+   
+   glFlush();   
+}
+
 void Canvas::display ( void )
 {
    glClear ( GL_COLOR_BUFFER_BIT );

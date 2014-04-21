@@ -48,6 +48,7 @@ struct Cell {
    Position TR; // Top Right
    Position BL; // Bottom Left
    Position BR; // Bottom Right
+   int      size;
 };
 
 typedef std::vector<Box>  Boxes;

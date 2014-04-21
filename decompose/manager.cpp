@@ -131,3 +131,8 @@ Box Manager::getBox(int boxNum)
 {
 	return boxes[boxNum];
 }
+
+Cell Manager::getCell(int cellNum)
+{
+   return cells[cellNum];
+}
