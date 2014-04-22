@@ -24,6 +24,12 @@ struct Position {
    int X;
    int Y;
    Position(int _x = -1, int _y = -1) : X(_x), Y(_y) {};
+	
+	bool operator=(const Position& other)
+	{
+		X = other.X;
+		Y = other.Y;
+	}
 };
 typedef Position Robot;
 typedef Position Destination;
@@ -35,25 +41,47 @@ struct Box {
 };
 typedef std::vector<Box>   Boxes;
 
-//typedef Position Node;
-
 struct Cell {
    Position pos;     // node position in this cell (center? random?)
-   Position TL;      // Top Left
-   Position TR;      // Top Right
-   Position BL;      // Bottom Left
-   Position BR;      // Bottom Right
+   int      L;       // Left Edge
+   int      R;       // Right Edge
+   int      T;       // Top Edge
+   int      B;       // Bottom Edge
+   Position TL;      // Top Left Vertex
+   Position TR;      // Top Right Vertex
+   Position BL;      // Bottom Left Vertex
+   Position BR;      // Bottom Right Vertex
    bool     isValid; // is this cell valid? true; is this cell in collision? false
+	
+	bool operator=(const Cell& other)
+	{
+		pos = other.pos;
+		L = other.L;
+		R = other.R;
+		T = other.T;
+		B = other.B;
+		TL = other.TL;
+		TR = other.TR;
+		BL = other.BL;
+		BR = other.BR;
+		isValid = other.isValid;
+	}
 };
+
+inline bool operator==(const Cell& lhs, const Cell& rhs)
+{
+   if (  (lhs.pos.X == rhs.pos.X) &&
+         (lhs.pos.Y == rhs.pos.Y) )
+      return true;
+   else
+      return false;
+}
+
 typedef std::vector<Cell>  Path; // the path from src cell to dest cell
 typedef std::vector<Cell>  CRow; // a cell row
 typedef std::vector<CRow>  Cells;// a 2D grid of cells (of varying sizes)
 
-// an edge is a line between two positions
-struct Edge {
-   //Cell src;
-   Cell dest;
-};
+struct Edge;
 typedef std::vector<Edge>  Edges;
 
 // a graph node is a node and its list of edges
@@ -61,11 +89,23 @@ struct Node {
    Cell  cell;
    Edges edges;
    bool  visited;
+   int   dist; // distance for Dijkstra's Algorithm
 };
 
-//typedef std::vector<Edge>  Graph; // plain-list style
-//typedef std::vector<Edges> Graph; // adjacency-list style
-typedef std::vector<Node>  Graph;
+inline bool operator==(const Node& lhs, const Node& rhs) {
+   if (lhs.cell == rhs.cell)
+      return true;
+   else
+      return false;
+}
+
+// an edge is a line between two positions
+struct Edge {
+   //Cell src;
+   Node* dest;
+};
+
+typedef std::vector<Node*>  Graph;
 
 #endif
 

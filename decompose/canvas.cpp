@@ -195,15 +195,6 @@ void Canvas::display ( void )
    glVertex2f (WIDTH-10, HEIGHT-10);
    glVertex2f (WIDTH-10, 10);
    glEnd();
-   glColor3f(1.0,0.25,0.0);
-
-   glLineWidth(3.0);
-   glBegin (GL_LINE_LOOP);
-   glVertex2f (10, 10);
-   glVertex2f (10, HEIGHT-10);
-   glVertex2f (WIDTH-10, HEIGHT-10);
-   glVertex2f (WIDTH-10, 10);
-   glEnd();
 
 	drawBox(0);
 	drawBox(1);
