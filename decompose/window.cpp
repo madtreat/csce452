@@ -34,7 +34,7 @@ selection(0)
    timer->start();
 
    windowTitle = "Cell Decomposition";
-   setWindowTitle(windowTitle);
+   setWindowTitle(windowTitle + " - Robot");
 }
 
 Window::~Window()
@@ -46,8 +46,6 @@ void Window::windowAnimate()
 {
    // move each car based on positions of light sources
 	manager->timeStep();
-   // update the combo boxes
-   //updateComboBoxes();
    // draw the new positions
 	canvasWidget->animate();
 }
@@ -101,7 +99,6 @@ void Window::keyPressEvent(QKeyEvent* event)
       titleSuffix += "Calculating Path...";
       setWindowTitle(windowTitle + titleSuffix);
       manager->generatePath();
-      titleSuffix = " - ";
       pathCalculated();
    }
 	if (event->key() == Qt::Key_1)
@@ -126,7 +123,7 @@ void Window::keyPressEvent(QKeyEvent* event)
    {
       // select robot marker for repositioning
       selection = 0;
-      titleSuffix += "Marker";
+      titleSuffix += "Robot";
    }
 	if (event->key() == Qt::Key_D)
    {
