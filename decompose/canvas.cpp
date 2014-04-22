@@ -211,6 +211,8 @@ void Canvas::display ( void )
 	drawRobot();
 	drawDest();
 	drawCells();
-	drawPath();
+	
+	if (manager->pathDrawn)
+		drawPath();
 }
 

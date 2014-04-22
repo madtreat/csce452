@@ -11,6 +11,8 @@ class Manager
 public:
    Manager();
    ~Manager();
+	
+	bool pathDrawn;
    
 	void timeStep();
    void generatePath();
@@ -19,7 +21,7 @@ public:
    Path  dijkstra(Graph g);
 	int isCollision(Position pos);
 	
-	void clearCells()	{cells.clear();}
+	void clearCells();
 
 	// SET Functions
 	void setBox(int boxNum, Position pos);
@@ -42,6 +44,7 @@ private:
 	Robot 		robot;
 	Destination dest;
    Cells       cells;	//typedef'd to std::vector<Cell>
+	
 };
 
 #endif

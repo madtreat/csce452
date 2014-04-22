@@ -15,6 +15,7 @@ Manager::Manager()
 	{
 		boxes.push_back(Box());
 	}
+	pathDrawn = false;
 }
 
 Manager::~Manager()
@@ -40,6 +41,7 @@ void Manager::generatePath()
    Path path = dijkstra(graph);
 
    // Complete!
+	pathDrawn = true;
 }
 
 void Manager::decompose()
@@ -195,22 +197,33 @@ int Manager::isCollision(Position pos)
 
 void Manager::setBox(int boxNum, Position pos)
 {
-	boxes[boxNum].pos = pos;
+	if (boxNum > 0 && boxNum < boxes.size() )
+		boxes[boxNum].pos = pos;
+	else cout << "Error: Out of Bounds in setBox" <<endl;
 }
 
 void Manager::setBoxSize(int boxNum, int size)
 {
-	boxes[boxNum].size = size;
+	if (boxNum > 0 && boxNum < boxes.size() )
+		boxes[boxNum].size = size;
+	else cout << "Error: Out of Bounds in setBoxSize" <<endl;
 }
 
 Box Manager::getBox(int boxNum)
 {
-	return boxes[boxNum];
+	if (boxNum > 0 && boxNum < boxes.size() )
+		return boxes[boxNum];
+	else
+		return Box();
 }
 
 Cell Manager::getCell(int row, int col)
 {
-   return cells[row][col];
+	if (row > 0 && row < cells.size() )
+		if (col > 0 && col < cells[row].size() )
+			return cells[row][col];
+	else
+		return Cell();
 }
 
 Position Manager::getPathNode(int nodeNum)
@@ -222,3 +235,10 @@ int Manager::getPathNodesLength()
 {
 	return 0;
 }
+
+void Manager::clearCells()
+{
+	cells.clear();
+	pathDrawn = false;
+}
+ 
