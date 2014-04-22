@@ -132,7 +132,7 @@ void Manager::decompose()
 
          Node* node = new Node();
          node->cell = cell;
-         node->visited = false;
+         node->spset = false;
          node->dist = 999999;
          graph.push_back(node);
       }
@@ -153,7 +153,6 @@ void Manager::connectCells()
          Cell cell  = cells[i][j];
          Node* node = getNode(cell);
          Edge edge;
-         edge.weight = 1;
          edge.src = node;
 
          // if this cell is not valid, move to the next
@@ -182,7 +181,9 @@ void Manager::connectCells()
          // right neighbor
          if (isValidCell(i, j+1))
          {
-            edge.dest = getNode(cells[i][j+1]);
+            Node* dest = getNode(cells[i][j+1]);
+            edge.dest = dest;
+            edge.weight = sqrt(pow(dest->cell.pos.X - cell.pos.X, 2) + pow(dest->cell.pos.Y - cell.pos.Y,2));
             node->edges.push_back(edge);
             edges.push_back(edge);
          }
@@ -190,7 +191,9 @@ void Manager::connectCells()
          // bottom neighbor
          if (isValidCell(i+1, j))
          {
-            edge.dest = getNode(cells[i+1][j]);
+            Node* dest = getNode(cells[i+1][j]);
+            edge.dest = dest;
+            edge.weight = sqrt(pow(dest->cell.pos.X - cell.pos.X, 2) + pow(dest->cell.pos.Y - cell.pos.Y,2));
             node->edges.push_back(edge);
             edges.push_back(edge);
          }
@@ -198,7 +201,9 @@ void Manager::connectCells()
          // left neighbor
          if (isValidCell(i, j-1))
          {
-            edge.dest = getNode(cells[i][j-1]);
+            Node* dest = getNode(cells[i][j-1]);
+            edge.dest = dest;
+            edge.weight = sqrt(pow(dest->cell.pos.X - cell.pos.X, 2) + pow(dest->cell.pos.Y - cell.pos.Y,2));
             node->edges.push_back(edge);
             edges.push_back(edge);
          }
@@ -206,7 +211,9 @@ void Manager::connectCells()
          // top neighbor
          if (isValidCell(i-1, j))
          {
-            edge.dest = getNode(cells[i-1][j]);
+            Node* dest = getNode(cells[i-1][j]);
+            edge.dest = dest;
+            edge.weight = sqrt(pow(dest->cell.pos.X - cell.pos.X, 2) + pow(dest->cell.pos.Y - cell.pos.Y,2));
             node->edges.push_back(edge);
             edges.push_back(edge);
          }
@@ -226,7 +233,7 @@ int Manager::minDistance()//int dist[], bool spset[])
    int minIndex;
    for (int n = 0; n < nodes.size(); n++)
    {
-      if (nodes[n]->spset == false && nodes[n]->dist <= min)
+      if ( !nodes[n]->spset && nodes[n]->dist <= min )
       {
          min = nodes[n]->dist;
          minIndex = n;
@@ -234,6 +241,26 @@ int Manager::minDistance()//int dist[], bool spset[])
    }
    return minIndex;
 }
+
+/*
+bool Manager::BFS(int nodeIndex, Nodes visited)
+{
+   for (int n = 0; n < nodes.size(); n++)
+   {
+      for (int e = 0; e < nodes[n]->edges.size(); e++)
+      {
+         // base case
+         if (*(nodes[n]->edges[e].dest) == *destNode)
+         {
+            return true;
+         }
+         
+         // recursive case: go to this edge's dest
+         return BFS(n, visited);
+      }
+   }
+}
+// */
 
 // Find the shortest path from the robot to destination using
 // Dijkstra's SSSP Algorithm
@@ -252,36 +279,32 @@ void Manager::dijkstra()
       return;
    }
 
-   // find the starting cell (srcCell) in terms of the graph's nodes
-   Node* currentNode = srcNode;
-
-
+   // add source node to path and see if source == dest
+   path.push_back(srcNode->cell);
+   if (*srcNode == *destNode)
+   {
+      return;
+   }
 
    // the actual Dijkstra Algorithm
-   // have path member already
-   path.push_back(srcNode->cell);
-   //int dist[nodes.size()];
-
-   // set of nodes to include in path
-   //bool spset[nodes.size()];
-
-   // distances are already infinite
 
    // set distance of source node to 0 (and visited)
-   //dist[src] = 0;
    srcNode->dist = 0;
-   srcNode->visited = true;
+   //srcNode->spset = true;
 
+   // DIJKSTRA
    for (int i = 0; i < nodes.size(); i++)
    {
       // find the minimum distance node
       int u = minDistance();//dist, shortestPath);
-      nodes[u]->spset = true; // mark that node as part of the shortest path set
-      nodes[u]->visited = true;
-      path.push_back(nodes[u]->cell);
 
-      if (nodes[u] == destNode)
+      // mark the discovered minimum distance node as part of the shortest path
+      nodes[u]->spset = true;
+      //path.push_back(nodes[u]->cell);
+
+      if (*nodes[u] == *destNode)
       {
+         cout << "Path found! i=" << i << " u=" << u << endl;
          break;
       }
 
@@ -290,16 +313,45 @@ void Manager::dijkstra()
       {
          Edge edge = nodes[u]->hasEdge(nodes[n]);
          // update the distance of node n if ...
-         if (!nodes[n]->spset &&          // not already in spset
-             edge.dest &&                 // there is an edge from u to n
-             nodes[u]->dist != 999999 &&  // total weight from u to n is < ...
-             nodes[u]->dist + edge.weight < nodes[n]->dist) // current dist
+         if ( !nodes[n]->spset &&          // not already in spset
+              edge.dest &&                 // there is an edge from u to n
+              nodes[u]->dist != 999999 &&  // total weight from u to n is < ...
+              nodes[u]->dist + edge.weight < nodes[n]->dist ) // current dist
          {
             nodes[n]->dist = nodes[u]->dist + edge.weight;
          }
       }
    }
 
+   //*
+   // find the starting cell (srcCell) in terms of the graph's nodes
+   Node* currentNode = srcNode;
+   //while (currentNode != destNode)
+   for (int n = 0; n < nodes.size(); n++)
+   {
+      //int shortest = 0;//currentNode + dist;
+      int nextIndex = 0;
+      for (int i = 0; i < currentNode->edges.size(); i++)
+      {
+         Node* dest = currentNode->edges[i].dest;
+         if (dest->spset)
+         {
+            //shortest = (dest.dist <= shortest) ? dest.dist : shortest;
+            nextIndex = i;
+         }
+      }
+      currentNode = currentNode->edges[nextIndex].dest;
+      path.push_back(currentNode->cell);
+      if (*currentNode == *destNode)
+         break;
+   }
+   /*
+   for (int i = 0; i < nodes.size(); i++)
+   {
+      if (nodes[i]->spset)
+         path.push_back(nodes[i]->cell);
+   }
+   // */
 
 
 
