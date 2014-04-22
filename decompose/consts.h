@@ -45,6 +45,11 @@ struct Box {
 	Box(Position _pos = Position(), int _size = 0) : pos(_pos), size(_size) {};
 };
 
+inline std::ostream& operator<<(std::ostream& os, const Box& box) {
+   os << "Box at " << box.pos << " of size " << box.size;
+   return os;
+}
+
 typedef std::vector<Box>   Boxes;
 
 struct Cell {
@@ -72,6 +77,11 @@ struct Cell {
 		isValid = other.isValid;
 	}
 };
+
+inline std::ostream& operator<<(std::ostream& os, const Cell& cell) {
+   os << "Cell at " << cell.pos << " isValid (" << cell.isValid << ")";
+   return os;
+}
 
 inline bool operator==(const Cell& lhs, const Cell& rhs) {
    if (  (lhs.pos.X == rhs.pos.X) &&
