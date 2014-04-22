@@ -3,6 +3,7 @@
 #define CONSTS_H_
 
 #include <vector>
+#include <ostream>
 
 const double PI = 3.1415926;
 const int WIDTH  = 500;		//Window Size
@@ -29,6 +30,12 @@ struct Position {
 		Y = other.Y;
 	}
 };
+
+inline std::ostream& operator<<(std::ostream& os, const Position& pos) {
+   os << "Pos(" << pos.X << ", " << pos.Y << ")";
+   return os;
+}
+
 typedef Position Robot;
 typedef Position Destination;
 
@@ -37,6 +44,7 @@ struct Box {
    int      size;
 	Box(Position _pos = Position(), int _size = 0) : pos(_pos), size(_size) {};
 };
+
 typedef std::vector<Box>   Boxes;
 
 struct Cell {
