@@ -21,6 +21,16 @@ Manager::~Manager()
 {
 }
 
+// Return the node with this cell
+Node* Manager::getNode(const Cell& cell) const
+{
+   for (int i = 0; i < graph.size(); i++)
+      if (cell == graph[i]->cell)
+         return graph[i];
+   
+   return NULL;
+}
+
 // Called from window
 void Manager::timeStep()
 {
@@ -30,14 +40,19 @@ void Manager::timeStep()
 // Find a path from robot to destination, avoiding obstacles
 void Manager::generatePath()
 {
+   // clear out our last path
+   cells.clear();
+   graph.clear();
+   path.clear();
+
    // Step 1: decompose free space into cells
    decompose();
 
    // Step 2: generate connectivity graph
-   Graph graph = connectCells();
+   connectCells();
 
    // Step 3: find a path from robot to destination
-   Path path = dijkstra(graph);
+   path = dijkstra(graph);
 
    // Complete!
 }
@@ -75,16 +90,19 @@ void Manager::decompose()
       CRow row;
       for (int j = 1; j < ycoords.size(); j++)
       {
-         int nodeX = xcoords[i-1] + ( xcoords[i] - xcoords[i-1] ) / 2;
-         int nodeY = ycoords[j-1] + ( ycoords[j] - ycoords[j-1] ) / 2;
-         Position pos(nodeX, nodeY);
-         
          Cell cell;
-         cell.TL = Position(xcoords[i-1], ycoords[j-1]);
-         cell.TR = Position(xcoords[i],   ycoords[j-1]);
-         cell.BL = Position(xcoords[i-1], ycoords[j]);
-         cell.BR = Position(xcoords[i],   ycoords[j]);
+         cell.L  = xcoords[i-1];
+         cell.R  = xcoords[i];
+         cell.T  = ycoords[j-1];
+         cell.B  = ycoords[j];
+         cell.TL = Position(cell.L, cell.T);
+         cell.TR = Position(cell.R, cell.B);
+         cell.BL = Position(cell.L, cell.T);
+         cell.BR = Position(cell.R, cell.B);
          
+         int nodeX = cell.L + ( cell.R - cell.L ) / 2;
+         int nodeY = cell.T + ( cell.B - cell.T ) / 2;
+         Position pos(nodeX, nodeY);
          cell.pos = pos;
 
          // if this cell position is within a box, make it an invalid cell (but keep it...
@@ -95,6 +113,11 @@ void Manager::decompose()
             cell.isValid = true;
 
          row.push_back(cell);
+
+         Node* node = new Node();
+         node->cell = cell;
+         graph.push_back(node);
+
          cout << "Cell made with node = (" << nodeX << ", " << nodeY << ")" << endl;
       }
       cells.push_back(row);
@@ -102,10 +125,8 @@ void Manager::decompose()
 }
 
 // generate a connectivity graph based on the vector of cells given
-Graph Manager::connectCells() const
+void Manager::connectCells()
 {
-   Graph g;
-
    // loop through rows
    for (int i = 0; i < cells.size(); i++)
    {
@@ -113,9 +134,10 @@ Graph Manager::connectCells() const
       for (int j = 0; j < cells[i].size(); j++)
       {
          // Only add an edge to a node if BOTH this cell and its neighbor are valid
-         Node node;
-         node.cell    = cells[i][j];
-         node.visited = false;
+         Node* node    = new Node();
+         node->cell    = cells[i][j];
+         node->visited = false;
+         node->dist    = 0;
 
          Edges edges;
 
@@ -125,7 +147,7 @@ Graph Manager::connectCells() const
               cells[i][j+1].isValid )
          {
             Edge edge;
-            edge.dest = cells[i][j+1];
+            edge.dest = getNode(cells[i][j+1]);
             edges.push_back(edge);
          }
 
@@ -135,7 +157,7 @@ Graph Manager::connectCells() const
               cells[i+1][j].isValid )
          {
             Edge edge;
-            edge.dest = cells[i+1][j];
+            edge.dest = getNode(cells[i+1][j]);
             edges.push_back(edge);
          }
 
@@ -145,7 +167,7 @@ Graph Manager::connectCells() const
               cells[i][j-1].isValid )
          {
             Edge edge;
-            edge.dest = cells[i][j-1];
+            edge.dest = getNode(cells[i][j-1]);
             edges.push_back(edge);
          }
 
@@ -155,22 +177,118 @@ Graph Manager::connectCells() const
               cells[i-1][j].isValid )
          {
             Edge edge;
-            edge.dest = cells[i-1][j];
+            edge.dest = getNode(cells[i-1][j]);
             edges.push_back(edge);
          }
 
-         node.edges = edges;
-         g.push_back(node);
+         node->edges = edges;
+         graph.push_back(node);
+      }
+   }
+}
+
+// Find the shortest path from the robot to destination using
+// Dijkstra's SSSP Algorithm
+Path Manager::dijkstra(Graph)
+{
+   Cell srcCell;
+   Cell destCell;
+   Path path;
+   
+   // find the source node (the cell containing the robot)
+   bool foundSrc = false;
+   bool foundDest = false;
+   for (int i = 0; i < cells.size(); i++)
+   {
+      for (int j = 0; j < cells[i].size(); i++)
+      {
+         Cell cell = cells[i][j];
+         if ( (robot.X >= cell.L) &&
+              (robot.X <  cell.R) &&
+              (robot.Y >= cell.T) &&
+              (robot.Y <  cell.B) )
+         {
+            srcCell = cell;
+            foundSrc = true;
+         }
+         if ( (dest.X >= cell.L) &&
+              (dest.X <  cell.R) &&
+              (dest.Y >= cell.T) &&
+              (dest.Y <  cell.B) )
+         {
+            destCell = cell;
+            foundDest = true;
+         }
+      }
+      if (foundSrc && foundDest)
+         break;
+   }
+
+   // check errors: robot or dest inside a box
+   if (!srcCell.isValid && !destCell.isValid)
+   {
+      cout << "ERROR: invalid parameters" << endl;
+      cout << "robot or dest may be inside a box" << endl;
+      return path;
+   }
+
+   path.push_back(srcCell);
+
+   // find the starting cell (srcCell) in terms of the graph's nodes
+   Node* currentNode = NULL;
+   Node* destNode = NULL;
+   for (int i = 0; i < graph.size(); i++)
+   {
+      if (graph[i]->cell == srcCell)
+      {
+         currentNode = graph[i];
+      }
+      if (graph[i]->cell == destCell)
+      {
+         destNode = graph[i];
       }
    }
 
-   return g;
-}
+   // Dijkstra's Algorithm
+   while (true)
+   {
+      // if current is destination, we have found a path
+      if (currentNode == destNode)
+      {
+         cout << "Path found!" << endl;
+         break;
+      }
+      // loop through neighbors
+      for (int n = 0; n < currentNode->edges.size(); n++)
+      {
+         Node* neighbor = currentNode->edges[n].dest;
+         // if not visited...
+         if (!neighbor->visited)
+         {
+            // update neighbor distance if smaller via this path
+            int newDist = currentNode->dist + 1;
+            if (neighbor->dist > newDist)
+               neighbor->dist = newDist;
+         }
+      }
+      // mark this node as visited
+      currentNode->visited = true;
 
-Path Manager::dijkstra(Graph g)
-{
-   Path path;
+      // traverse to find the next node
+      int nextDist = 999999;
+      Node* nextNode = NULL;
+      for (int n = 0; n < currentNode->edges.size(); n++)
+      {
+         if (currentNode->edges[n].dest->dist < nextDist)
+         {
+            nextDist = currentNode->edges[n].dest->dist;
+            nextNode = currentNode->edges[n].dest;
+         }
+      }
 
+      currentNode = nextNode;
+      path.push_back(currentNode->cell);
+   }
    return path;
 }
 

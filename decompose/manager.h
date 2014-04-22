@@ -12,12 +12,14 @@ public:
    Manager();
    ~Manager();
    
-	void timeStep();
-   void generatePath();
-   void decompose();
-   Graph connectCells() const;
+   Node* getNode(const Cell& cell) const;
+
+	void  timeStep();
+   void  generatePath();
+   void  decompose();
+   void  connectCells();
    Path  dijkstra(Graph g);
-	int isCollision(Position pos);
+	int   isCollision(Position pos);
 
 	// SET Functions
 	void setBox(int boxNum, Position pos);
@@ -34,10 +36,12 @@ public:
 	int			getCellCols()	const	{return cells[0].size();}
 	
 private:
-   Boxes       boxes;	//typedef'd to std::vector<Box>
+   Boxes       boxes;	// typedef'd to std::vector<Box>
 	Robot 		robot;
 	Destination dest;
-   Cells       cells;	//typedef'd to std::vector<Cell>
+   Cells       cells;	// typedef'd to std::vector<Cell>
+   Graph       graph;   // typedef'd to std::vector<Node*>
+   Path        path;    // typedef'd to std::vector<Cell>
 };
 
 #endif
