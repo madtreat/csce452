@@ -18,6 +18,8 @@ public:
    Graph connectCells() const;
    Path  dijkstra(Graph g);
 	int isCollision(Position pos);
+	
+	void clearCells()	{cells.clear();}
 
 	// SET Functions
 	void setBox(int boxNum, Position pos);
@@ -32,6 +34,8 @@ public:
    Cell        getCell(int row, int col); 
 	int			getCellRows()	const	{return cells.size();}
 	int			getCellCols()	const	{return cells[0].size();}
+	Position		getPathNode(int nodeNum);
+	int			getPathNodesLength();
 	
 private:
    Boxes       boxes;	//typedef'd to std::vector<Box>

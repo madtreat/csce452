@@ -44,7 +44,7 @@ void Manager::generatePath()
 
 void Manager::decompose()
 {
-	cells.clear();
+	clearCells();
    vector<int> xcoords;
    vector<int> ycoords;
 
@@ -211,4 +211,14 @@ Box Manager::getBox(int boxNum)
 Cell Manager::getCell(int row, int col)
 {
    return cells[row][col];
+}
+
+Position Manager::getPathNode(int nodeNum)
+{
+	return Position();
+}
+
+int Manager::getPathNodesLength()
+{
+	return 0;
 }

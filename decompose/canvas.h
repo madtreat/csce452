@@ -19,6 +19,7 @@ public:
    void drawCellNode(int row, int col);
 	void drawCellBorders(int row, int col);
 	void drawCells();
+	void drawPath();
    
 private:
    Manager* manager;
