@@ -22,7 +22,7 @@ public:
    void  generatePath();
    void  decompose();
    void  connectCells();
-   int   minDistance();//int dist[], bool spset[]);
+   int   minDistance();
    void  dijkstra();
 	int 	isCollision(Position pos);
 	void 	clearCells();

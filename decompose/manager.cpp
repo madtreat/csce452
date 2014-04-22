@@ -163,7 +163,8 @@ void Manager::connectCells()
       // loop through columns in this row
       for (int j = 0; j < cells[i].size(); j++)
       {
-         // Only add an edge to a node if BOTH this cell and its neighbor are valid
+         // Only add an edge to a node if BOTH this cell and
+         // its neighbor are valid
          Cell cell  = cells[i][j];
          Node* node = getNode(cell);
          Edge edge;
@@ -176,7 +177,6 @@ void Manager::connectCells()
          }
 
          // update the source and dest nodes
-         //printf("Cell: L=%d, R=%d, T=%d, B=%d\n", cell.L, cell.R, cell.T, cell.B);
          if ( (robot.X >= cell.L) &&
               (robot.X <  cell.R) &&
               (robot.Y >= cell.T) &&
@@ -236,7 +236,7 @@ void Manager::connectCells()
 // utility function for Dijkstra's algorithm
 // dist is the list of shortest distance paths
 // spset[i] is true if node i is in the shortest path
-int Manager::minDistance()//int dist[], bool spset[])
+int Manager::minDistance()
 {
    int min = 999999;
    int minIndex;
@@ -269,7 +269,7 @@ void Manager::dijkstra()
    for (int i = 0; i < nodes.size(); i++)
    {
       // find the minimum distance node
-      int u = minDistance();//dist, shortestPath);
+      int u = minDistance();
 
       // mark the discovered minimum distance node as part of the shortest path
       nodes[u]->spset = true;
@@ -368,7 +368,7 @@ Cell Manager::getCell(int row, int col)
 
 Position Manager::getPathNode(int nodeNum)
 {
-	return path[nodeNum].pos;//Position();
+	return path[nodeNum].pos;
 }
 
 int Manager::getPathNodesLength()
