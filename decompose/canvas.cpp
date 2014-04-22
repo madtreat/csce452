@@ -200,9 +200,10 @@ void Canvas::drawPath()
 	glColor3f(1,1,0);
 	glBegin(GL_LINE_STRIP);
 	glVertex2f(manager->getRobot().X,manager->getRobot().Y);	
-	for (int i=0; i<manager->getPathNodesLength(); i++)
+	for (int i=0; i<manager->getPathNodesLength()-1; i++)
 	{
-		glVertex2f(manager->getPathNode(i).X,manager->getPathNode(i).Y);	
+		glVertex2f(manager->getPathNode(i).X,manager->getPathNode(i).Y);
+      glVertex2f(manager->getPathNode(i+1).X,manager->getPathNode(i+1).Y);
 	}
 	glVertex2f(manager->getDest().X,manager->getDest().Y);	
 	glEnd();
