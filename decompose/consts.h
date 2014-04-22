@@ -120,6 +120,7 @@ struct Edge {
    }
 };
 
+typedef std::vector<Node*>  Nodes;
 typedef std::vector<Node*>  Graph;
 
 #endif

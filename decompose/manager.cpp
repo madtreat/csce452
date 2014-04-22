@@ -235,6 +235,7 @@ void Manager::dijkstra()
    // find the starting cell (srcCell) in terms of the graph's nodes
    Node* currentNode = NULL;
    Node* destNode = NULL;
+   Nodes visitedNodes;
    for (int i = 0; i < graph.size(); i++)
    {
       if (graph[i]->cell == srcCell)
@@ -243,6 +244,7 @@ void Manager::dijkstra()
          currentNode = graph[i];
          currentNode->dist = 0;
          currentNode->visited = true;
+         visitedNodes.push_back(currentNode);
       }
       if (graph[i]->cell == destCell)
       {
@@ -256,13 +258,14 @@ void Manager::dijkstra()
 		return;
 	}
 
-   cout << "Beginning Dijkstra's Algorithm" << endl;
+   cout << endl << "Beginning Dijkstra's Algorithm" << endl;
    // Dijkstra's Algorithm
    while (true)
    {
       // if current and destination are in same cell, we have found a path!
-      cout << "   Checking path complete..." << endl;
-      if (*currentNode == *destNode)
+      cout << "=============================================" << endl;
+      cout << "   Checking path complete...nodesVisited=" << visitedNodes.size() << endl;
+      if (*currentNode == *destNode || visitedNodes.size() == graph.size())
       {
          cout << "Path found!" << endl;
          break;
@@ -275,7 +278,8 @@ void Manager::dijkstra()
       for (int n = 0; n < currentNode->edges.size(); n++)
       {
          Node* neighbor = currentNode->edges[n].dest;
-         cout << "      neighbors: " << neighbor->cell << "..." << endl;
+         cout << "      neighbors: " << findCellIndex(neighbor->cell) << "...";
+         cout << "dist=" << neighbor->dist <<endl;
          // if not visited...
          if (!neighbor->visited)
          {
@@ -283,7 +287,6 @@ void Manager::dijkstra()
             int newDist = currentNode->dist + 1;
             if (neighbor->dist > newDist)
                neighbor->dist = newDist;
-            cout << "      " << neighbor->dist <<endl;
          }
       }
 
@@ -294,8 +297,10 @@ void Manager::dijkstra()
       for (int n = 0; n < currentNode->edges.size(); n++)
       {
          Node* neighbor = currentNode->edges[n].dest;
-         cout << "      " << neighbor->cell << "..." << neighbor->visited << "..." << neighbor->dist << endl;
-         if (!neighbor->visited && neighbor->dist < nextDist)
+         cout << "      " << findCellIndex(neighbor->cell) << "...visited=" << neighbor->visited << "...dist=" << neighbor->dist << endl;
+         if ( (*neighbor == *destNode) || 
+              (!neighbor->visited && 
+                neighbor->dist < nextDist) )
          {
             nextDist = neighbor->dist;
             nextNode = neighbor;
@@ -304,10 +309,11 @@ void Manager::dijkstra()
 		
 		if (nextNode != NULL)
 		{
-         cout << "Updating to next " << nextNode->cell << "..." << endl;
+         cout << "Updating to next cell " << findCellIndex(nextNode->cell) << "...dist=" << nextNode->dist << endl;
 			currentNode = nextNode;
          // mark this node as visited
          currentNode->visited = true;
+         visitedNodes.push_back(currentNode);
 			path.push_back(currentNode->cell);
 		}
       else
