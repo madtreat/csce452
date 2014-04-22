@@ -157,6 +157,7 @@ void Window::mouseReleaseEvent(QMouseEvent* e)
 {
 	//qDebug() << "Mouse Released" << event->pos();
 	manager->clearCells();
+   manager->decompose();
 	switch (selection)
 	{
 		case 0:		//Robot

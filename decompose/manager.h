@@ -39,6 +39,8 @@ public:
 	int			getCellCols()	const	{return cells[0].size();}
 	Position		getPathNode(int nodeNum);
 	int			getPathNodesLength();
+   
+   Position    findCellIndex(Cell c) const;
 	
 private:
    Boxes       boxes;	// typedef'd to std::vector<Box>

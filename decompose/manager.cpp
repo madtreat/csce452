@@ -26,8 +26,12 @@ Manager::~Manager()
 Node* Manager::getNode(const Cell& cell) const
 {
    for (int i = 0; i < graph.size(); i++)
+   {
       if (cell == graph[i]->cell)
+      {
          return graph[i];
+      }
+   }
    
    return NULL;
 }
@@ -117,7 +121,7 @@ void Manager::decompose()
          Node* node = new Node();
          node->cell = cell;
          node->visited = false;
-         node->dist = 999999;
+         node->dist = 999998;
          graph.push_back(node);
       }
       cells.push_back(row);
@@ -134,10 +138,7 @@ void Manager::connectCells()
       for (int j = 0; j < cells[i].size(); j++)
       {
          // Only add an edge to a node if BOTH this cell and its neighbor are valid
-         Node* node    = new Node();
-         node->cell    = cells[i][j];
-         node->visited = false;
-         node->dist    = 0;
+         Node* node    = getNode(cells[i][j]);
 
          // right neighbor
          if ( ( j+1 < cells.size() ) && 
@@ -239,7 +240,10 @@ Path Manager::dijkstra(Graph)
    {
       if (graph[i]->cell == srcCell)
       {
+         // start node - initial set up
          currentNode = graph[i];
+         currentNode->dist = 0;
+         currentNode->visited = true;
       }
       if (graph[i]->cell == destCell)
       {
@@ -267,7 +271,8 @@ Path Manager::dijkstra(Graph)
 
       // loop through neighbors,
       // updating their distances from the source
-      cout << "   Checking neighbors of current..." << endl;
+      
+      cout << "   Checking neighbors of current cell: " << findCellIndex(currentNode->cell) << endl;
       for (int n = 0; n < currentNode->edges.size(); n++)
       {
          Node* neighbor = currentNode->edges[n].dest;
@@ -279,11 +284,9 @@ Path Manager::dijkstra(Graph)
             int newDist = currentNode->dist + 1;
             if (neighbor->dist > newDist)
                neighbor->dist = newDist;
+            cout << "      " << neighbor->dist <<endl;
          }
       }
-
-      // mark this node as visited
-      currentNode->visited = true;
 
       // traverse to find the next node
       int nextDist = 999999;
@@ -292,8 +295,8 @@ Path Manager::dijkstra(Graph)
       for (int n = 0; n < currentNode->edges.size(); n++)
       {
          Node* neighbor = currentNode->edges[n].dest;
-         cout << "      " << neighbor->cell << "..." << endl;
-         if (neighbor->dist < nextDist)
+         cout << "      " << neighbor->cell << "..." << neighbor->visited << "..." << neighbor->dist << endl;
+         if (!neighbor->visited && neighbor->dist < nextDist)
          {
             nextDist = neighbor->dist;
             nextNode = neighbor;
@@ -304,8 +307,14 @@ Path Manager::dijkstra(Graph)
 		{
          cout << "Updating to next " << nextNode->cell << "..." << endl;
 			currentNode = nextNode;
+         // mark this node as visited
+         currentNode->visited = true;
 			path.push_back(currentNode->cell);
 		}
+      else
+      {
+         cout << "ERROR: nextNode is null" << endl;
+      }
    }
    return path;
 }
@@ -365,6 +374,20 @@ Position Manager::getPathNode(int nodeNum)
 int Manager::getPathNodesLength()
 {
 	return 0;
+}
+
+Position Manager::findCellIndex(Cell c) const
+{
+   for (int i=0; i<cells.size(); i++)
+   {
+      for (int j=0; j<cells[i].size(); j++)
+      {
+         if (cells[i][j] == c)
+            return Position(i,j);
+      }
+   }
+   
+   return Position();
 }
 
 void Manager::clearCells()
