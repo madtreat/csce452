@@ -116,11 +116,43 @@ void Canvas::drawCellNode(int row, int col)
 
       for(int i=0; i<=360; i++)
       {
-         glVertex2f(X +sin(i)*5, Y + cos(i)*5);
+         glVertex2f(X +sin(i)*3, Y + cos(i)*3);
       }
    glEnd();
    
    glFlush();   
+}
+
+void Canvas::drawCellBorders(int row, int col)
+{
+	int X1 = manager->getCell(row, col).TR.X;
+	int Y1 = manager->getCell(row, col).TR.Y;
+	int X2 = manager->getCell(row, col).TL.X;
+	int Y2 = manager->getCell(row, col).TL.Y;
+	int X3 = manager->getCell(row, col).BL.X;
+	int Y3 = manager->getCell(row, col).BL.Y;
+	int X4 = manager->getCell(row, col).BR.X;
+	int Y4 = manager->getCell(row, col).BR.Y;
+	
+	glColor3f(0,0,0);
+	
+	glPushAttrib(GL_ENABLE_BIT); 
+
+	glLineStipple(1, 0x8888);		// Spacing of dotted lines from 0x0000(no line) to 0xFFFF(black line)
+	glEnable(GL_LINE_STIPPLE);
+	
+   glBegin(GL_LINES);
+      glVertex2f(X1,Y1);
+		glVertex2f(X4,Y4);
+		
+		glVertex2f(X4,Y4);
+		glVertex2f(X3,Y3);
+   glEnd();
+	
+	glPopAttrib();
+   
+   glFlush();   
+	
 }
 
 void Canvas::drawCells()
@@ -130,6 +162,7 @@ void Canvas::drawCells()
 		for (int j=0; j<manager->getCellCols(); j++)
 		{
 			drawCellNode(i,j);
+			drawCellBorders(i,j);
 		}		
 	}
 }

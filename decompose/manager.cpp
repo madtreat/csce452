@@ -59,6 +59,7 @@ void Manager::generatePath()
 
 void Manager::decompose()
 {
+	cells.clear();
    vector<int> xcoords;
    vector<int> ycoords;
 
