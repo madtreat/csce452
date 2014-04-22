@@ -271,7 +271,7 @@ Path Manager::dijkstra(Graph)
       for (int n = 0; n < currentNode->edges.size(); n++)
       {
          Node* neighbor = currentNode->edges[n].dest;
-         cout << "      neighbors: cell " << neighbor->cell.pos.X << "," << neighbor->cell.pos.Y << "..." << endl;
+         cout << "      neighbors: cell at " << neighbor->cell.pos << "..." << endl;
          // if not visited...
          if (!neighbor->visited)
          {
@@ -292,7 +292,7 @@ Path Manager::dijkstra(Graph)
       for (int n = 0; n < currentNode->edges.size(); n++)
       {
          Node* neighbor = currentNode->edges[n].dest;
-         cout << "      cell " << neighbor->cell.pos.X << "," << neighbor->cell.pos.Y << "..." << endl;
+         cout << "      cell at " << neighbor->cell.pos << "..." << endl;
          if (neighbor->dist < nextDist)
          {
             nextDist = neighbor->dist;
@@ -302,7 +302,7 @@ Path Manager::dijkstra(Graph)
 		
 		if (nextNode != NULL)
 		{
-         cout << "Updating to next cell " << nextNode->cell.pos.X << "," << nextNode->cell.pos.Y << "..." << endl;
+         cout << "Updating to next cell at " << nextNode->cell.pos << "..." << endl;
 			currentNode = nextNode;
 			path.push_back(currentNode->cell);
 		}
