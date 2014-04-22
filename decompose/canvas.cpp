@@ -75,14 +75,27 @@ void Canvas::drawRobot()
    int Y = manager->getRobot().Y;
 
    glColor3f(0,0,0);
-   glBegin(GL_TRIANGLE_FAN);
+	glBegin(GL_TRIANGLE_FAN);
       glVertex2f(X,Y);
 
       for(int i=0; i<=360; i++)
       {
-         glVertex2f(X +sin(i)*ROBOT_RADIUS, Y + cos(i)*ROBOT_RADIUS);
+         glVertex2f(X +sin(i)*2, Y + cos(i)*2);
       }
    glEnd();
+	
+	glBegin(GL_LINES);
+		glVertex2f(X-6-9, Y+6+6);
+		glVertex2f(X-6-9, Y-6+6);
+		glVertex2f(X-6-9, Y-6+6);
+		glVertex2f(X+3-9, Y-6+6);
+		glVertex2f(X+3-9, Y-6+6);
+		glVertex2f(X+3-9, Y+0+6);
+		glVertex2f(X+3-9, Y+0+6);
+		glVertex2f(X-6-9, Y+0+6);
+		glVertex2f(X+0-9, Y+0+6);
+		glVertex2f(X+3-9, Y+6+7);
+	glEnd();
 
    glFlush(); 
 }
@@ -92,15 +105,28 @@ void Canvas::drawDest()
    int X = manager->getDest().X;
    int Y = manager->getDest().Y;
 
-   glColor3f(.8,0,.8);
-   glBegin(GL_TRIANGLE_FAN);
+   glColor3f(0,0,0);
+	glBegin(GL_TRIANGLE_FAN);
       glVertex2f(X,Y);
 
       for(int i=0; i<=360; i++)
       {
-         glVertex2f(X +sin(i)*DEST_RADIUS, Y + cos(i)*DEST_RADIUS);
+         glVertex2f(X +sin(i)*2, Y + cos(i)*2);
       }
    glEnd();
+	
+	glBegin(GL_LINES);
+	{
+      glVertex2f(X+0-9,Y-8-6);
+      glVertex2f(X+0-9,Y+6-6);
+      glVertex2f(X+0-9,Y+6-6);
+      glVertex2f(X-6-9,Y+6-6);
+      glVertex2f(X-6-9,Y+6-6);
+      glVertex2f(X-6-9,Y+0-6);
+      glVertex2f(X-6-9,Y+0-6);
+		glVertex2f(X+0-9,Y+0-6);
+	}
+	glEnd();
 	
    glFlush(); 
 }
