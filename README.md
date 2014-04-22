@@ -7,9 +7,11 @@ Texas A&M University - CSCE 452
 2. Project 2: Using the PaintBot in Project 1, add world controls using Inverse Kinematics.
 3. Project 3: Convert Project 2 to a tele-operated (via a network) system, with optional delay.
 
-##Braitenberg Vehicle Projects
+##Braitenberg Vehicle Project
 4. Project 4: Create a Braitenberg Vehicle system.
-5. Project 5: Currently undefined.
+
+##Robot Motion Planning Project
+5. Project 5: Cell Decomposition.
 
 ##Notes:
 This project requires OpenGL installed on this machine to be run.
@@ -42,7 +44,7 @@ $ make
 
 and to run an executable (from the build directory):
 ```bash
-# to run the PaintBot executable
+# to run the PaintBot executable (projects 1-3)
 $ ./paintbot/paintbot
 # PaintBot arguments:
 #   -s [port]          - Run as server on [port]
@@ -50,11 +52,15 @@ $ ./paintbot/paintbot
 #   -d [delay]         - Add delay in [delay] seconds.  
 #                        If -s or -c does not exist, run as standard with no connections.  
 #                        NOTE: -s and -c can not be used at the same time.
-# to run the braitenberg vehicles executable
 
+# to run the braitenberg vehicles executable (project 4)
 $ ./vehicles/vehicles
 # Braitenberg Vehicle Arguments:
 #   -c [num-cars]      - (OPTIONAL) Randomly spawn num-cars vehicles
 #   -l [num-lights]    - (OPTIONAL) Randomly spawn num-lights light sources
+
+# to run Ceel Decomposition executable (project 5)
+$ ./decompose/decompose
+# there are no arguments for the Cell Decomposition project
 ```
 
