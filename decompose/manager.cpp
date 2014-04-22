@@ -116,6 +116,8 @@ void Manager::decompose()
 
          Node* node = new Node();
          node->cell = cell;
+         node->visited = false;
+         node->dist = 999999;
          graph.push_back(node);
 
          cout << "Cell made with node = (" << nodeX << ", " << nodeY << ")" << endl;
@@ -337,17 +339,15 @@ Box Manager::getBox(int boxNum)
 {
 	if (boxNum >= 0 && boxNum < boxes.size() )
 		return boxes[boxNum];
-	else
-		return Box();
+   return Box();
 }
 
 Cell Manager::getCell(int row, int col)
 {
-	if (row >= 0 && row < cells.size() )
-		if (col >= 0 && col < cells[row].size() )
+	if ( ( row >= 0 && row < cells.size() ) &&
+		  ( col >= 0 && col < cells[row].size() ) )
 			return cells[row][col];
-	else
-		return Cell();
+   return Cell();
 }
 
 Position Manager::getPathNode(int nodeNum)

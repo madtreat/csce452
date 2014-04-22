@@ -20,7 +20,7 @@ public:
    void  generatePath();
    void  decompose();
    void  connectCells();
-   Path  dijkstra(Graph g);
+   Path  dijkstra(Graph graph);
 	int 	isCollision(Position pos);
 	void 	clearCells();
 

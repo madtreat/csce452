@@ -190,10 +190,10 @@ void Canvas::display ( void )
    // set greyish canvas
    glColor3f (.7,.7,.7);
    glBegin (GL_POLYGON);
-   glVertex2f (10, 10);
-   glVertex2f (10, HEIGHT-10);
-   glVertex2f (WIDTH-10, HEIGHT-10);
-   glVertex2f (WIDTH-10, 10);
+   glVertex2f (0, 0);
+   glVertex2f (0, HEIGHT);
+   glVertex2f (WIDTH, HEIGHT);
+   glVertex2f (WIDTH, 0);
    glEnd();
 
 	drawBox(0);

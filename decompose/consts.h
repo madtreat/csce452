@@ -25,7 +25,7 @@ struct Position {
    int Y;
    Position(int _x = -1, int _y = -1) : X(_x), Y(_y) {};
 	
-	bool operator=(const Position& other)
+	void operator=(const Position& other)
 	{
 		X = other.X;
 		Y = other.Y;
@@ -53,7 +53,7 @@ struct Cell {
    Position BR;      // Bottom Right Vertex
    bool     isValid; // is this cell valid? true; is this cell in collision? false
 	
-	bool operator=(const Cell& other)
+	void operator=(const Cell& other)
 	{
 		pos = other.pos;
 		L = other.L;
@@ -73,8 +73,7 @@ inline bool operator==(const Cell& lhs, const Cell& rhs)
    if (  (lhs.pos.X == rhs.pos.X) &&
          (lhs.pos.Y == rhs.pos.Y) )
       return true;
-   else
-      return false;
+   return false;
 }
 
 typedef std::vector<Cell>  Path; // the path from src cell to dest cell
@@ -95,8 +94,7 @@ struct Node {
 inline bool operator==(const Node& lhs, const Node& rhs) {
    if (lhs.cell == rhs.cell)
       return true;
-   else
-      return false;
+   return false;
 }
 
 // an edge is a line between two positions
