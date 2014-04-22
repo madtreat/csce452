@@ -3,15 +3,15 @@ Texas A&M University - CSCE 452
 # Robotics and Spatial Intelligence
 
 ##PaintBot Projects
-1. Project 1: Create a PaintBot program with 3 links, 2 revolute joints and a prismatic joint.
-2. Project 2: Using the PaintBot in Project 1, add world controls using Inverse Kinematics.
-3. Project 3: Convert Project 2 to a tele-operated (via a network) system, with optional delay.
+Project 1: Create a PaintBot program with 3 links, 2 revolute joints and a prismatic joint.
+Project 2: Using the PaintBot in Project 1, add world controls using Inverse Kinematics.
+Project 3: Convert Project 2 to a tele-operated (via a network) system, with optional delay.
 
 ##Braitenberg Vehicle Project
-4. Project 4: Create a Braitenberg Vehicle system.
+Project 4: Create a Braitenberg Vehicle system.
 
 ##Robot Motion Planning Project
-5. Project 5: Cell Decomposition.
+Project 5: Cell Decomposition.
 
 ##Notes:
 This project requires OpenGL installed on this machine to be run.
@@ -59,7 +59,7 @@ $ ./vehicles/vehicles
 #   -c [num-cars]      - (OPTIONAL) Randomly spawn num-cars vehicles
 #   -l [num-lights]    - (OPTIONAL) Randomly spawn num-lights light sources
 
-# to run Ceel Decomposition executable (project 5)
+# to run Cell Decomposition executable (project 5)
 $ ./decompose/decompose
 # there are no arguments for the Cell Decomposition project
 ```
