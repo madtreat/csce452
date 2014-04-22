@@ -110,7 +110,9 @@ void Canvas::drawCellNode(int row, int col)
 
    int X = manager->getCell(row, col).pos.X;
    int Y = manager->getCell(row, col).pos.Y;
-   glColor3f(1,1,0);
+	if (manager->getCell(row, col).isValid)
+		glColor3f(1,1,0);
+	else glColor3f(0,0,0);
    glBegin(GL_TRIANGLE_FAN);
       glVertex2f(X,Y);
 

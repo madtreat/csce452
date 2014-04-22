@@ -52,9 +52,10 @@ void Manager::generatePath()
 
    // Step 3: find a path from robot to destination
    path = dijkstra(graph);
+	if (path.size() > 0)
+		pathDrawn = true;
 
    // Complete!
-	pathDrawn = true;
 }
 
 void Manager::decompose()
@@ -227,7 +228,7 @@ Path Manager::dijkstra(Graph)
    }
 
    // check errors: robot or dest inside a box
-   if (!srcCell.isValid && !destCell.isValid)
+   if (!srcCell.isValid || !destCell.isValid)
    {
       cout << "ERROR: invalid parameters" << endl;
       cout << "robot or dest may be inside a box" << endl;
