@@ -198,7 +198,7 @@ void Canvas::drawCells()
 void Canvas::drawPath()
 {
 	glColor3f(1,1,0);
-	glBegin(GL_LINES);
+	glBegin(GL_LINE_STRIP);
 	glVertex2f(manager->getRobot().X,manager->getRobot().Y);	
 	for (int i=0; i<manager->getPathNodesLength(); i++)
 	{

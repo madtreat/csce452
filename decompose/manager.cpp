@@ -55,7 +55,7 @@ void Manager::generatePath()
    connectCells();
 
    // Step 3: find a path from robot to destination
-   path = dijkstra(graph);
+   dijkstra();
 	if (path.size() > 0)
 		pathDrawn = true;
 
@@ -187,11 +187,10 @@ void Manager::connectCells()
 
 // Find the shortest path from the robot to destination using
 // Dijkstra's SSSP Algorithm
-Path Manager::dijkstra(Graph)
+void Manager::dijkstra()
 {
    Cell srcCell;
    Cell destCell;
-   Path path;
    
    // find the source node (the cell containing the robot)
    bool foundSrc = false;
@@ -228,7 +227,7 @@ Path Manager::dijkstra(Graph)
    {
       cout << "ERROR: invalid parameters" << endl;
       cout << "robot or dest may be inside a box" << endl;
-      return path;
+      return;
    }
 
    path.push_back(srcCell);
@@ -254,7 +253,7 @@ Path Manager::dijkstra(Graph)
 	if ( currentNode == NULL || destNode == NULL)
 	{
 		cout << "ERROR: Null R and D nodes" << endl;
-		return path;
+		return;
 	}
 
    cout << "Beginning Dijkstra's Algorithm" << endl;
@@ -316,7 +315,6 @@ Path Manager::dijkstra(Graph)
          cout << "ERROR: nextNode is null" << endl;
       }
    }
-   return path;
 }
 
 // Return index of box that collides
@@ -368,12 +366,12 @@ Cell Manager::getCell(int row, int col)
 
 Position Manager::getPathNode(int nodeNum)
 {
-	return Position();
+	return path[nodeNum].pos;//Position();
 }
 
 int Manager::getPathNodesLength()
 {
-	return 0;
+	return path.size();
 }
 
 Position Manager::findCellIndex(Cell c) const
