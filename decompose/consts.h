@@ -4,7 +4,6 @@
 
 #include <vector>
 
-
 const double PI = 3.1415926;
 const int WIDTH  = 500;		//Window Size
 const int HEIGHT = 500;		//Window Size
@@ -25,8 +24,7 @@ struct Position {
    int Y;
    Position(int _x = -1, int _y = -1) : X(_x), Y(_y) {};
 	
-	void operator=(const Position& other)
-	{
+	void operator=(const Position& other) {
 		X = other.X;
 		Y = other.Y;
 	}
@@ -53,8 +51,7 @@ struct Cell {
    Position BR;      // Bottom Right Vertex
    bool     isValid; // is this cell valid? true; is this cell in collision? false
 	
-	void operator=(const Cell& other)
-	{
+	void operator=(const Cell& other) {
 		pos = other.pos;
 		L = other.L;
 		R = other.R;
@@ -68,8 +65,7 @@ struct Cell {
 	}
 };
 
-inline bool operator==(const Cell& lhs, const Cell& rhs)
-{
+inline bool operator==(const Cell& lhs, const Cell& rhs) {
    if (  (lhs.pos.X == rhs.pos.X) &&
          (lhs.pos.Y == rhs.pos.Y) )
       return true;
@@ -101,6 +97,9 @@ inline bool operator==(const Node& lhs, const Node& rhs) {
 struct Edge {
    //Cell src;
    Node* dest;
+	void operator=(const Edge& other) {
+      dest = other.dest;
+   }
 };
 
 typedef std::vector<Node*>  Graph;

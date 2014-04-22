@@ -139,8 +139,6 @@ void Manager::connectCells()
          node->visited = false;
          node->dist    = 0;
 
-         Edges edges;
-
          // right neighbor
          if ( ( j+1 < cells.size() ) && 
               cells[i][j].isValid && 
@@ -148,7 +146,7 @@ void Manager::connectCells()
          {
             Edge edge;
             edge.dest = getNode(cells[i][j+1]);
-            edges.push_back(edge);
+            node->edges.push_back(edge);
          }
 
          // bottom neighbor
@@ -158,7 +156,7 @@ void Manager::connectCells()
          {
             Edge edge;
             edge.dest = getNode(cells[i+1][j]);
-            edges.push_back(edge);
+            node->edges.push_back(edge);
          }
 
          // left neighbor
@@ -168,7 +166,7 @@ void Manager::connectCells()
          {
             Edge edge;
             edge.dest = getNode(cells[i][j-1]);
-            edges.push_back(edge);
+            node->edges.push_back(edge);
          }
 
          // top neighbor
@@ -178,10 +176,9 @@ void Manager::connectCells()
          {
             Edge edge;
             edge.dest = getNode(cells[i-1][j]);
-            edges.push_back(edge);
+            node->edges.push_back(edge);
          }
 
-         node->edges = edges;
          graph.push_back(node);
       }
    }
@@ -200,9 +197,10 @@ Path Manager::dijkstra(Graph)
    bool foundDest = false;
    for (int i = 0; i < cells.size(); i++)
    {
-      for (int j = 0; j < cells[i].size(); i++)
+      for (int j = 0; j < cells[i].size(); j++)
       {
          Cell cell = cells[i][j];
+         //printf("Cell: L=%d, R=%d, T=%d, B=%d\n", cell.L, cell.R, cell.T, cell.B);
          if ( (robot.X >= cell.L) &&
               (robot.X <  cell.R) &&
               (robot.Y >= cell.T) &&
@@ -210,7 +208,6 @@ Path Manager::dijkstra(Graph)
          {
             srcCell = cell;
             foundSrc = true;
-            cout << "found source cell" << endl;
          }
          if ( (dest.X >= cell.L) &&
               (dest.X <  cell.R) &&
@@ -219,7 +216,6 @@ Path Manager::dijkstra(Graph)
          {
             destCell = cell;
             foundDest = true;
-            cout << "found destination cell" << endl;
          }
       }
       if (foundSrc && foundDest)
@@ -257,19 +253,25 @@ Path Manager::dijkstra(Graph)
 		return path;
 	}
 
+   cout << "Beginning Dijkstra's Algorithm" << endl;
    // Dijkstra's Algorithm
    while (true)
    {
-      // if current is destination, we have found a path
+      // if current and destination are in same cell, we have found a path!
+      cout << "   Checking path complete..." << endl;
       if (*currentNode == *destNode)
       {
          cout << "Path found!" << endl;
          break;
       }
-      // loop through neighbors
+
+      // loop through neighbors,
+      // updating their distances from the source
+      cout << "   Checking neighbors of current..." << endl;
       for (int n = 0; n < currentNode->edges.size(); n++)
       {
          Node* neighbor = currentNode->edges[n].dest;
+         cout << "   neighbors: cell " << neighbor->cell.pos.X << "," << neighbor->cell.pos.Y << "..." << endl;
          // if not visited...
          if (!neighbor->visited)
          {
@@ -279,23 +281,28 @@ Path Manager::dijkstra(Graph)
                neighbor->dist = newDist;
          }
       }
+
       // mark this node as visited
       currentNode->visited = true;
 
       // traverse to find the next node
       int nextDist = 999999;
       Node* nextNode = NULL;
+      cout << "   Finding next cell..." << endl;
       for (int n = 0; n < currentNode->edges.size(); n++)
       {
-         if (currentNode->edges[n].dest->dist < nextDist)
+         Node* neighbor = currentNode->edges[n].dest;
+         cout << "   cell " << neighbor->cell.pos.X << "," << neighbor->cell.pos.Y << "..." << endl;
+         if (neighbor->dist < nextDist)
          {
-            nextDist = currentNode->edges[n].dest->dist;
-            nextNode = currentNode->edges[n].dest;
+            nextDist = neighbor->dist;
+            nextNode = neighbor;
          }
       }
 		
 		if (nextNode != NULL)
 		{
+         cout << "Updating to next cell " << nextNode->cell.pos.X << "," << nextNode->cell.pos.Y << "..." << endl;
 			currentNode = nextNode;
 			path.push_back(currentNode->cell);
 		}
