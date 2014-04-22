@@ -52,8 +52,6 @@ private:
 
    Cells       cells;	// typedef'd to std::vector<Cell>
    Nodes       nodes;
-   Edges       edges;
-   Graph       graph;   // typedef'd to std::vector<Node*>
    Path        path;    // typedef'd to std::vector<Cell>
 	
    Node*       srcNode;

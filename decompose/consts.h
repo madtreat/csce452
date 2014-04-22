@@ -101,6 +101,7 @@ struct Edge {
    Node* src;
    Node* dest;
    int   weight;
+
 	void operator=(const Edge& other) {
       src  = other.src;
       dest = other.dest;
