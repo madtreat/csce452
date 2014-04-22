@@ -5,6 +5,7 @@
 #include <cmath>
 #include <iostream>
 #include <vector>
+#include <list>
 
 using namespace std;
 
@@ -34,6 +35,17 @@ Node* Manager::getNode(const Cell& cell) const
    }
    
    return NULL;
+}
+
+// Return true if cell is within boundaries and the cell is not in a box
+bool Manager::isValidCell(int r, int c) const
+{
+   // check boundaries first, then check if cell is in a box
+   bool validCell = 
+          (r >= 0 && r < cells.size()) &&
+          (c >= 0 && c < cells[0].size()) &&
+          cells[r][c].isValid;
+   return validCell;
 }
 
 // Called from window
@@ -121,7 +133,7 @@ void Manager::decompose()
          Node* node = new Node();
          node->cell = cell;
          node->visited = false;
-         node->dist = 999998;
+         node->dist = 999999;
          graph.push_back(node);
       }
       cells.push_back(row);
@@ -138,128 +150,169 @@ void Manager::connectCells()
       for (int j = 0; j < cells[i].size(); j++)
       {
          // Only add an edge to a node if BOTH this cell and its neighbor are valid
-         Node* node    = getNode(cells[i][j]);
+         Cell cell  = cells[i][j];
+         Node* node = getNode(cell);
+         Edge edge;
+         edge.weight = 1;
+         edge.src = node;
 
-         // right neighbor
-         if ( ( j+1 < cells.size() ) && 
-              cells[i][j].isValid && 
-              cells[i][j+1].isValid )
+         // if this cell is not valid, move to the next
+         if (!isValidCell(i, j))
          {
-            Edge edge;
-            edge.dest = getNode(cells[i][j+1]);
-            node->edges.push_back(edge);
+            continue;
          }
 
-         // bottom neighbor
-         if ( ( i+1 < cells.size() ) && 
-              cells[i][j].isValid && 
-              cells[i+1][j].isValid )
-         {
-            Edge edge;
-            edge.dest = getNode(cells[i+1][j]);
-            node->edges.push_back(edge);
-         }
-
-         // left neighbor
-         if ( ( j-1 >= 0 ) && 
-              cells[i][j].isValid && 
-              cells[i][j-1].isValid )
-         {
-            Edge edge;
-            edge.dest = getNode(cells[i][j-1]);
-            node->edges.push_back(edge);
-         }
-
-         // top neighbor
-         if ( ( i-1 >= 0 ) && 
-              cells[i][j].isValid && 
-              cells[i-1][j].isValid )
-         {
-            Edge edge;
-            edge.dest = getNode(cells[i-1][j]);
-            node->edges.push_back(edge);
-         }
-
-         graph.push_back(node);
-      }
-   }
-}
-
-// Find the shortest path from the robot to destination using
-// Dijkstra's SSSP Algorithm
-void Manager::dijkstra()
-{
-   Cell srcCell;
-   Cell destCell;
-   
-   // find the source node (the cell containing the robot)
-   bool foundSrc = false;
-   bool foundDest = false;
-   for (int i = 0; i < cells.size(); i++)
-   {
-      for (int j = 0; j < cells[i].size(); j++)
-      {
-         Cell cell = cells[i][j];
+         // update the source and dest nodes
          //printf("Cell: L=%d, R=%d, T=%d, B=%d\n", cell.L, cell.R, cell.T, cell.B);
          if ( (robot.X >= cell.L) &&
               (robot.X <  cell.R) &&
               (robot.Y >= cell.T) &&
               (robot.Y <  cell.B) )
          {
-            srcCell = cell;
-            foundSrc = true;
+            srcNode = node;
          }
          if ( (dest.X >= cell.L) &&
               (dest.X <  cell.R) &&
               (dest.Y >= cell.T) &&
               (dest.Y <  cell.B) )
          {
-            destCell = cell;
-            foundDest = true;
+            destNode = node;
          }
-      }
-      if (foundSrc && foundDest)
-         break;
-   }
 
+         // right neighbor
+         if (isValidCell(i, j+1))
+         {
+            edge.dest = getNode(cells[i][j+1]);
+            node->edges.push_back(edge);
+            edges.push_back(edge);
+         }
+
+         // bottom neighbor
+         if (isValidCell(i+1, j))
+         {
+            edge.dest = getNode(cells[i+1][j]);
+            node->edges.push_back(edge);
+            edges.push_back(edge);
+         }
+
+         // left neighbor
+         if (isValidCell(i, j-1))
+         {
+            edge.dest = getNode(cells[i][j-1]);
+            node->edges.push_back(edge);
+            edges.push_back(edge);
+         }
+
+         // top neighbor
+         if (isValidCell(i-1, j))
+         {
+            edge.dest = getNode(cells[i-1][j]);
+            node->edges.push_back(edge);
+            edges.push_back(edge);
+         }
+
+         nodes.push_back(node);
+         graph.push_back(node);
+      }
+   }
+}
+
+// utility function for Dijkstra's algorithm
+// dist is the list of shortest distance paths
+// spset[i] is true if node i is in the shortest path
+int Manager::minDistance()//int dist[], bool spset[])
+{
+   int min = 999999;
+   int minIndex;
+   for (int n = 0; n < nodes.size(); n++)
+   {
+      if (nodes[n]->spset == false && nodes[n]->dist <= min)
+      {
+         min = nodes[n]->dist;
+         minIndex = n;
+      }
+   }
+   return minIndex;
+}
+
+// Find the shortest path from the robot to destination using
+// Dijkstra's SSSP Algorithm
+void Manager::dijkstra()
+{
+   // Preparation for the algorithm
+   cout << endl << "Beginning Dijkstra's Algorithm..." << endl;
    // check errors: robot or dest inside a box
-   if (!srcCell.isValid || !destCell.isValid)
+   if ( !srcNode || 
+        !srcNode->cell.isValid || 
+        !destNode || 
+        !destNode->cell.isValid)
    {
       cout << "ERROR: invalid parameters" << endl;
       cout << "robot or dest may be inside a box" << endl;
       return;
    }
 
-   path.push_back(srcCell);
-
    // find the starting cell (srcCell) in terms of the graph's nodes
-   Node* currentNode = NULL;
-   Node* destNode = NULL;
-   Nodes visitedNodes;
-   for (int i = 0; i < graph.size(); i++)
+   Node* currentNode = srcNode;
+
+
+
+   // the actual Dijkstra Algorithm
+   // have path member already
+   path.push_back(srcNode->cell);
+   //int dist[nodes.size()];
+
+   // set of nodes to include in path
+   //bool spset[nodes.size()];
+
+   // distances are already infinite
+
+   // set distance of source node to 0 (and visited)
+   //dist[src] = 0;
+   srcNode->dist = 0;
+   srcNode->visited = true;
+
+   for (int i = 0; i < nodes.size(); i++)
    {
-      if (graph[i]->cell == srcCell)
+      // find the minimum distance node
+      int u = minDistance();//dist, shortestPath);
+      nodes[u]->spset = true; // mark that node as part of the shortest path set
+      nodes[u]->visited = true;
+      path.push_back(nodes[u]->cell);
+
+      if (nodes[u] == destNode)
       {
-         // start node - initial set up
-         currentNode = graph[i];
-         currentNode->dist = 0;
-         currentNode->visited = true;
-         visitedNodes.push_back(currentNode);
+         break;
       }
-      if (graph[i]->cell == destCell)
+
+      // update dist value of adjacent nodes of the picked node
+      for (int n = 0; n < nodes.size(); n++)
       {
-         destNode = graph[i];
+         Edge edge = nodes[u]->hasEdge(nodes[n]);
+         // update the distance of node n if ...
+         if (!nodes[n]->spset &&          // not already in spset
+             edge.dest &&                 // there is an edge from u to n
+             nodes[u]->dist != 999999 &&  // total weight from u to n is < ...
+             nodes[u]->dist + edge.weight < nodes[n]->dist) // current dist
+         {
+            nodes[n]->dist = nodes[u]->dist + edge.weight;
+         }
       }
    }
-	
-	if ( currentNode == NULL || destNode == NULL)
-	{
-		cout << "ERROR: Null R and D nodes" << endl;
-		return;
-	}
 
-   cout << endl << "Beginning Dijkstra's Algorithm" << endl;
+
+
+
+
+
+
+
+
+	
    // Dijkstra's Algorithm
+   /*
+   Nodes visitedNodes;
+   visitedNodes.push_back(currentNode);
    while (true)
    {
       // if current and destination are in same cell, we have found a path!
@@ -321,6 +374,32 @@ void Manager::dijkstra()
          cout << "ERROR: nextNode is null" << endl;
       }
    }
+   
+   // now that all nodes have a shortest distance from the source node, find
+   // the shortest path by traversing backwards from the destination
+   /*
+   currentNode = destNode;
+   list<Cell> cellPath;
+   cellPath.push_front(destNode->cell);
+   while (true)
+   {
+      Node* prevNode = currentNode->edges[0].src;
+      for (int i = 0; i < currentNode->edges.size(); i++)
+      {
+         Node* neighbor = currentNode->edges[i].src;
+         // find the shortest dist neighbor
+         if (neighbor->dist < prevNode->dist)
+         {
+            prevNode = neighbor;
+            if (*prevNode == *destNode)
+               break;
+         }
+      }
+      cellPath.push_front(prevNode->cell);
+      currentNode = prevNode;
+   }
+   path = Path(cellPath.begin(), cellPath.end());
+   // */
 }
 
 // Return index of box that collides

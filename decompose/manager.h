@@ -15,11 +15,14 @@ public:
 	bool pathDrawn;
    
    Node* getNode(const Cell& cell) const;
+   bool  isValidCell(int r, int c) const;
+   
 
 	void  timeStep();
    void  generatePath();
    void  decompose();
    void  connectCells();
+   int   minDistance();//int dist[], bool spset[]);
    void  dijkstra();
 	int 	isCollision(Position pos);
 	void 	clearCells();
@@ -46,10 +49,15 @@ private:
    Boxes       boxes;	// typedef'd to std::vector<Box>
 	Robot 		robot;
 	Destination dest;
+
    Cells       cells;	// typedef'd to std::vector<Cell>
+   Nodes       nodes;
+   Edges       edges;
    Graph       graph;   // typedef'd to std::vector<Node*>
    Path        path;    // typedef'd to std::vector<Cell>
 	
+   Node*       srcNode;
+   Node*       destNode;
 };
 
 #endif

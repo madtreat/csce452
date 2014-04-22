@@ -94,7 +94,19 @@ typedef std::vector<Cell>  Path; // the path from src cell to dest cell
 typedef std::vector<Cell>  CRow; // a cell row
 typedef std::vector<CRow>  Cells;// a 2D grid of cells (of varying sizes)
 
-struct Edge;
+struct Node;
+
+// an edge is a line between two positions
+struct Edge {
+   Node* src;
+   Node* dest;
+   int   weight;
+	void operator=(const Edge& other) {
+      src  = other.src;
+      dest = other.dest;
+   }
+};
+
 typedef std::vector<Edge>  Edges;
 
 // a graph node is a node and its list of edges
@@ -102,7 +114,15 @@ struct Node {
    Cell  cell;
    Edges edges;
    bool  visited;
-   int   dist; // distance for Dijkstra's Algorithm
+   bool  spset; // is this node part of the shortest path?
+   int   dist;  // distance for Dijkstra's Algorithm
+
+   Edge hasEdge(Node* dest) {
+      for (int i = 0; i < edges.size(); i++)
+         if (edges[i].dest->cell == dest->cell)
+            return edges[i];
+      return Edge();
+   }
 };
 
 inline bool operator==(const Node& lhs, const Node& rhs) {
@@ -110,15 +130,6 @@ inline bool operator==(const Node& lhs, const Node& rhs) {
       return true;
    return false;
 }
-
-// an edge is a line between two positions
-struct Edge {
-   //Cell src;
-   Node* dest;
-	void operator=(const Edge& other) {
-      dest = other.dest;
-   }
-};
 
 typedef std::vector<Node*>  Nodes;
 typedef std::vector<Node*>  Graph;
