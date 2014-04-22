@@ -68,7 +68,6 @@ void Manager::decompose()
    // decompose the area into cells based on the box locations
    for (int i = 0; i < NUM_BOXES; i++)
    {
-      cout << "box[" << i << "] = (" << boxes[i].pos.X << "," << boxes[i].pos.Y << ")" << endl;
       xcoords.push_back( boxes[i].pos.X - boxes[i].size );
       xcoords.push_back( boxes[i].pos.X + boxes[i].size );
       ycoords.push_back( boxes[i].pos.Y - boxes[i].size );
@@ -108,10 +107,10 @@ void Manager::decompose()
 
          // if this cell position is within a box, make it an invalid cell (but keep it...
          // useful for graph construction)
-         if (isCollision(pos) != -1)
-            cell.isValid = false;
-         else
+         if (isCollision(pos) == -1)
             cell.isValid = true;
+         else
+            cell.isValid = false;
 
          row.push_back(cell);
 
@@ -120,8 +119,6 @@ void Manager::decompose()
          node->visited = false;
          node->dist = 999999;
          graph.push_back(node);
-
-         cout << "Cell made with node = (" << nodeX << ", " << nodeY << ")" << endl;
       }
       cells.push_back(row);
    }
@@ -213,6 +210,7 @@ Path Manager::dijkstra(Graph)
          {
             srcCell = cell;
             foundSrc = true;
+            cout << "found source cell" << endl;
          }
          if ( (dest.X >= cell.L) &&
               (dest.X <  cell.R) &&
@@ -221,6 +219,7 @@ Path Manager::dijkstra(Graph)
          {
             destCell = cell;
             foundDest = true;
+            cout << "found destination cell" << endl;
          }
       }
       if (foundSrc && foundDest)
